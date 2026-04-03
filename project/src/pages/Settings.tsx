@@ -20,8 +20,6 @@ export default function Settings() {
 
     const user = useAuthStore((s) => s.user);
 
-    // Derive display values from the Firebase user object
-    const isGoogleAuth = user?.providerData.some(p => p.providerId === 'google.com');
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
     const photoURL = user?.photoURL || null;
     const initials = displayName.charAt(0).toUpperCase();
@@ -136,9 +134,7 @@ export default function Settings() {
                                         )}
                                         <div>
                                             <button
-                                                className="px-4 py-2 bg-secondary text-secondary-foreground text-sm font-medium rounded-md hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                                disabled={isGoogleAuth}
-                                                title={isGoogleAuth ? "Google accounts use their Google profile picture" : ""}
+                                                className="px-4 py-2 bg-secondary text-secondary-foreground text-sm font-medium rounded-md hover:bg-secondary/80 transition-colors"
                                             >
                                                 Change Avatar
                                             </button>
@@ -151,9 +147,7 @@ export default function Settings() {
                                             <input
                                                 type="text"
                                                 defaultValue={displayName}
-                                                disabled={isGoogleAuth}
-                                                className="w-full px-3 py-2 border border-input rounded-md bg-background focus:ring-primary focus:border-primary transition-colors text-sm disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
-                                                title={isGoogleAuth ? "Google accounts use their Google display name" : ""}
+                                                className="w-full px-3 py-2 border border-input rounded-md bg-background focus:ring-primary focus:border-primary transition-colors text-sm"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -161,13 +155,10 @@ export default function Settings() {
                                             <input
                                                 type="email"
                                                 defaultValue={user?.email || ''}
-                                                disabled={isGoogleAuth}
-                                                className="w-full px-3 py-2 border border-input rounded-md bg-background focus:ring-primary focus:border-primary transition-colors text-sm disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
+                                                className="w-full px-3 py-2 border border-input rounded-md bg-background focus:ring-primary focus:border-primary transition-colors text-sm"
                                             />
                                             <p className="text-xs text-muted-foreground">
-                                                {isGoogleAuth
-                                                    ? "Your email is managed by Google."
-                                                    : "Your email address."}
+                                                Your email address.
                                             </p>
                                         </div>
                                     </div>

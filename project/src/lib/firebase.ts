@@ -1,16 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { initializeAuth, browserLocalPersistence, browserSessionPersistence, browserPopupRedirectResolver, setPersistence, GoogleAuthProvider } from "firebase/auth";
+import { initializeAuth, browserLocalPersistence, browserSessionPersistence, setPersistence } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC2-5eY7G-SlS1WJlbqGYdwgQicba-guRA",
-    authDomain: "seniorproject-d1dbb.firebaseapp.com",
-    projectId: "seniorproject-d1dbb",
-    storageBucket: "seniorproject-d1dbb.firebasestorage.app",
-    messagingSenderId: "220494552719",
-    appId: "1:220494552719:web:c2c06a1a1f18862eb31afa",
-    measurementId: "G-F5QQMTS4CM"
+    apiKey: "AIzaSyAW7B2x5i_ZPKqs5k40zLSzAnTIZ2dyD1U",
+    authDomain: "chea-new.firebaseapp.com",
+    projectId: "chea-new",
+    storageBucket: "chea-new.firebasestorage.app",
+    messagingSenderId: "706181810831",
+    appId: "1:706181810831:web:d465270ba0bdf00d7f7efa",
+    measurementId: "G-T9N5YQJGYR"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,7 +18,6 @@ export const analytics = typeof window !== "undefined" ? getAnalytics(app) : nul
 
 export const auth = initializeAuth(app, {
     persistence: browserLocalPersistence,
-    popupRedirectResolver: browserPopupRedirectResolver
 });
 
 export async function setAuthPersistence(rememberMe: boolean) {
@@ -29,6 +28,5 @@ export async function setAuthPersistence(rememberMe: boolean) {
 export const db = initializeFirestore(app, {
     experimentalForceLongPolling: true,
 });
-export const googleProvider = new GoogleAuthProvider();
 
 export default app;

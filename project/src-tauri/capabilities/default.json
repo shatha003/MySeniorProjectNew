@@ -3,9 +3,7 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "main",
-    "googleAuthLogin",
-    "googleAuthRegister"
+    "main"
   ],
   "permissions": [
     "core:default",
@@ -24,7 +22,6 @@
     "core:webview:allow-create-webview-window",
     "core:event:allow-listen",
     "core:event:allow-emit",
-    "google-auth:default",
     "dialog:default"
   ]
 }

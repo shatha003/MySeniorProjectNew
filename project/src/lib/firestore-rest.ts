@@ -10,7 +10,7 @@
 
 import { auth } from './firebase';
 
-const PROJECT_ID = 'seniorproject-d1dbb';
+const PROJECT_ID = 'chea-new';
 const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
 /**

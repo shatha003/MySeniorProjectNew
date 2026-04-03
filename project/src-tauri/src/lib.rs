@@ -17,7 +17,6 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_google_auth::init())
         .setup(|app| {
             let pty_state = terminal::spawn_pty_reader(app.handle().clone());
             app.manage(pty_state);
