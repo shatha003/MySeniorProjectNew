@@ -1,0 +1,209 @@
+<mxfile host="65bd71144e">
+    <diagram name="Activity - Scanning" id="activity-scanning">
+        <mxGraphModel dx="2444" dy="1394" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="&lt;b&gt;Figure 3.2 — Activity Diagram: URL &amp;amp; File Scanning&lt;/b&gt;&lt;br&gt;&lt;i&gt;Use Case: UC3 — Scan URL for Threats / UC4 — Scan File for Malware&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="20" width="500" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="545" y="80" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" value="Scan Type?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="505" y="140" width="110" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_s_d1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="start" target="d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_enter_url" value="User enters URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="250" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_d1_url" value="URL" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontSize=10;fontColor=#030303;" parent="1" source="d1" target="a_enter_url" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_validate" value="Validate URL format" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="310" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_url_val" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_enter_url" target="a_validate" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_url_valid" value="Valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="383" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_val_valid" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_validate" target="d_url_valid" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_url_error" value="Show validation error" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="380" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_val_no" value="No" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontSize=10;fontColor=#030303;" parent="1" source="d_url_valid" target="a_url_error" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_err_back" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;dashed=1;" parent="1" source="a_url_error" target="a_enter_url" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="60" y="400"/>
+                            <mxPoint x="60" y="270"/>
+                            <mxPoint x="200" y="270"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_send_vt" value="Send URL to&#10;VirusTotal API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="245" y="480" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_val_yes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;fontSize=10;fontColor=#030303;" parent="1" source="d_url_valid" target="a_send_vt" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_select_file" value="User selects file" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="250" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_d1_file" value="File" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontSize=10;fontColor=#030303;" parent="1" source="d1" target="a_select_file" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_hash" value="Compute SHA-256 hash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="310" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_sel_hash" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_select_file" target="a_hash" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_check_vt" value="Check hash on VirusTotal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="370" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_hash_check" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_hash" target="a_check_vt" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_hash_known" value="Hash&#10;known?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="430" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_check_known" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_check_vt" target="d_hash_known" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_upload" value="Upload file to&#10;VirusTotal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="440" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_unknown" value="No" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontSize=10;fontColor=#030303;" parent="1" source="d_hash_known" target="a_upload" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_get_report" value="Get analysis report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="890" y="570" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_known_yes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;fontSize=10;fontColor=#030303;" parent="1" source="d_hash_known" target="a_get_report" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_upload_report" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_upload" target="a_get_report" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_send_file_vt" value="Send file to&#10;VirusTotal API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="490" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_poll" value="Poll for analysis result" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="580" width="150" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_url_poll" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;exitX=0.911;exitY=1.035;exitDx=0;exitDy=0;exitPerimeter=0;fontColor=#030303;" parent="1" source="a_send_vt" target="a_poll" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="390" y="521"/>
+                            <mxPoint x="390" y="530"/>
+                            <mxPoint x="575" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_file_poll" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_get_report" target="a_poll" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="865" y="560"/>
+                            <mxPoint x="575" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d_complete" value="Analysis&#10;complete?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="505" y="640" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_poll_comp" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_poll" target="d_complete" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_retry" value="Retry (max 30)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="650" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_retry" value="No" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d6b656;fontSize=10;fontColor=#030303;" parent="1" source="d_complete" target="a_retry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_retry_back" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d6b656;dashed=1;fontColor=#030303;" parent="1" source="a_retry" target="a_poll" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="630"/>
+                            <mxPoint x="750" y="600"/>
+                            <mxPoint x="650" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_timeout" value="Show timeout error" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="750" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_timeout" value="Timeout" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontSize=10;fontColor=#030303;" parent="1" source="a_retry" target="a_timeout" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="735" y="710"/>
+                            <mxPoint x="745" y="710"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_parse" value="Parse detection results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="720" width="150" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_done" value="Yes" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;fontSize=10;fontColor=#030303;" parent="1" source="d_complete" target="a_parse" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_threat" value="Threat&#10;level?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="790" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_parse_class" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_parse" target="d_threat" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_display" value="Display results with&#10;color-coded threat level" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="880" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_red" value="Malicious" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontSize=10;fontColor=#030303;" parent="1" source="d_threat" target="a_display" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_yellow" value="Suspicious" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#d6b656;fontSize=10;fontColor=#030303;" parent="1" source="d_threat" target="a_display" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="375" y="860"/>
+                            <mxPoint x="390" y="860"/>
+                            <mxPoint x="390" y="920"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_green" value="Clean" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;fontSize=10;fontColor=#030303;" parent="1" source="d_threat" target="a_display" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="375" y="890"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_xp" value="Award XP &amp;amp; update&#10;daily tasks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="185" y="960" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_disp_xp" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_display" target="a_xp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;fontColor=#030303;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="1000" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_xp_end" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;fontColor=#030303;" parent="1" source="a_xp" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_timeout_end" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#333333;dashed=1;fontColor=#030303;" parent="1" source="a_timeout" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="745" y="1015"/>
+                            <mxPoint x="405" y="1015"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

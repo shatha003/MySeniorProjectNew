@@ -1,0 +1,113 @@
+## Writing Rules For Humanizing  
+### *HyperTool: A Comprehensive Cybersecurity Desktop Application*
+
+---
+
+### Tone
+Keep it semi-formal, but natural. You’re a student explaining your own project, not writing a research paper.  
+Sound confident, but don’t exaggerate.
+
+---
+
+### Opening Style (Important)
+Start sections with a clear point, not generic phrases.
+
+**Good:**
+- “Cybersecurity tools are often either too complex or too limited.”
+- “The idea behind HyperTool came from a simple problem…”
+
+**Avoid:**
+- “This report will discuss…”
+
+---
+
+### Be Practical, Not Theoretical
+Focus on what you actually did:
+- Features you built  
+- Problems you faced  
+- How you solved them  
+
+This is your project story, not a textbook.
+
+---
+
+### Explain Like a Developer
+Keep explanations simple and direct.
+
+**Avoid:**
+> “The system utilizes advanced methodologies to enhance security operations.”
+
+**Better:**
+> “The tool scans for open ports and shows which ones might be risky.”
+
+---
+
+### Feature Descriptions
+For each feature, clearly explain:
+- What it does  
+- How it works (briefly)  
+- Why it matters  
+
+**Example:**
+> “The password analyzer checks how strong a password is. It looks at length, symbols, and common patterns. This helps users avoid weak passwords.”
+
+---
+
+### Don’t Overclaim
+Be honest about your system.
+
+**Avoid:**
+- “Highly secure system”
+- “Advanced AI-based solution” (unless it actually is)
+
+**Better:**
+> “The tool covers basic security checks but does not replace professional tools.”
+
+---
+
+### Discussion Section = Be Honest
+This is where you gain marks.
+
+Use real reflections:
+- “One issue I faced was…”
+- “At first, the tool was slow because…”
+- “This feature didn’t work as expected…”
+
+---
+
+### Sentence Style
+Mix sentence lengths:
+- Short → “This caused a problem.”  
+- Longer → explain details  
+
+Don’t try to sound perfect. Just be clear.
+
+---
+
+### Vocabulary
+Use correct cybersecurity terms when needed:
+- port scanning  
+- encryption  
+- vulnerability  
+- authentication  
+
+But don’t overuse technical buzzwords.
+
+---
+
+### Imperfection (Controlled)
+- Slight repetition is okay  
+- Simple wording is fine  
+- Avoid obvious grammar mistakes  
+
+---
+
+## What Your Writing Should Feel Like
+
+> “At the start, the goal was to create a simple tool that combines basic cybersecurity features in one place. A lot of existing tools are either too advanced or require separate installations, which can be confusing for beginners. Because of that, HyperTool was designed as a desktop application that brings multiple functions together in a more straightforward way.”
+
+---
+
+### Final Note
+Keep it clear. Keep it real.  
+Don’t try too hard to sound smart — it usually does the opposite.

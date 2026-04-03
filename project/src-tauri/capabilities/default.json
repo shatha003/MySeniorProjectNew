@@ -1,0 +1,30 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main",
+    "googleAuthLogin",
+    "googleAuthRegister"
+  ],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-close",
+    "core:window:allow-start-dragging",
+    "core:window:allow-is-maximized",
+    "core:window:allow-create",
+    "core:window:allow-set-title",
+    "core:window:allow-set-size",
+    "core:window:allow-center",
+    "core:window:allow-set-resizable",
+    "core:window:allow-set-maximizable",
+    "core:webview:allow-create-webview-window",
+    "core:event:allow-listen",
+    "core:event:allow-emit",
+    "google-auth:default",
+    "dialog:default"
+  ]
+}
