@@ -110,3 +110,5 @@ But don’t overuse technical buzzwords.
 ### Final Note
 Keep it clear. Keep it real.  
 Don’t try too hard to sound smart — it usually does the opposite.
+
+**make sure the generaited text looks like student with BAND score from 5.5-6.5 IELTS** 
