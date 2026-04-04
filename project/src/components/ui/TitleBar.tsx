@@ -33,10 +33,10 @@ export default function TitleBar() {
             {/* App Branding */}
             <div className="titlebar-brand" data-tauri-drag-region>
                 <div className="titlebar-icon">
-                    <img src="/icon.png" alt="HyperTool" width="16" height="16" className="object-contain" />
+                    <img src="/icon.png" alt="CHEA" width="16" height="16" className="object-contain" />
                 </div>
                 <span className="titlebar-title" data-tauri-drag-region>
-                    HyperTool
+                    CHEA
                 </span>
             </div>
 

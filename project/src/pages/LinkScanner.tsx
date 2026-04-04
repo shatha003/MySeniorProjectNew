@@ -46,7 +46,7 @@ export default function LinkScanner() {
 
     // Load history from local storage
     useEffect(() => {
-        const savedHistory = localStorage.getItem('hypertool_link_history');
+        const savedHistory = localStorage.getItem('chea_link_history');
         if (savedHistory) {
             try {
                 setHistory(JSON.parse(savedHistory));
@@ -65,7 +65,7 @@ export default function LinkScanner() {
         };
         const updated = [newItem, ...history].slice(0, 10); // Keep last 10
         setHistory(updated);
-        localStorage.setItem('hypertool_link_history', JSON.stringify(updated));
+        localStorage.setItem('chea_link_history', JSON.stringify(updated));
     };
 
     const handleScan = async (e: React.FormEvent | string) => {

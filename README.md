@@ -1,2 +1,0 @@
-# MySeniorProject
-my senior project

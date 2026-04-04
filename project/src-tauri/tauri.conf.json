@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "HyperTool",
+  "productName": "CHEA",
   "version": "0.1.0",
-  "identifier": "com.hypertool.app",
+  "identifier": "com.chea.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3001",
@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "HyperTool - Security Dashboard",
+        "title": "CHEA - Security Dashboard",
         "width": 1200,
         "height": 800,
         "minWidth": 600,

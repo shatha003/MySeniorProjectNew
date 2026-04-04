@@ -25,7 +25,7 @@ export default function Login() {
 
     try {
       await setAuthPersistence(rememberMe)
-      localStorage.setItem('hypertool-remember-me', rememberMe ? 'true' : 'false')
+      localStorage.setItem('chea-remember-me', rememberMe ? 'true' : 'false')
       await signInWithEmailAndPassword(auth, email, password)
       navigate('/dashboard')
     } catch (err: any) {

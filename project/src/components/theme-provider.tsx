@@ -29,7 +29,7 @@ function getSystemTheme(): "dark" | "light" {
 export function ThemeProvider({
     children,
     defaultTheme = "system",
-    storageKey = "hypertool-ui-theme",
+    storageKey = "chea-ui-theme",
     ...props
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(

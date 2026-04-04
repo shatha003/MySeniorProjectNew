@@ -6,7 +6,7 @@ export interface VaultConfig {
     encryptedVerifyHash: string;
 }
 
-const VERIFY_STRING = "hypertool-vault-verification-string";
+const VERIFY_STRING = "chea-vault-verification-string";
 
 export async function setupMasterPassword(userId: string, masterPassword: string): Promise<boolean> {
     if (!userId || !masterPassword) throw new Error('User ID and Master Password are required');

@@ -117,7 +117,7 @@ export default function ImagePrivacy() {
 
     // Load history from local storage
     useEffect(() => {
-        const savedHistory = localStorage.getItem('hypertool_image_history');
+        const savedHistory = localStorage.getItem('chea_image_history');
         if (savedHistory) {
             try {
                 setHistory(JSON.parse(savedHistory));
@@ -136,7 +136,7 @@ export default function ImagePrivacy() {
         };
         setHistory(prev => {
             const updated = [newItem, ...prev].slice(0, 10); // Keep last 10
-            localStorage.setItem('hypertool_image_history', JSON.stringify(updated));
+            localStorage.setItem('chea_image_history', JSON.stringify(updated));
             return updated;
         });
     };
@@ -146,7 +146,7 @@ export default function ImagePrivacy() {
             if (prev.length === 0) return prev;
             const updated = [...prev];
             updated[0] = { ...updated[0], status: newStatus };
-            localStorage.setItem('hypertool_image_history', JSON.stringify(updated));
+            localStorage.setItem('chea_image_history', JSON.stringify(updated));
             return updated;
         });
     };

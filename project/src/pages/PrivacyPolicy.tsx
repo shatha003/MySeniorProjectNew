@@ -39,7 +39,7 @@ export default function PrivacyPolicy() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">1. Information We Collect</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            When you use HyperTool, we may collect the following types of information:
+                            When you use CHEA, we may collect the following types of information:
                         </p>
                         <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
                             <li><strong className="text-foreground">Account Information:</strong> Your email address, display name, and profile picture when you register or sign in with Google.</li>
@@ -80,7 +80,7 @@ export default function PrivacyPolicy() {
                         <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
                             <li>With your explicit consent</li>
                             <li>To comply with legal obligations or respond to lawful requests</li>
-                            <li>To protect the rights, property, or safety of HyperTool, its users, or the public</li>
+                            <li>To protect the rights, property, or safety of CHEA, its users, or the public</li>
                             <li>With service providers who assist in operating the App (e.g., Firebase, Google Cloud)</li>
                         </ul>
                     </section>
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">5. Children's Privacy</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            HyperTool is designed for users of all ages, including minors. We are committed to protecting children's privacy. If
+                            CHEA is designed for users of all ages, including minors. We are committed to protecting children's privacy. If
                             you are under the age of 13, a parent or guardian must consent to and supervise your use of the App. We do not knowingly
                             collect personal information from children under 13 without parental consent.
                         </p>
@@ -110,7 +110,7 @@ export default function PrivacyPolicy() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">7. Cookies & Local Storage</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            HyperTool may use local storage and browser-based persistence mechanisms to maintain your session and preferences.
+                            CHEA may use local storage and browser-based persistence mechanisms to maintain your session and preferences.
                             These are essential for the App to function correctly and cannot be disabled without affecting the App's operation.
                         </p>
                     </section>

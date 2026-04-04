@@ -153,7 +153,7 @@ const Mermaid: React.FC<MermaidProps> = ({ chart, isStreaming = false }) => {
             const base64Content = btoa(unescape(encodeURIComponent(svgStr)));
 
             const saved = await invoke<boolean>('save_diagram', {
-                fileName: `hypertool-diagram.svg`,
+                fileName: `chea-diagram.svg`,
                 contentBase64: base64Content,
             });
 

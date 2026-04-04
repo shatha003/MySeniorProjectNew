@@ -8,7 +8,7 @@ import App from './App.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider defaultTheme="system" storageKey="hypertool-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="chea-ui-theme">
         <App />
       </ThemeProvider>
     </BrowserRouter>

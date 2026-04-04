@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { auth } from '../lib/firebase'
 import { motion } from 'framer-motion'
 
@@ -39,7 +39,7 @@ export default function TermsOfService() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">1. Acceptance of Terms</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            By accessing or using HyperTool ("the App"), you agree to be bound by these Terms of Service. If you do not agree to
+                            By accessing or using CHEA ("the App"), you agree to be bound by these Terms of Service. If you do not agree to
                             these terms, please do not use the App. These terms apply to all users of the App, including minors under the supervision
                             of a parent or guardian.
                         </p>
@@ -48,7 +48,7 @@ export default function TermsOfService() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">2. Description of Service</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            HyperTool is a desktop security companion application designed to help users manage permissions, monitor activity,
+                            CHEA is a desktop security companion application designed to help users manage permissions, monitor activity,
                             and enforce digital safety policies. The App provides tools for security monitoring, parental controls, and activity
                             management across your digital ecosystem.
                         </p>
@@ -57,7 +57,7 @@ export default function TermsOfService() {
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">3. User Accounts</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            To use HyperTool, you must create an account by providing accurate information. You are responsible for maintaining the
+                            To use CHEA, you must create an account by providing accurate information. You are responsible for maintaining the
                             confidentiality of your account credentials and for all activities that occur under your account. You must notify us
                             immediately of any unauthorized use of your account.
                         </p>
@@ -76,15 +76,15 @@ export default function TermsOfService() {
                         <h2 className="font-display text-lg font-semibold">5. Intellectual Property</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
                             All content, features, and functionality of the App, including but not limited to text, graphics, logos, and software,
-                            are the exclusive property of HyperTool and are protected by copyright, trademark, and other intellectual property laws.
+                            are the exclusive property of CHEA and are protected by copyright, trademark, and other intellectual property laws.
                         </p>
                     </section>
 
                     <section className="space-y-3">
                         <h2 className="font-display text-lg font-semibold">6. Limitation of Liability</h2>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            HyperTool is provided "as is" without any warranties, express or implied. We do not guarantee that the App will be
-                            uninterrupted, error-free, or completely secure. In no event shall HyperTool be liable for any indirect, incidental,
+                            CHEA is provided "as is" without any warranties, express or implied. We do not guarantee that the App will be
+                            uninterrupted, error-free, or completely secure. In no event shall CHEA be liable for any indirect, incidental,
                             special, or consequential damages arising out of or in connection with your use of the App.
                         </p>
                     </section>

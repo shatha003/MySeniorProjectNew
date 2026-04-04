@@ -413,7 +413,7 @@ export default function AIAgent() {
                     />
                     <div className="min-w-0 flex-1">
                         <h2 className="font-semibold flex items-center gap-2">
-                            HyperTool Support Agent
+                            CHEA Support Agent
                             <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
                         </h2>
                         <p className="text-xs text-muted-foreground truncate" dir="auto">

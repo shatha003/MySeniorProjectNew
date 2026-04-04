@@ -48,7 +48,7 @@ export default function FileScanner() {
 
     // Load history from local storage
     useEffect(() => {
-        const savedHistory = localStorage.getItem('hypertool_file_history');
+        const savedHistory = localStorage.getItem('chea_file_history');
         if (savedHistory) {
             try {
                 setHistory(JSON.parse(savedHistory));
@@ -67,7 +67,7 @@ export default function FileScanner() {
         };
         const updated = [newItem, ...history].slice(0, 10); // Keep last 10
         setHistory(updated);
-        localStorage.setItem('hypertool_file_history', JSON.stringify(updated));
+        localStorage.setItem('chea_file_history', JSON.stringify(updated));
     };
 
     // In Tauri v2, if you want drag-and-drop to get file paths, you listen to window events.

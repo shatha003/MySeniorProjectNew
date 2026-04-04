@@ -1,10 +1,10 @@
-# HyperTool
+# CHEA
 
 A comprehensive cybersecurity desktop application built with Tauri (React + TypeScript + Rust).
 
 ## Overview
 
-HyperTool is a powerful cybersecurity suite designed to help users manage their digital security with features including:
+CHEA is a powerful cybersecurity suite designed to help users manage their digital security with features including:
 - Link scanning and threat detection
 - Password vault with AES-256-GCM encryption
 - Security analysis and reporting

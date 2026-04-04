@@ -116,7 +116,7 @@ export default function DashboardLayout() {
     const handleLogout = async () => {
         try {
             // Clear remember-me preference so next launch starts fresh
-            localStorage.removeItem('hypertool-remember-me');
+            localStorage.removeItem('chea-remember-me');
             await signOut(auth);
             navigate('/login');
         } catch (error) {
@@ -253,8 +253,8 @@ export default function DashboardLayout() {
                     <aside className="relative w-[280px] max-w-[85%] bg-card border-r border-border h-full flex flex-col shadow-2xl animate-in slide-in-from-left duration-300">
                         <div className="p-6 flex items-center justify-between border-b border-border">
                             <div className="flex items-center gap-3">
-                                <img src="/icon.png" alt="HyperTool Logo" className="w-8 h-8 object-contain drop-shadow-sm" />
-                                <h1 className="text-xl font-bold">HyperTool</h1>
+                                <img src="/icon.png" alt="CHEA Logo" className="w-8 h-8 object-contain drop-shadow-sm" />
+                                <h1 className="text-xl font-bold">CHEA</h1>
                             </div>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}

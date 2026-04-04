@@ -46,8 +46,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-3 p-12">
-          <img src="/icon.png" alt="HyperTool" className="w-10 h-10 object-contain" />
-          <span className={`font-display text-xl font-bold tracking-tight drop-shadow-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>HyperTool</span>
+          <img src="/icon.png" alt="CHEA" className="w-10 h-10 object-contain" />
+          <span className={`font-display text-xl font-bold tracking-tight drop-shadow-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>CHEA</span>
         </div>
 
         {/* Bottom text */}

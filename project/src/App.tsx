@@ -65,7 +65,7 @@ function App() {
         <div className="app-content flex items-center justify-center h-screen">
           <div className="flex flex-col items-center gap-4">
             <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-muted-foreground animate-pulse">Loading HyperTool…</p>
+            <p className="text-sm text-muted-foreground animate-pulse">Loading CHEA…</p>
           </div>
         </div>
       </div>
