@@ -14,7 +14,6 @@ import {
     Clock, 
     Search,
     Star,
-    ChevronRight,
     BarChart3,
     Fingerprint,
     HardDrive,

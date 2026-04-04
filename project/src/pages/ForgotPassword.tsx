@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '@/components/theme-provider'
 import AuthLayout from '@/components/auth/AuthLayout'
 import Input from '@/components/ui/Input'
-import Button from '@/components/ui/Button'
+import { Mail, ArrowLeft, CheckCircle, Sparkles } from 'lucide-react'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -57,6 +57,7 @@ export default function ForgotPassword() {
     }
   }
 
+  const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900'
   const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500'
   const linkColor = isDark
     ? 'text-neon-crimson/80 hover:text-neon-crimson transition-colors'
@@ -74,46 +75,29 @@ export default function ForgotPassword() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-            className="space-y-6"
+            className="space-y-8"
           >
             {/* Success state */}
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-3 mb-6">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${
+            <div className="space-y-4">
+              <motion.div
+                className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto ${
                   isDark
-                    ? 'border-emerald-500/20 bg-emerald-500/5'
-                    : 'border-emerald-500/20 bg-emerald-50'
-                }`}>
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={isDark ? '#22c55e' : '#16a34a'}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ scale: 0, rotate: -15 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 18, delay: 0.15 }}
-                  >
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </motion.svg>
-                </div>
-                <div className={`h-8 w-px ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
-                <span className={`text-[0.6rem] font-cyber tracking-[0.25em] uppercase ${mutedText}`}>
-                  Confirmation
-                </span>
-              </div>
-              <h2 className={`font-cyber text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                Check your inbox
+                    ? 'bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/20'
+                    : 'bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-200'
+                }`}
+                initial={{ scale: 0, rotate: -15 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 18, delay: 0.15 }}
+              >
+                <CheckCircle size={40} className={isDark ? 'text-emerald-400' : 'text-emerald-600'} />
+              </motion.div>
+              <h2 className={`font-display text-3xl font-black tracking-tight text-center ${headingColor}`}>
+                Check Your Inbox! 📬
               </h2>
-              <p className={`text-sm leading-relaxed ${mutedText}`}>
-                A password reset link has been sent to{' '}
-                <span className={`font-medium ${isDark ? 'text-white/80' : 'text-gray-800'}`}>{email}</span>.
-                Follow the instructions to regain access.
+              <p className={`text-base font-medium text-center leading-relaxed ${mutedText}`}>
+                We sent a password reset link to{' '}
+                <span className={`font-bold ${isDark ? 'text-white/80' : 'text-gray-800'}`}>{email}</span>.
+                Follow the instructions to get back in!
               </p>
             </div>
 
@@ -125,22 +109,9 @@ export default function ForgotPassword() {
             >
               <Link
                 to="/login"
-                className={`inline-flex items-center gap-2 text-xs font-medium ${linkColor}`}
+                className={`inline-flex items-center gap-2 text-sm font-bold ${linkColor}`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="19" y1="12" x2="5" y2="12" />
-                  <polyline points="12 19 5 12 12 5" />
-                </svg>
+                <ArrowLeft size={16} />
                 Back to login
               </Link>
             </motion.div>
@@ -151,60 +122,34 @@ export default function ForgotPassword() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-6"
+            className="space-y-8"
           >
             {/* Header */}
-            <motion.div variants={itemVariants} className="space-y-1.5">
-              <div className="flex items-center gap-3 mb-5">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${
-                  isDark
-                    ? 'border-neon-crimson/20 bg-neon-crimson/5'
-                    : 'border-neon-violet/20 bg-neon-violet/5'
-                }`}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={isDark ? '#FF0A54' : '#4D00FF'}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                  </svg>
-                </div>
-                <div className={`h-8 w-px ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
-                <span className={`text-[0.6rem] font-cyber tracking-[0.25em] uppercase ${mutedText}`}>
-                  Recovery
-                </span>
-              </div>
-              <h2 className={`font-cyber text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                Reset password
+            <motion.div variants={itemVariants} className="space-y-4">
+              
+              <h2 className={`font-display text-3xl font-black tracking-tight ${headingColor}`}>
+                Forgot Password? 🔑
               </h2>
-              <p className={`text-sm ${mutedText}`}>
-                Enter your email to receive a reset link
+              <p className={`text-base font-medium ${mutedText}`}>
+                No worries! Enter your email and we'll help you get back in.
               </p>
             </motion.div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <motion.div variants={itemVariants}>
                 <Input
                   type="email"
                   label={
-                    <span className={`flex items-center gap-1.5 text-xs font-medium tracking-wide ${isDark ? 'text-white/60' : 'text-gray-600'}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                      <Mail size={16} />
                       Email
                     </span>
                   }
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="cyber-input-glow"
+                  className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
                   placeholder="you@example.com"
                 />
               </motion.div>
@@ -213,34 +158,48 @@ export default function ForgotPassword() {
                 <motion.div
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`p-3 rounded-lg text-xs flex items-center gap-2 border ${
+                  className={`p-4 rounded-xl text-sm font-bold flex items-center gap-3 border-2 ${
                     isDark
-                      ? 'bg-red-500/5 border-red-500/20 text-red-400/90'
-                      : 'bg-red-50 border-red-200/60 text-red-600'
+                      ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                      : 'bg-red-50 border-red-200 text-red-600'
                   }`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span className="text-xl">🤔</span>
                   {error}
                 </motion.div>
               )}
 
               <motion.div variants={itemVariants} className="pt-2">
-                <Button
+                <motion.button
                   type="submit"
-                  variant="cyber"
-                  className="w-full font-cyber text-xs tracking-[0.15em] uppercase h-11 rounded-lg"
-                  size="lg"
-                  loading={loading}
+                  disabled={loading}
+                  className={`w-full flex items-center justify-center gap-3 py-5 font-display text-lg font-black rounded-2xl transition-all shadow-xl disabled:opacity-40 disabled:cursor-not-allowed ${
+                    isDark
+                      ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:scale-[1.03]'
+                      : 'bg-gradient-to-r from-primary to-violet-600 text-white hover:scale-[1.03]'
+                  }`}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  Send Reset Link
-                </Button>
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Reset Link! 
+                      <Sparkles size={20} />
+                    </>
+                  )}
+                </motion.button>
               </motion.div>
             </form>
 
             {/* Divider */}
             <motion.div variants={itemVariants} className="flex items-center gap-3">
               <div className={`flex-1 h-px ${dividerColor}`} />
-              <span className={`text-[0.6rem] uppercase tracking-[0.2em] ${dividerTextColor}`}>
+              <span className={`text-xs font-black uppercase tracking-wider ${dividerTextColor}`}>
                 or
               </span>
               <div className={`flex-1 h-px ${dividerColor}`} />
@@ -249,14 +208,14 @@ export default function ForgotPassword() {
             {/* Sign in link */}
             <motion.p
               variants={itemVariants}
-              className={`text-center text-xs ${isDark ? 'text-white/35' : 'text-gray-400'}`}
+              className={`text-center text-sm font-medium ${isDark ? 'text-white/40' : 'text-gray-400'}`}
             >
               Remember your password?{' '}
               <Link
                 to="/login"
-                className={`font-semibold ${linkColor}`}
+                className={`font-black ${linkColor}`}
               >
-                Sign in
+                Sign in! 👋
               </Link>
             </motion.p>
           </motion.div>

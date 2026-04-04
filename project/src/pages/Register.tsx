@@ -10,7 +10,7 @@ import Input from '@/components/ui/Input'
 import PasswordInput from '@/components/ui/PasswordInput'
 import PasswordStrength from '@/components/ui/PasswordStrength'
 import Checkbox from '@/components/ui/Checkbox'
-import Button from '@/components/ui/Button'
+import { Mail, User, Lock, ShieldCheck, Sparkles } from 'lucide-react'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -135,6 +135,7 @@ export default function Register() {
 
   const passwordsMatch = formData.confirmPassword && formData.password === formData.confirmPassword
 
+  const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900'
   const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500'
   const linkColor = isDark
     ? 'text-neon-crimson/80 hover:text-neon-crimson transition-colors'
@@ -148,62 +149,37 @@ export default function Register() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-5"
+        className="space-y-6"
       >
         {/* Header */}
-        <motion.div variants={itemVariants} className="space-y-1.5">
-          <div className="flex items-center gap-3 mb-5">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${
-              isDark
-                ? 'border-neon-crimson/20 bg-neon-crimson/5'
-                : 'border-neon-violet/20 bg-neon-violet/5'
-            }`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={isDark ? '#FF0A54' : '#4D00FF'}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <line x1="19" y1="8" x2="19" y2="14" />
-                <line x1="22" y1="11" x2="16" y2="11" />
-              </svg>
-            </div>
-            <div className={`h-8 w-px ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
-            <span className={`text-[0.6rem] font-cyber tracking-[0.25em] uppercase ${mutedText}`}>
-              Registration
-            </span>
+        <motion.div variants={itemVariants} className="space-y-3">
+          <div className="flex items-center gap-3">
+           
           </div>
-          <h2 className={`font-cyber text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          <h2 className={`font-display text-3xl font-black tracking-tight ${headingColor}`}>
             Join the Team! 🚀
           </h2>
-          <p className={`text-sm ${mutedText}`}>
-            Create your account and start your adventure
+          <p className={`text-base font-medium ${mutedText}`}>
+            Create your account and start your adventure!
           </p>
         </motion.div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <motion.div variants={itemVariants}>
             <Input
               type="email"
               name="email"
               label={
-                <span className={`flex items-center gap-1.5 text-xs font-medium tracking-wide ${isDark ? 'text-white/60' : 'text-gray-600'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                  <Mail size={16} />
                   Email
                 </span>
               }
               value={formData.email}
               onChange={handleChange}
               error={errors.email}
-              className="cyber-input-glow"
+              className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
               placeholder="you@example.com"
             />
           </motion.div>
@@ -213,16 +189,16 @@ export default function Register() {
               type="text"
               name="displayName"
               label={
-                <span className={`flex items-center gap-1.5 text-xs font-medium tracking-wide ${isDark ? 'text-white/60' : 'text-gray-600'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  Display name
+                <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                  <User size={16} />
+                  Your Name
                 </span>
               }
               value={formData.displayName}
               onChange={handleChange}
               error={errors.displayName}
-              className="cyber-input-glow"
-              placeholder="Your display name"
+              className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
+              placeholder="What should we call you?"
             />
           </motion.div>
 
@@ -230,8 +206,8 @@ export default function Register() {
             <PasswordInput
               name="password"
               label={
-                <span className={`flex items-center gap-1.5 text-xs font-medium tracking-wide ${isDark ? 'text-white/60' : 'text-gray-600'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                  <Lock size={16} />
                   Password
                 </span>
               }
@@ -239,8 +215,8 @@ export default function Register() {
               onChange={handleChange}
               error={errors.password}
               autoComplete="new-password"
-              className="cyber-input-glow"
-              placeholder="Create a password"
+              className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
+              placeholder="Create a super secret password"
             />
           </motion.div>
 
@@ -258,27 +234,27 @@ export default function Register() {
             <PasswordInput
               name="confirmPassword"
               label={
-                <span className={`flex items-center gap-1.5 text-xs font-medium tracking-wide ${isDark ? 'text-white/60' : 'text-gray-600'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  Confirm password
+                <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                  <ShieldCheck size={16} />
+                  Confirm Password
                 </span>
               }
               value={formData.confirmPassword}
               onChange={handleChange}
               error={errors.confirmPassword}
               autoComplete="new-password"
-              className="cyber-input-glow"
-              placeholder="Repeat your password"
+              className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
+              placeholder="Type it one more time"
             />
             {formData.confirmPassword && !passwordsMatch && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`text-xs mt-1.5 flex items-center gap-1 ${
+                className={`text-sm mt-2 flex items-center gap-2 font-bold ${
                   isDark ? 'text-red-400/80' : 'text-red-500'
                 }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>🔄</span>
                 Passwords do not match
               </motion.p>
             )}
@@ -286,12 +262,12 @@ export default function Register() {
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`text-xs mt-1.5 flex items-center gap-1 ${
+                className={`text-sm mt-2 flex items-center gap-2 font-bold ${
                   isDark ? 'text-emerald-400/80' : 'text-emerald-600'
                 }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                Passwords match
+                <span>✅</span>
+                Passwords match!
               </motion.p>
             )}
           </motion.div>
@@ -299,11 +275,11 @@ export default function Register() {
           <motion.div variants={itemVariants}>
             <Checkbox
               label={
-                <span className="text-xs">
+                <span className="text-sm font-medium">
                   I agree to the{' '}
-                  <Link to="/terms" className={linkColor}>Terms of Service</Link>
+                  <Link to="/terms" className={`font-bold ${linkColor}`}>Rules</Link>
                   {' '}and{' '}
-                  <Link to="/privacy" className={linkColor}>Privacy Policy</Link>
+                  <Link to="/privacy" className={`font-bold ${linkColor}`}>Privacy Stuff</Link>
                 </span>
               }
               checked={agreedToTerms}
@@ -313,7 +289,7 @@ export default function Register() {
               }}
             />
             {errors.terms && (
-              <p className={`text-xs mt-1 ${isDark ? 'text-red-400/80' : 'text-red-500'}`}>{errors.terms}</p>
+              <p className={`text-sm mt-2 font-bold ${isDark ? 'text-red-400/80' : 'text-red-500'}`}>{errors.terms}</p>
             )}
           </motion.div>
 
@@ -321,35 +297,48 @@ export default function Register() {
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-3 rounded-lg text-xs flex items-center gap-2 border ${
+              className={`p-4 rounded-xl text-sm font-bold flex items-center gap-3 border-2 ${
                 isDark
-                  ? 'bg-red-500/5 border-red-500/20 text-red-400/90'
-                  : 'bg-red-50 border-red-200/60 text-red-600'
+                  ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                  : 'bg-red-50 border-red-200 text-red-600'
               }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span className="text-xl">😅</span>
               {errors.submit}
             </motion.div>
           )}
 
           <motion.div variants={itemVariants} className="pt-1">
-            <Button
+            <motion.button
               type="submit"
-              variant="cyber"
-              className="w-full font-cyber text-xs tracking-[0.15em] uppercase h-11 rounded-lg"
-              size="lg"
-              loading={loading}
-              disabled={!agreedToTerms}
+              disabled={loading || !agreedToTerms}
+              className={`w-full flex items-center justify-center gap-3 py-5 font-display text-lg font-black rounded-2xl transition-all shadow-xl disabled:opacity-40 disabled:cursor-not-allowed ${
+                isDark
+                  ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:scale-[1.03]'
+                  : 'bg-gradient-to-r from-primary to-violet-600 text-white hover:scale-[1.03]'
+              }`}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.97 }}
             >
-              Join Now! ✨
-            </Button>
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Join Now! ✨
+                  <Sparkles size={20} />
+                </>
+              )}
+            </motion.button>
           </motion.div>
         </form>
 
         {/* Divider */}
         <motion.div variants={itemVariants} className="flex items-center gap-3">
           <div className={`flex-1 h-px ${dividerColor}`} />
-          <span className={`text-[0.6rem] uppercase tracking-[0.2em] ${dividerTextColor}`}>
+          <span className={`text-xs font-black uppercase tracking-wider ${dividerTextColor}`}>
             or
           </span>
           <div className={`flex-1 h-px ${dividerColor}`} />
@@ -358,12 +347,12 @@ export default function Register() {
         {/* Sign in link */}
         <motion.p
           variants={itemVariants}
-          className={`text-center text-xs ${isDark ? 'text-white/35' : 'text-gray-400'}`}
+          className={`text-center text-sm font-medium ${isDark ? 'text-white/40' : 'text-gray-400'}`}
         >
           Already have an account?{' '}
           <Link
             to="/login"
-            className={`font-semibold ${linkColor}`}
+            className={`font-black ${linkColor}`}
           >
             Sign in! 👋
           </Link>

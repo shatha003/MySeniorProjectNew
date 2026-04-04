@@ -11,7 +11,6 @@ import {
     Clock, 
     RotateCcw, 
     Scan, 
-    Crosshair, 
     BarChart3,
     Star,
     ChevronRight,

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
-import { Delete, RotateCcw, Divide, X, Minus, Plus, Equal, Percent } from 'lucide-react';
+import { Delete, Divide, X, Minus, Plus, Equal, Percent } from 'lucide-react';
 
 type Operator = '+' | '-' | '*' | '/' | null;
 
@@ -49,11 +49,6 @@ export default function Calculator() {
         } else {
             setDisplay(display.slice(0, -1));
         }
-    }, [display]);
-
-    const toggleSign = useCallback(() => {
-        const value = parseFloat(display);
-        setDisplay(String(value * -1));
     }, [display]);
 
     const percentage = useCallback(() => {

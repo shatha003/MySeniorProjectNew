@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, Check, ShieldCheck, ShieldAlert, ShieldHalf, Star, RefreshCw, KeyRound, Zap, Lock, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Copy, Check, Star, RefreshCw, KeyRound } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
 

@@ -18,7 +18,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            let pty_state = terminal::spawn_pty_reader(app.handle().clone());
+            let pty_state = terminal::PtyState {
+                app_handle: app.handle().clone(),
+            };
             app.manage(pty_state);
             Ok(())
         })
