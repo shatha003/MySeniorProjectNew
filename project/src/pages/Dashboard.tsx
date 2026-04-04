@@ -3,15 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     Shield, ShieldAlert, Link as LinkIcon, FileSearch, KeyRound,
-    ShieldCheck, Lock, Eye, Flame, Trophy,
-    Target, CheckCircle2, Circle, Star, ChevronRight,
-    Activity, Terminal, Cpu, Clock, Award
+    Lock, Eye, Flame, Trophy, CheckCircle2, ChevronRight,
+    Activity, Star
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
 import { useDailyTasksStore } from '../store/useDailyTasksStore';
 import { useActivityStore } from '../store/useActivityStore';
-import { LEVEL_THRESHOLDS } from '../services/userProgressService';
 import { ActivityType } from '../services/activityService';
 import { getUserCredentials } from '../services/credentialService';
 import { useTheme } from '@/components/theme-provider';
@@ -41,7 +39,7 @@ const Dashboard = () => {
     const user = useAuthStore((state) => state.user);
     const { progress, levelInfo, fetchProgress } = useUserProgressStore();
     const { tasks, summary, fetchTasks } = useDailyTasksStore();
-    const { activities, fetchActivities, loading: activityLoading } = useActivityStore();
+    const { activities, fetchActivities } = useActivityStore();
     const [credentialCount, setCredentialCount] = useState(0);
     const [animatedScore, setAnimatedScore] = useState(0);
 
@@ -84,15 +82,6 @@ const Dashboard = () => {
         }, 300);
         return () => clearTimeout(timer);
     }, [securityScore]);
-
-    const scoreBreakdown = useMemo(() => ({
-        base: 10,
-        xp: Math.min(Math.floor((progress?.xp || 0) * 0.025), 25),
-        streak: Math.min((progress?.streakDays || 0) * 2, 20),
-        vault: Math.min(credentialCount * 3, 15),
-        activity: Math.min(activities.length * 3, 15),
-        tasks: Math.min((tasks?.tasks.filter(t => t.completed).length || 0) * 3, 15),
-    }), [progress, credentialCount, activities, tasks]);
 
     const getTierStyle = (lvl: number) => {
         if (lvl <= 3) {
@@ -250,10 +239,10 @@ const Dashboard = () => {
                     style={{ background: isDark ? 'radial-gradient(circle, rgba(255,10,84,0.06), transparent 70%)' : 'radial-gradient(circle, rgba(77,0,255,0.04), transparent 70%)' }} />
             </div>
 
-            <div className="relative z-10 space-y-8">
+            <div className="relative z-10 space-y-5">
                 {/* Friendly Hero Section */}
                 <motion.div variants={itemVariants} className="relative">
-                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-10 shadow-xl overflow-hidden relative`}>
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 md:p-6 shadow-xl overflow-hidden relative`}>
                         {/* Animated background shape */}
                         <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
                         
@@ -321,14 +310,14 @@ const Dashboard = () => {
                 </motion.div>
 
                 {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     
                     {/* LEFT: Quick Stats & Missions (1 column) */}
-                    <div className="lg:col-span-1 space-y-8">
+                    <div className="lg:col-span-1 space-y-5">
                         {/* Power Meter (Security Score) */}
                         <motion.div variants={itemVariants}>
-                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 text-center shadow-lg`}>
-                                <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-6`}>Security Power</h3>
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 text-center shadow-lg`}>
+                                <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-4`}>Security Power</h3>
                                 <div className="relative w-32 h-32 mx-auto">
                                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                         <circle
@@ -367,7 +356,7 @@ const Dashboard = () => {
 
                         {/* Daily Quests */}
                         <motion.div variants={itemVariants}>
-                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 shadow-lg`}>
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 shadow-lg`}>
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText}`}>Today's Quests</h3>
                                     <span className={`text-xs font-black text-emerald-500`}>{summary.completed}/{summary.total}</span>
@@ -397,52 +386,99 @@ const Dashboard = () => {
                     </div>
 
                     {/* RIGHT: Tools Grid (3 columns) */}
-                    <div className="lg:col-span-3 space-y-8">
-                        <div className="flex items-center justify-between">
-                            <h2 className={`font-display text-2xl font-black ${headingColor}`}>My Security Tools</h2>
+                    <div className="lg:col-span-3 space-y-5">
+                        <div className="flex items-center justify-between mb-3">
+                            <h2 className={`font-display text-xl font-black ${headingColor}`}>My Security Tools</h2>
                             <span className={`text-xs font-bold ${mutedText}`}>{tools.length} Awesome Tools</span>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {tools.map((tool, i) => (
-                                <motion.div
-                                    key={i}
-                                    variants={itemVariants}
-                                    whileHover={{ y: -8, scale: 1.02 }}
-                                    className={`group relative p-6 rounded-3xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-lg overflow-hidden`}
-                                    onClick={() => navigate(tool.to)}
-                                >
-                                    {/* Icon with gradient background */}
-                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-6 shadow-lg ${tool.glow} group-hover:scale-110 transition-transform duration-300`}>
-                                        {tool.icon}
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <h3 className={`text-xl font-black ${headingColor}`}>{tool.name}</h3>
-                                        <p className={`text-sm ${mutedText} leading-relaxed line-clamp-2`}>
-                                            {tool.description}
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-6 flex items-center justify-between">
-                                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500">
-                                            <Star size={12} fill="currentColor" />
-                                            <span className="text-xs font-black">+{tool.xp} XP</span>
+                        {/* Scanning Tools */}
+                        <div className="mb-4">
+                            <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
+                                <Eye size={12} /> Scanning
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {[tools[0], tools[1], tools[2]].map((tool, i) => (
+                                    <motion.div
+                                        key={i}
+                                        variants={itemVariants}
+                                        whileHover={{ y: -4, scale: 1.02 }}
+                                        className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                        onClick={() => navigate(tool.to)}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-3 shadow-md ${tool.glow}`}>
+                                            {tool.icon}
                                         </div>
-                                        <div className={`w-10 h-10 rounded-xl ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors`}>
-                                            <ChevronRight size={20} />
+                                        <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
+                                        <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
+                                        <div className="mt-3 flex items-center justify-between">
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                         </div>
-                                    </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
 
-                                    {/* Decoration */}
-                                    <div className={`absolute -bottom-6 -right-6 w-24 h-24 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10 rounded-full blur-2xl transition-opacity`} />
-                                </motion.div>
-                            ))}
+                        {/* Password Tools */}
+                        <div className="mb-4">
+                            <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
+                                <KeyRound size={12} /> Password
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {[tools[3], tools[4]].map((tool, i) => (
+                                    <motion.div
+                                        key={i}
+                                        variants={itemVariants}
+                                        whileHover={{ y: -4, scale: 1.02 }}
+                                        className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                        onClick={() => navigate(tool.to)}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-3 shadow-md ${tool.glow}`}>
+                                            {tool.icon}
+                                        </div>
+                                        <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
+                                        <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
+                                        <div className="mt-3 flex items-center justify-between">
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Encryption & Vault */}
+                        <div className="mb-4">
+                            <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
+                                <Lock size={12} /> Encryption & Vault
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {[tools[5], tools[6]].map((tool, i) => (
+                                    <motion.div
+                                        key={i}
+                                        variants={itemVariants}
+                                        whileHover={{ y: -4, scale: 1.02 }}
+                                        className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                        onClick={() => navigate(tool.to)}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-3 shadow-md ${tool.glow}`}>
+                                            {tool.icon}
+                                        </div>
+                                        <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
+                                        <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
+                                        <div className="mt-3 flex items-center justify-between">
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Recent Wins (Activity Log) */}
-                        <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-lg`}>
-                            <div className="flex items-center justify-between mb-8">
+                        <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-5 shadow-lg`}>
+                            <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     <Activity className="text-primary" />
                                     <h2 className={`font-display text-xl font-black ${headingColor}`}>Recent Wins</h2>

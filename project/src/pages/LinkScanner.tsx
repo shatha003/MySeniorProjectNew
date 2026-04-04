@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ShieldAlert, ShieldCheck, Link as LinkIcon, AlertTriangle, ExternalLink, Globe, Search, Clock, RotateCcw, Scan, Crosshair, BarChart3 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+    ShieldAlert, 
+    ShieldCheck, 
+    Link as LinkIcon, 
+    AlertTriangle, 
+    ExternalLink, 
+    Globe, 
+    Search, 
+    Clock, 
+    RotateCcw, 
+    Scan, 
+    Crosshair, 
+    BarChart3,
+    Star,
+    ChevronRight,
+    Activity,
+    Target
+} from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { invoke } from '@tauri-apps/api/core';
 import { useTheme } from '@/components/theme-provider';
@@ -14,11 +31,11 @@ const containerVariants = {
 };
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { type: 'spring', stiffness: 300, damping: 24 },
+        transition: { type: 'spring', stiffness: 280, damping: 22 },
     },
 };
 
@@ -142,35 +159,33 @@ export default function LinkScanner() {
     const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500';
     const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
-    const inputBg = isDark ? 'bg-cyber-surface border-[#8AB4F8]/10 focus:border-neon-crimson/50' : 'bg-gray-50 border-gray-200 focus:border-neon-violet/50';
-    const tableBorder = isDark ? 'border-[#8AB4F8]/8' : 'border-gray-200';
-    const tableHeaderBg = isDark ? 'bg-cyber-surface/80' : 'bg-gray-50';
-    const tableRowBg = isDark ? 'bg-cyber-dark/50' : 'bg-white';
-    const tableRowHover = isDark ? 'hover:bg-cyber-surface/60' : 'hover:bg-gray-50';
 
     const statusConfig = {
         malicious: {
-            color: isDark ? '#FF0A54' : '#EF4444',
-            bg: isDark ? 'bg-neon-crimson/10' : 'bg-red-50',
-            border: isDark ? 'border-neon-crimson/30' : 'border-red-300',
-            text: isDark ? 'text-neon-crimson' : 'text-red-600',
-            label: 'THREAT DETECTED',
+            color: 'from-red-500 to-orange-600',
+            glow: 'shadow-red-500/30',
+            bg: isDark ? 'bg-red-500/10' : 'bg-red-50',
+            border: 'border-red-500/20',
+            text: 'text-red-500',
+            label: 'DANGER DETECTED!',
             icon: ShieldAlert,
         },
         suspicious: {
-            color: isDark ? '#FB923C' : '#F59E0B',
-            bg: isDark ? 'bg-orange-400/10' : 'bg-amber-50',
-            border: isDark ? 'border-orange-400/30' : 'border-amber-300',
-            text: isDark ? 'text-orange-400' : 'text-amber-600',
-            label: 'SUSPICIOUS',
+            color: 'from-orange-400 to-amber-500',
+            glow: 'shadow-amber-500/30',
+            bg: isDark ? 'bg-orange-500/10' : 'bg-amber-50',
+            border: 'border-orange-500/20',
+            text: 'text-orange-500',
+            label: 'CAREFUL NOW...',
             icon: AlertTriangle,
         },
         clean: {
-            color: isDark ? '#34D399' : '#10B981',
-            bg: isDark ? 'bg-emerald-400/10' : 'bg-emerald-50',
-            border: isDark ? 'border-emerald-400/30' : 'border-emerald-300',
-            text: isDark ? 'text-emerald-400' : 'text-emerald-600',
-            label: 'CLEAN',
+            color: 'from-emerald-400 to-teal-500',
+            glow: 'shadow-teal-500/30',
+            bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
+            border: 'border-emerald-500/20',
+            text: 'text-emerald-500',
+            label: 'SAFE TO GO!',
             icon: ShieldCheck,
         },
     };
@@ -183,7 +198,7 @@ export default function LinkScanner() {
 
     return (
         <motion.div
-            className="relative min-h-full"
+            className="relative min-h-full pb-10"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -191,306 +206,305 @@ export default function LinkScanner() {
             {/* Background Effects */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl"
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl"
                     style={{ background: isDark ? 'radial-gradient(circle, rgba(255,10,84,0.06), transparent 70%)' : 'radial-gradient(circle, rgba(77,0,255,0.04), transparent 70%)' }} />
             </div>
 
-            <div className="relative z-10 space-y-6 max-w-6xl mx-auto">
-                {/* Header */}
-                <motion.div variants={itemVariants}>
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'border-neon-crimson/20 bg-neon-crimson/5' : 'border-neon-violet/20 bg-neon-violet/5'}`}>
-                            <Crosshair size={20} className={isDark ? 'text-neon-crimson' : 'text-neon-violet'} />
-                        </div>
-                        <div>
-                            <div className={`text-xs font-cyber tracking-[0.2em] uppercase ${mutedText}`}>URL Analysis Module</div>
-                            <h1 className={`font-cyber text-2xl md:text-3xl font-bold tracking-wider ${headingColor}`}>
-                                Link Scanner
-                            </h1>
+            <div className="relative z-10 space-y-8 max-w-6xl mx-auto">
+                {/* Friendly Hero Header */}
+                <motion.div variants={itemVariants} className="relative">
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 md:p-10 shadow-xl overflow-hidden relative`}>
+                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+                        
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30`}>
+                                        <LinkIcon size={24} />
+                                    </div>
+                                    <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
+                                        Link Scanner
+                                    </h1>
+                                </div>
+                                <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
+                                    Is this link safe to click? Let's check it out! 🕵️‍♂️
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
+                                <Star size={20} fill="currentColor" className="animate-bounce" />
+                                <div className="flex flex-col">
+                                    <span className="text-xl font-black leading-none">+10 XP</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Scan</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <p className={`text-sm ${mutedText} ml-[52px]`}>
-                        Analyze URLs for malware, phishing attempts, and reputation threats using VirusTotal.
-                    </p>
                 </motion.div>
 
-                {/* Scan Input */}
+                {/* Scan Input Card */}
                 <motion.div variants={itemVariants}>
-                    <div className={`rounded-xl border ${borderColor} ${cardBg} overflow-hidden relative`}>
-                        {/* Corner accents */}
-                        <div className={`absolute top-0 left-0 w-5 h-5 border-l-2 border-t-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-tl-xl`} />
-                        <div className={`absolute top-0 right-0 w-5 h-5 border-r-2 border-t-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-tr-xl`} />
-                        <div className={`absolute bottom-0 left-0 w-5 h-5 border-l-2 border-b-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-bl-xl`} />
-                        <div className={`absolute bottom-0 right-0 w-5 h-5 border-r-2 border-b-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-br-xl`} />
-
-                        <div className="p-5 md:p-6">
-                            <form onSubmit={handleScan} className="flex gap-3 flex-col sm:flex-row">
-                                <div className="relative flex-1">
-                                    <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none ${mutedText}`}>
-                                        <LinkIcon size={18} />
-                                    </div>
-                                    <input
-                                        type="url"
-                                        value={url}
-                                        onChange={(e) => setUrl(e.target.value)}
-                                        placeholder="https://example.com"
-                                        className={`block w-full pl-11 pr-4 py-3.5 border rounded-xl bg-transparent ${inputBg} text-sm focus:outline-none focus:ring-1 ${isDark ? 'focus:ring-neon-crimson/30' : 'focus:ring-neon-violet/30'} transition-all ${headingColor}`}
-                                        required
-                                        disabled={isScanning}
-                                    />
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-8 shadow-lg relative overflow-hidden`}>
+                        <form onSubmit={handleScan} className="flex gap-4 flex-col md:flex-row">
+                            <div className="relative flex-1">
+                                <div className={`absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none ${mutedText}`}>
+                                    <Target size={22} />
                                 </div>
-                                <motion.button
-                                    type="submit"
-                                    disabled={isScanning || !url}
-                                    className={`flex justify-center items-center gap-2 px-8 py-3.5 font-cyber text-xs tracking-[0.15em] uppercase rounded-xl transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden ${
-                                        isDark
-                                            ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:brightness-110 shadow-lg shadow-neon-crimson/20'
-                                            : 'bg-gradient-to-r from-neon-violet to-purple-600 text-white hover:brightness-110 shadow-lg shadow-neon-violet/20'
-                                    }`}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    {isScanning ? (
-                                        <>
-                                            <span className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></span>
-                                            Scanning...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Scan size={16} />
-                                            Scan URL
-                                        </>
-                                    )}
-                                </motion.button>
-                            </form>
+                                <input
+                                    type="url"
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    placeholder="Paste your link here (e.g., https://safe-site.com)"
+                                    className={`block w-full pl-14 pr-6 py-5 rounded-2xl border-2 bg-transparent ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} text-lg font-bold focus:outline-none transition-all ${headingColor} placeholder:font-medium placeholder:opacity-50`}
+                                    required
+                                    disabled={isScanning}
+                                />
+                            </div>
+                            <motion.button
+                                type="submit"
+                                disabled={isScanning || !url}
+                                className={`flex justify-center items-center gap-3 px-10 py-5 font-display text-lg font-black rounded-2xl transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-xl ${
+                                    isDark
+                                        ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:scale-105'
+                                        : 'bg-gradient-to-r from-primary to-violet-600 text-white hover:scale-105'
+                                }`}
+                                whileHover={{ y: -4 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                {isScanning ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
+                                        Checking...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Scan size={24} />
+                                        Scan Now!
+                                    </>
+                                )}
+                            </motion.button>
+                        </form>
 
-                            {/* Scan Progress Bar */}
+                        {/* Progress Bar */}
+                        <AnimatePresence>
                             {isScanning && (
                                 <motion.div
-                                    className="mt-4"
+                                    className="mt-8 space-y-3"
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
                                 >
-                                    <div className={`h-1 ${isDark ? 'bg-[#8AB4F8]/10' : 'bg-gray-200'} rounded-full overflow-hidden`}>
+                                    <div className="flex justify-between items-center text-sm font-bold uppercase tracking-wider">
+                                        <span className={mutedText}>Analyzing security layers...</span>
+                                        <span className={headingColor}>{Math.round(scanProgress)}%</span>
+                                    </div>
+                                    <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
                                         <motion.div
-                                            className={`h-full rounded-full ${isDark ? 'bg-gradient-to-r from-neon-crimson to-neon-violet' : 'bg-gradient-to-r from-neon-violet to-purple-600'}`}
+                                            className={`h-full bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full relative`}
                                             style={{ width: `${scanProgress}%` }}
                                             transition={{ duration: 0.3 }}
-                                        />
-                                    </div>
-                                    <div className={`flex items-center gap-2 mt-2 ${mutedText}`}>
-                                        <Search size={12} className="animate-pulse" />
-                                        <span className="text-xs font-cyber tracking-wider">SCANNING URL...</span>
+                                        >
+                                            <div className="absolute inset-0 bg-white/20 animate-shimmer bg-[length:200%_100%]" />
+                                        </motion.div>
                                     </div>
                                 </motion.div>
                             )}
+                        </AnimatePresence>
 
-                            {/* Error Message */}
-                            {errorMsg && (
-                                <motion.div
-                                    className={`mt-4 p-3 rounded-lg border flex items-start gap-2 text-sm ${isDark ? 'bg-red-500/5 border-red-500/20 text-red-400/90' : 'bg-red-50 border-red-200/60 text-red-600'}`}
-                                    initial={{ opacity: 0, y: 4 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                >
-                                    <ShieldAlert size={16} className="mt-0.5 shrink-0" />
-                                    <span>{errorMsg}</span>
-                                </motion.div>
-                            )}
-                        </div>
+                        {errorMsg && (
+                            <motion.div
+                                className={`mt-6 p-4 rounded-2xl border-2 flex items-start gap-3 text-sm font-bold ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                            >
+                                <ShieldAlert size={20} className="shrink-0" />
+                                <span>{errorMsg}</span>
+                            </motion.div>
+                        )}
                     </div>
                 </motion.div>
 
-                {/* Scan Results */}
-                {hasScanned && scanResult && (
-                    <motion.div variants={itemVariants} className="space-y-6">
-                        {/* Status Banner */}
-                        {(() => {
-                            const config = getConfig(scanResult.status);
-                            const StatusIcon = config.icon;
-                            return (
-                                <motion.div
-                                    className={`rounded-xl border ${config.border} ${config.bg} overflow-hidden relative`}
-                                    initial={{ opacity: 0, scale: 0.98 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                                >
-                                    <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${config.bg} border ${config.border}`}>
-                                                <StatusIcon size={28} style={{ color: config.color }} />
+                {/* Scan Results Display */}
+                <AnimatePresence mode="wait">
+                    {hasScanned && scanResult && (
+                        <motion.div 
+                            key="results"
+                            variants={itemVariants} 
+                            className="space-y-8"
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            {/* Status Hero Card */}
+                            {(() => {
+                                const config = getConfig(scanResult.status);
+                                const StatusIcon = config.icon;
+                                return (
+                                    <motion.div
+                                        className={`rounded-3xl border-2 ${config.border} ${config.bg} p-8 md:p-10 shadow-2xl relative overflow-hidden`}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                    >
+                                        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 relative z-10">
+                                            <div className="flex flex-col md:flex-row items-center gap-8">
+                                                <div className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${config.color} flex items-center justify-center text-white shadow-2xl ${config.glow} transform -rotate-6`}>
+                                                    <StatusIcon size={48} />
+                                                </div>
+                                                <div className="text-center md:text-left space-y-2">
+                                                    <div className={`text-xs font-black uppercase tracking-[0.2em] ${config.text}`}>
+                                                        Security Verdict
+                                                    </div>
+                                                    <h2 className={`text-4xl md:text-5xl font-black font-display ${headingColor}`}>
+                                                        {config.label}
+                                                    </h2>
+                                                    <a 
+                                                        href={scanResult.target} 
+                                                        target="_blank" 
+                                                        rel="noreferrer" 
+                                                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-current/10 text-sm font-bold ${mutedText} hover:bg-white/10 transition-colors mt-2`}
+                                                    >
+                                                        <span className="max-w-[200px] md:max-w-md truncate">{scanResult.target}</span>
+                                                        <ExternalLink size={14} />
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div className={`text-xs font-cyber tracking-[0.2em] uppercase ${config.text}`}>
-                                                    {config.label}
-                                                </div>
-                                                <div className={`text-lg font-bold font-cyber ${headingColor} mt-0.5`}>
-                                                    {scanResult.status === 'malicious' ? 'Malicious Site Detected' :
-                                                     scanResult.status === 'suspicious' ? 'Suspicious Activity Found' : 'Site Is Clean'}
-                                                </div>
-                                                <a href={scanResult.target} target="_blank" rel="noreferrer" className={`text-xs ${mutedText} hover:underline flex items-center gap-1 mt-1`}>
-                                                    {scanResult.target}
-                                                    <ExternalLink size={10} />
-                                                </a>
+
+                                            {/* Big Score Stats */}
+                                            <div className="grid grid-cols-3 gap-6 w-full lg:w-auto">
+                                                {[
+                                                    { label: 'Threats', value: scanResult.stats.malicious, color: 'text-red-500' },
+                                                    { label: 'Alerts', value: scanResult.stats.suspicious, color: 'text-orange-500' },
+                                                    { label: 'Safe', value: cleanCount, color: 'text-emerald-500' }
+                                                ].map((stat, i) => (
+                                                    <div key={i} className={`flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-current/5`}>
+                                                        <span className={`text-4xl font-black font-display ${stat.color}`}>{stat.value}</span>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${mutedText}`}>{stat.label}</span>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
+                                        
+                                        {/* Reset Button */}
+                                        <button 
+                                            onClick={resetScan}
+                                            className="absolute top-6 right-6 p-2 rounded-xl hover:bg-white/10 transition-colors text-gray-400 hover:text-primary"
+                                        >
+                                            <RotateCcw size={20} />
+                                        </button>
+                                    </motion.div>
+                                );
+                            })()}
 
-                                        {/* Quick Stats */}
-                                        <div className="flex items-center gap-6">
-                                            <div className="text-center">
-                                                <div className={`text-2xl font-bold font-cyber ${isDark ? 'text-red-400' : 'text-red-600'}`}>{scanResult.stats.malicious}</div>
-                                                <div className={`text-[0.6rem] font-cyber tracking-wider uppercase ${mutedText}`}>Malicious</div>
+                            {/* Detailed Stats Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Detection Ratio Card */}
+                                <motion.div
+                                    className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-lg`}
+                                    whileHover={{ y: -5 }}
+                                >
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500">
+                                                <BarChart3 size={24} />
                                             </div>
-                                            <div className={`w-px h-10 ${isDark ? 'bg-[#8AB4F8]/10' : 'bg-gray-200'}`} />
-                                            <div className="text-center">
-                                                <div className={`text-2xl font-bold font-cyber ${isDark ? 'text-orange-400' : 'text-amber-600'}`}>{scanResult.stats.suspicious}</div>
-                                                <div className={`text-[0.6rem] font-cyber tracking-wider uppercase ${mutedText}`}>Suspicious</div>
-                                            </div>
-                                            <div className={`w-px h-10 ${isDark ? 'bg-[#8AB4F8]/10' : 'bg-gray-200'}`} />
-                                            <div className="text-center">
-                                                <div className={`text-2xl font-bold font-cyber ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>{cleanCount}</div>
-                                                <div className={`text-[0.6rem] font-cyber tracking-wider uppercase ${mutedText}`}>Clean</div>
-                                            </div>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>Engine Results</h3>
+                                        </div>
+                                        <span className={`text-sm font-black ${mutedText}`}>{totalDetections} Flags / {totalEngines} Vendors</span>
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-end">
+                                            <span className={`text-sm font-bold ${mutedText}`}>Overall Risk Level</span>
+                                            <span className={`text-lg font-black ${totalDetections > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
+                                                {totalDetections > 5 ? 'High Risk' : totalDetections > 0 ? 'Medium Risk' : 'Perfectly Safe'}
+                                            </span>
+                                        </div>
+                                        <div className={`h-6 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
+                                            <motion.div
+                                                className={`h-full rounded-full ${totalDetections > 0 ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-emerald-400 to-teal-500'}`}
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${totalEngines > 0 ? (totalDetections / totalEngines) * 100 : 0}%` }}
+                                                transition={{ duration: 1, ease: "easeOut" }}
+                                            />
                                         </div>
                                     </div>
                                 </motion.div>
-                            );
-                        })()}
 
-                        {/* Detection Ratio + Reputation + Reset */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Detection Ratio */}
-                            <motion.div
-                                className={`rounded-xl border ${borderColor} ${cardBg} p-5 relative overflow-hidden`}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                            >
-                                <div className={`absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-tl-lg`} />
-                                <div className={`absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-br-lg`} />
-
-                                <div className={`flex items-center gap-2 mb-3 ${mutedText}`}>
-                                    <BarChart3 size={16} />
-                                    <span className="text-xs font-cyber tracking-wider">DETECTION RATIO</span>
-                                </div>
-                                <div className={`text-3xl font-black font-cyber ${headingColor}`}>
-                                    {totalDetections}<span className={`text-lg ${mutedText}`}>/{totalEngines}</span>
-                                </div>
-                                <div className={`h-2 ${isDark ? 'bg-[#8AB4F8]/10' : 'bg-gray-200'} rounded-full mt-3 overflow-hidden`}>
-                                    <motion.div
-                                        className={`h-full rounded-full ${totalDetections > 0 ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-emerald-500'}`}
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${totalEngines > 0 ? (totalDetections / totalEngines) * 100 : 0}%` }}
-                                        transition={{ duration: 0.8, delay: 0.3 }}
-                                    />
-                                </div>
-                            </motion.div>
-
-                            {/* Reputation Score */}
-                            <motion.div
-                                className={`rounded-xl border ${borderColor} ${cardBg} p-5 relative overflow-hidden`}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <div className={`absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-tl-lg`} />
-                                <div className={`absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-br-lg`} />
-
-                                <div className={`flex items-center gap-2 mb-3 ${mutedText}`}>
-                                    <Globe size={16} />
-                                    <span className="text-xs font-cyber tracking-wider">COMMUNITY SCORE</span>
-                                </div>
-                                <div className={`text-3xl font-black font-cyber ${
-                                    scanResult.reputation < 0 ? (isDark ? 'text-red-400' : 'text-red-600') :
-                                    scanResult.reputation > 0 ? (isDark ? 'text-emerald-400' : 'text-emerald-600') :
-                                    headingColor
-                                }`}>
-                                    {scanResult.reputation > 0 ? '+' : ''}{scanResult.reputation}
-                                </div>
-                                <div className={`text-xs ${mutedText} mt-2`}>
-                                    {scanResult.reputation > 50 ? 'Highly trusted' :
-                                     scanResult.reputation > 0 ? 'Generally safe' :
-                                     scanResult.reputation === 0 ? 'No reputation data' :
-                                     'Potentially harmful'}
-                                </div>
-                            </motion.div>
-
-                            {/* Reset */}
-                            <motion.div
-                                className={`rounded-xl border ${borderColor} ${cardBg} p-5 flex flex-col items-center justify-center relative overflow-hidden`}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                            >
-                                <div className={`absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-tl-lg`} />
-                                <div className={`absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 ${isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'} rounded-br-lg`} />
-
-                                <motion.button
-                                    onClick={resetScan}
-                                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-cyber text-xs tracking-[0.1em] uppercase transition-all ${
-                                        isDark
-                                            ? 'border-[#8AB4F8]/20 text-[#8AB4F8]/80 hover:bg-[#8AB4F8]/10 hover:border-neon-crimson/30'
-                                            : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-neon-violet/30'
-                                    }`}
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.97 }}
+                                {/* Community Score Card */}
+                                <motion.div
+                                    className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-lg`}
+                                    whileHover={{ y: -5 }}
                                 >
-                                    <RotateCcw size={14} />
-                                    New Scan
-                                </motion.button>
-                            </motion.div>
-                        </div>
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
+                                                <Globe size={24} />
+                                            </div>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>Community Trust</h3>
+                                        </div>
+                                        <div className={`px-4 py-1.5 rounded-full font-black text-sm ${
+                                            scanResult.reputation >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
+                                        }`}>
+                                            {scanResult.reputation > 0 ? '+' : ''}{scanResult.reputation}
+                                        </div>
+                                    </div>
 
-                        {/* Security Engine Analysis Table */}
-                        <motion.div
-                            className={`rounded-xl border ${borderColor} ${cardBg} overflow-hidden`}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                        >
-                            <div className={`px-5 py-4 border-b ${isDark ? 'border-[#8AB4F8]/10' : 'border-gray-200'} flex items-center justify-between`}>
-                                <div className="flex items-center gap-2">
-                                    <ShieldCheck size={18} className={isDark ? 'text-neon-crimson' : 'text-neon-violet'} />
-                                    <h2 className={`font-cyber text-sm tracking-wider ${headingColor}`}>SECURITY ENGINE ANALYSIS</h2>
-                                </div>
-                                <span className={`text-xs ${mutedText}`}>{totalEngines} vendors checked</span>
+                                    <div className="space-y-4">
+                                        <p className={`text-lg font-bold leading-relaxed ${headingColor}`}>
+                                            {scanResult.reputation > 50 ? 'Wow! The community loves this site. It\'s super trusted! 🌟' :
+                                             scanResult.reputation > 0 ? 'Looking good! Most people say this link is fine. 👍' :
+                                             scanResult.reputation === 0 ? 'We don\'t have much info from others yet. Be careful! 🤔' :
+                                             'Uh oh... People have reported this link as dangerous! 🛑'}
+                                        </p>
+                                        <div className={`text-sm ${mutedText} font-medium`}>
+                                            Based on feedback from {totalEngines} security researchers.
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </div>
 
-                            {scanResult.detections && scanResult.detections.length > 0 ? (
+                            {/* Detailed Findings Table */}
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                                <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
+                                    <div className="flex items-center gap-3">
+                                        <Activity className="text-primary" />
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Detailed Investigation</h2>
+                                    </div>
+                                    <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
+                                        {totalEngines} Security Checks
+                                    </span>
+                                </div>
+
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
                                         <thead>
-                                            <tr className={`${tableHeaderBg} ${tableBorder} border-b`}>
-                                                <th className={`text-left px-5 py-3 text-xs font-cyber tracking-wider ${mutedText} uppercase`}>Security Vendor</th>
-                                                <th className={`text-left px-5 py-3 text-xs font-cyber tracking-wider ${mutedText} uppercase hidden sm:table-cell`}>Result</th>
-                                                <th className={`text-right px-5 py-3 text-xs font-cyber tracking-wider ${mutedText} uppercase`}>Verdict</th>
+                                            <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Security Expert</th>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>Reason</th>
+                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {scanResult.detections.map((det: Detection, i: number) => {
-                                                const isMalicious = det.category.toLowerCase() === 'malicious';
-                                                const isSuspicious = det.category.toLowerCase() === 'suspicious';
-                                                const verdictColor = isMalicious
-                                                    ? (isDark ? 'text-red-400 bg-red-400/10' : 'text-red-600 bg-red-50')
-                                                    : isSuspicious
-                                                    ? (isDark ? 'text-orange-400 bg-orange-400/10' : 'text-amber-600 bg-amber-50')
-                                                    : (isDark ? 'text-emerald-400 bg-emerald-400/10' : 'text-emerald-600 bg-emerald-50');
-
+                                        <tbody className="divide-y-2 divide-current/5">
+                                            {scanResult.detections.map((det, i) => {
+                                                const isDanger = det.category.toLowerCase() === 'malicious' || det.category.toLowerCase() === 'suspicious';
                                                 return (
-                                                    <tr key={i} className={`${tableRowBg} ${tableBorder} border-b ${tableRowHover} transition-colors`}>
-                                                        <td className="px-5 py-3">
-                                                            <div className="flex items-center gap-3">
-                                                                <Globe size={16} className={mutedText} />
-                                                                <span className={`font-medium text-sm ${headingColor}`}>{det.engine}</span>
+                                                    <tr key={i} className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50/50'} transition-colors`}>
+                                                        <td className="px-8 py-5">
+                                                            <div className="flex items-center gap-4">
+                                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                                                    {isDanger ? <AlertTriangle size={18} /> : <ShieldCheck size={18} />}
+                                                                </div>
+                                                                <span className={`font-black ${headingColor}`}>{det.engine}</span>
                                                             </div>
                                                         </td>
-                                                        <td className={`px-5 py-3 hidden sm:table-cell`}>
-                                                            <span className={`text-xs ${mutedText}`}>{det.result || '—'}</span>
+                                                        <td className="px-8 py-5 hidden sm:table-cell">
+                                                            <span className={`text-sm font-medium ${mutedText}`}>{det.result || 'No threats found'}</span>
                                                         </td>
-                                                        <td className="px-5 py-3 text-right">
-                                                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${verdictColor}`}>
-                                                                {isMalicious && <ShieldAlert size={12} />}
-                                                                {isSuspicious && <AlertTriangle size={12} />}
-                                                                {!isMalicious && !isSuspicious && <ShieldCheck size={12} />}
+                                                        <td className="px-8 py-5 text-right">
+                                                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
+                                                                isDanger 
+                                                                    ? 'bg-red-500/10 text-red-500' 
+                                                                    : 'bg-emerald-500/10 text-emerald-500'
+                                                            }`}>
                                                                 {det.category}
                                                             </span>
                                                         </td>
@@ -500,73 +514,68 @@ export default function LinkScanner() {
                                         </tbody>
                                     </table>
                                 </div>
-                            ) : (
-                                <div className="p-10 text-center">
-                                    <ShieldCheck size={48} className={`mx-auto mb-4 ${isDark ? 'text-emerald-400/30' : 'text-emerald-500/30'}`} />
-                                    <h3 className={`text-lg font-medium font-cyber ${headingColor}`}>No Findings</h3>
-                                    <p className={`text-sm ${mutedText} mt-1`}>No security vendors flagged this URL as malicious.</p>
-                                </div>
-                            )}
+                            </div>
                         </motion.div>
-                    </motion.div>
-                )}
+                    )}
 
-                {/* Recent Scans History */}
-                {!hasScanned && (
-                    <motion.div variants={itemVariants}>
-                        <div className={`rounded-xl border ${borderColor} ${cardBg} overflow-hidden`}>
-                            <div className={`px-5 py-4 border-b ${isDark ? 'border-[#8AB4F8]/10' : 'border-gray-200'} flex items-center justify-between`}>
-                                <div className="flex items-center gap-2">
-                                    <Clock size={18} className={isDark ? 'text-neon-crimson' : 'text-neon-violet'} />
-                                    <h2 className={`font-cyber text-sm tracking-wider ${headingColor}`}>RECENT SCANS</h2>
+                    {/* Recent Scans (History) */}
+                    {!hasScanned && (
+                        <motion.div key="history" variants={itemVariants}>
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                                <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
+                                    <div className="flex items-center gap-3">
+                                        <Clock className="text-primary" />
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Recent Investigations</h2>
+                                    </div>
+                                    <span className={`text-sm font-bold ${mutedText}`}>{history.length} Logs Saved</span>
                                 </div>
-                                <span className={`text-xs ${mutedText}`}>{history.length} entries</span>
-                            </div>
 
-                            <div className="p-3">
-                                {history.length > 0 ? (
-                                    <div className="space-y-1">
-                                        {history.map((scan) => {
-                                            const config = getConfig(scan.status);
-                                            const StatusIcon = config.icon;
-                                            return (
-                                                <motion.div
-                                                    key={scan.id}
-                                                    className={`flex items-center justify-between p-3 rounded-lg border ${isDark ? 'border-[#8AB4F8]/8 bg-cyber-surface/30 hover:bg-cyber-surface/50' : 'border-gray-200 bg-gray-50 hover:bg-white'} transition-colors cursor-pointer`}
-                                                    onClick={() => {
-                                                        setUrl(scan.url);
-                                                        handleScan(scan.url);
-                                                    }}
-                                                    whileHover={{ x: 2 }}
-                                                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                                                >
-                                                    <div className="flex items-center gap-3 overflow-hidden">
-                                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${config.bg} border ${config.border}`}>
-                                                            <StatusIcon size={14} style={{ color: config.color }} />
+                                <div className="p-6">
+                                    {history.length > 0 ? (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {history.map((scan) => {
+                                                const config = getConfig(scan.status);
+                                                const StatusIcon = config.icon;
+                                                return (
+                                                    <motion.div
+                                                        key={scan.id}
+                                                        className={`group flex items-center justify-between p-5 rounded-2xl border-2 ${isDark ? 'bg-cyber-surface/30 border-white/5 hover:border-primary/30' : 'bg-gray-50 border-gray-100 hover:border-primary/30'} transition-all cursor-pointer`}
+                                                        onClick={() => {
+                                                            setUrl(scan.url);
+                                                            handleScan(scan.url);
+                                                        }}
+                                                        whileHover={{ x: 5, scale: 1.02 }}
+                                                    >
+                                                        <div className="flex items-center gap-4 overflow-hidden">
+                                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-gradient-to-br ${config.color} text-white shadow-lg ${config.glow} shrink-0`}>
+                                                                <StatusIcon size={22} />
+                                                            </div>
+                                                            <div className="truncate">
+                                                                <p className={`font-black text-base truncate ${headingColor}`}>{scan.url}</p>
+                                                                <p className={`text-xs font-bold ${mutedText}`}>{scan.date}</p>
+                                                            </div>
                                                         </div>
-                                                        <div className="truncate pr-4">
-                                                            <p className={`font-medium text-sm truncate ${headingColor}`}>{scan.url}</p>
-                                                            <p className={`text-xs ${mutedText}`}>{scan.date}</p>
+                                                        <div className={`w-10 h-10 rounded-xl ${isDark ? 'bg-white/5' : 'bg-white'} flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors ml-4`}>
+                                                            <ChevronRight size={20} />
                                                         </div>
-                                                    </div>
-                                                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-md border shrink-0 ${config.text} ${config.bg} ${config.border}`}>
-                                                        {scan.status.toUpperCase()}
-                                                    </span>
-                                                </motion.div>
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
-                                    <div className={`py-10 text-center border border-dashed ${isDark ? 'border-[#8AB4F8]/10' : 'border-gray-200'} rounded-xl m-2`}>
-                                        <Search className={`mx-auto mb-3 ${isDark ? 'text-[#8AB4F8]/20' : 'text-gray-300'}`} size={32} />
-                                        <p className={mutedText}>No recent scans</p>
-                                        <p className={`text-sm ${mutedText} mt-1`}>Your scan history will appear here</p>
-                                    </div>
-                                )}
+                                                    </motion.div>
+                                                );
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className={`py-16 text-center border-4 border-dashed ${isDark ? 'border-white/5' : 'border-gray-100'} rounded-3xl`}>
+                                            <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <Search className={`text-primary/20`} size={40} />
+                                            </div>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>No logs yet!</h3>
+                                            <p className={`text-lg ${mutedText} mt-2`}>Start your first investigation above.</p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
-                )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </motion.div>
     );

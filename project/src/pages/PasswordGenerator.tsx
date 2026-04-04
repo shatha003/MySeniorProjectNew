@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
-import { RefreshCw, Copy, Check, ShieldCheck, ShieldAlert, Shield, Star, Trash2, ShieldHalf, Zap, Hourglass, Clock, Calendar, Infinity as InfinityIcon, Lock } from 'lucide-react';
+import { RefreshCw, Copy, Check, ShieldCheck, ShieldAlert, Shield, Star, Trash2, ShieldHalf, Zap, Hourglass, Clock, Calendar, Lock, Rocket, Ghost, Trophy, Sword, Sparkles } from 'lucide-react';
 import Button from '../components/ui/Button';
 import PasswordInput from '../components/ui/PasswordInput';
 import { useAuthStore } from '../store/useAuthStore';
@@ -9,6 +9,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { addPasswordHistory, getUserPasswordHistory, updatePasswordHistoryPin, deletePasswordHistory, clearUnpinnedHistory } from '../services/passwordHistoryService';
 import { hasVaultSetup, verifyMasterPassword } from '../services/vaultService';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface HistoryItem {
     id: string;
@@ -30,15 +31,15 @@ const formatTimeToCrack = (entropy: number) => {
     const totalCombinations = Math.pow(2, Math.min(entropy, 1024));
     const seconds = totalCombinations / guessesPerSecond;
 
-    if (seconds < 1) return { value: "Instantly", unit: "", color: "bg-destructive/10 text-destructive", icon: <Zap size={22} /> };
-    if (seconds < 60) return { value: Math.max(1, Math.round(seconds)).toString(), unit: "seconds", color: "bg-destructive/10 text-destructive", icon: <Hourglass size={22} /> };
-    if (seconds < 3600) return { value: Math.max(1, Math.round(seconds / 60)).toString(), unit: "minutes", color: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400", icon: <Hourglass size={22} /> };
-    if (seconds < 86400) return { value: Math.max(1, Math.round(seconds / 3600)).toString(), unit: "hours", color: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400", icon: <Clock size={22} /> };
-    if (seconds < 31536000) return { value: Math.max(1, Math.round(seconds / 86400)).toString(), unit: "days", color: "bg-green-500/10 text-green-600 dark:text-green-400", icon: <Clock size={22} /> };
-    if (seconds < 3153600000) return { value: Math.max(1, Math.round(seconds / 31536000)).toString(), unit: "years", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400", icon: <Calendar size={22} /> };
-    if (seconds < 315360000000) return { value: Math.max(1, Math.round(seconds / 3153600000)).toString(), unit: "centuries", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400", icon: <Calendar size={22} /> };
+    if (seconds < 1) return { value: "In a blink!", unit: "", color: "bg-rose-500/10 text-rose-500", icon: <Zap size={22} className="animate-pulse" /> };
+    if (seconds < 60) return { value: "Super Fast", unit: "by a hacker", color: "bg-rose-500/10 text-rose-500", icon: <Hourglass size={22} /> };
+    if (seconds < 3600) return { value: Math.max(1, Math.round(seconds / 60)).toString(), unit: "mins (Snack break)", color: "bg-amber-500/10 text-amber-500", icon: <Hourglass size={22} /> };
+    if (seconds < 86400) return { value: Math.max(1, Math.round(seconds / 3600)).toString(), unit: "hours (Gaming day)", color: "bg-amber-500/10 text-amber-500", icon: <Clock size={22} /> };
+    if (seconds < 31536000) return { value: Math.max(1, Math.round(seconds / 86400)).toString(), unit: "days (School week)", color: "bg-emerald-500/10 text-emerald-500", icon: <Clock size={22} /> };
+    if (seconds < 3153600000) return { value: "A Lifetime", unit: "(Until you grow up)", color: "bg-emerald-500/10 text-emerald-500", icon: <Calendar size={22} /> };
+    if (seconds < 315360000000) return { value: "Centuries", unit: "(Super Hacker proof)", color: "bg-purple-500/10 text-purple-500", icon: <Trophy size={22} /> };
 
-    return { value: "Forever", unit: "(\u221E)", color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400", icon: <InfinityIcon size={22} /> };
+    return { value: "Forever!", unit: "(Galaxy Guarded)", color: "bg-indigo-500/10 text-indigo-500", icon: <Rocket size={22} className="animate-bounce" /> };
 };
 
 export default function PasswordGenerator() {
@@ -315,36 +316,30 @@ export default function PasswordGenerator() {
     const currentEntropy = calculateEntropy(length, poolSize);
     const timeToCrack = formatTimeToCrack(currentEntropy);
 
-    let strengthLabel = "WEAK";
-    let strengthColor = "text-destructive";
-    let strengthBgClass = "bg-destructive";
-    let strengthIcon = <ShieldAlert size={16} />;
+    let strengthLabel = "BEGINNER NINJA";
+    let strengthColor = "text-rose-500";
+    let strengthBgClass = "bg-rose-500";
+    let strengthIcon = <Sword size={16} />;
     let strengthWidth = "w-1/4";
 
     if (currentEntropy >= 80) {
-        strengthLabel = "VERY STRONG";
+        strengthLabel = "SUPER NINJA";
+        strengthColor = "text-indigo-500";
+        strengthBgClass = "bg-indigo-500";
+        strengthIcon = <Sparkles size={16} />;
+        strengthWidth = "w-full";
+    } else if (currentEntropy >= 60) {
+        strengthLabel = "MASTER GUARD";
         strengthColor = "text-emerald-500";
         strengthBgClass = "bg-emerald-500";
         strengthIcon = <ShieldCheck size={16} />;
-        strengthWidth = "w-full";
-    } else if (currentEntropy >= 60) {
-        strengthLabel = "STRONG";
-        strengthColor = "text-green-400";
-        strengthBgClass = "bg-green-400";
-        strengthIcon = <ShieldCheck size={16} />;
         strengthWidth = "w-3/4";
     } else if (currentEntropy >= 40) {
-        strengthLabel = "FAIR";
-        strengthColor = "text-yellow-500";
-        strengthBgClass = "bg-yellow-500";
+        strengthLabel = "ADVANCED SCOUT";
+        strengthColor = "text-amber-500";
+        strengthBgClass = "bg-amber-500";
         strengthIcon = <ShieldHalf size={16} />;
         strengthWidth = "w-1/2";
-    } else {
-        strengthLabel = "WEAK";
-        strengthColor = "text-destructive";
-        strengthBgClass = "bg-destructive";
-        strengthIcon = <Shield size={16} />;
-        strengthWidth = "w-1/4";
     }
 
     // Sort history: pinned first, then by date desc
@@ -356,109 +351,139 @@ export default function PasswordGenerator() {
     });
 
     return (
-        <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-6xl mx-auto">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Password Generator</h1>
-                <p className="text-muted-foreground">
-                    Create strong, secure passwords locally using Web Crypto API.
+        <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-6xl mx-auto pb-12">
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col gap-2"
+            >
+                <h1 className="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-emerald-500">
+                    SUPER NINJA PASSWORD MAKER
+                </h1>
+                <p className="text-muted-foreground font-medium">
+                    Create unbreakable secret codes that keep the bad guys out! 🛡️
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                 {/* Left Column: Generator Controls & Output */}
                 <div className="lg:col-span-8 space-y-6">
-                    <Card className="border-primary/20 shadow-md">
+                    <Card className="border-primary/30 shadow-xl overflow-hidden bg-card/50 backdrop-blur-sm">
                         <CardContent className="pt-6 space-y-8">
                             {/* Password Display Box */}
                             <div className="relative group">
-                                <div className="flex items-center justify-between p-6 bg-muted/30 border-2 border-border rounded-xl hover:border-primary/50 transition-colors">
-                                    <span className="text-2xl sm:text-3xl font-mono tracking-wider break-all select-all font-medium text-foreground mr-4">
+                                <motion.div 
+                                    layoutId="password-box"
+                                    className="flex items-center justify-between p-8 bg-primary/5 border-4 border-primary/20 rounded-3xl hover:border-primary/50 transition-all shadow-inner relative overflow-hidden"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50 pointer-events-none" />
+                                    <span className="text-3xl sm:text-5xl font-mono tracking-widest break-all select-all font-black text-primary drop-shadow-sm z-10">
                                         {password}
                                     </span>
-                                    <div className="flex gap-2 shrink-0 flex-col sm:flex-row">
+                                    <div className="flex gap-3 shrink-0 flex-col sm:flex-row z-10">
                                         <button
                                             onClick={() => handleCopy(password)}
-                                            className="p-3 bg-secondary rounded-lg text-secondary-foreground hover:bg-secondary/80 transition-colors tooltip relative group/btn"
-                                            title="Copy Password"
+                                            className="p-4 bg-secondary rounded-2xl text-secondary-foreground hover:bg-secondary/80 transition-all hover:scale-110 active:scale-95 shadow-lg group/btn"
+                                            title="Copy Code"
                                         >
-                                            {copied ? <Check className="text-emerald-500" /> : <Copy />}
+                                            {copied ? <Check className="text-emerald-500 w-8 h-8" /> : <Copy className="w-8 h-8" />}
                                         </button>
                                         <button
                                             onClick={() => generatePassword(true)}
-                                            className="p-3 bg-primary rounded-lg text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
-                                            title="Generate New"
+                                            className="p-4 bg-primary rounded-2xl text-primary-foreground hover:bg-primary/90 transition-all hover:scale-110 active:rotate-90 active:scale-95 shadow-lg shadow-primary/20"
+                                            title="Make New Code"
                                         >
-                                            <RefreshCw className="hover:rotate-180 transition-transform duration-500" />
+                                            <RefreshCw className="w-8 h-8 transition-transform duration-500 group-hover:rotate-180" />
                                         </button>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
 
                             {/* Strength Indicator */}
-                            <div className="space-y-2 bg-card p-4 rounded-xl border border-border shadow-sm">
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="font-medium text-muted-foreground">Password Strength</span>
-                                    <span className={`font-bold flex items-center gap-1 ${strengthColor}`}>
+                            <div className="space-y-3 bg-muted/20 p-6 rounded-3xl border-2 border-border shadow-md">
+                                <div className="flex justify-between items-center">
+                                    <span className="font-black text-sm uppercase tracking-widest text-muted-foreground">SHIELD DEFENSE LEVEL</span>
+                                    <motion.span 
+                                        key={strengthLabel}
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        className={`font-black flex items-center gap-2 px-4 py-1.5 rounded-full text-sm ${strengthColor} bg-current/10 border-2 border-current/20 shadow-sm`}
+                                    >
                                         {strengthIcon} {strengthLabel}
-                                    </span>
+                                    </motion.span>
                                 </div>
-                                <div className="flex gap-1 h-2 w-full bg-muted rounded-full overflow-hidden">
-                                    <div className={`h-full transition-all duration-500 ease-out ${strengthBgClass} ${strengthWidth}`}></div>
+                                <div className="h-4 w-full bg-muted rounded-full overflow-hidden border-2 border-border/50">
+                                    <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: strengthWidth.replace('w-', '') }}
+                                        className={`h-full transition-all duration-700 ease-out shadow-[0_0_15px_rgba(0,0,0,0.1)] ${strengthBgClass}`}
+                                        style={{ width: strengthWidth === "w-full" ? "100%" : strengthWidth === "w-3/4" ? "75%" : strengthWidth === "w-1/2" ? "50%" : "25%" }}
+                                    />
                                 </div>
-                                <p className="text-xs text-muted-foreground text-right mt-1">Entropy: ~{currentEntropy.toFixed(1)} bits</p>
+                                <div className="flex justify-between items-center text-xs font-bold text-muted-foreground/60">
+                                    <p>SHIELD POINTS: ~{currentEntropy.toFixed(1)} XP</p>
+                                    <p className="flex items-center gap-1"><Ghost size={12} /> HACKER PROOF</p>
+                                </div>
                             </div>
 
                             {/* Controls */}
-                            <div className="space-y-6 pt-4 border-t border-border">
+                            <div className="space-y-8 pt-4 border-t-2 border-dashed border-border">
 
                                 {/* Time to Crack Visualization */}
-                                <div className={`flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl border transition-all duration-700 ease-out ${timeToCrack.color.split(' ')[0]} border-current/10 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group`}>
+                                <motion.div 
+                                    whileHover={{ y: -5 }}
+                                    className={`flex flex-col sm:flex-row items-center justify-between p-6 rounded-3xl border-4 transition-all duration-700 ease-out ${timeToCrack.color.split(' ')[0]} border-current/20 hover:shadow-2xl relative overflow-hidden group bg-card`}
+                                >
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-gradient-to-r from-transparent via-current to-transparent -translate-x-full group-hover:animate-[shimmer_3s_infinite] transition-opacity duration-700 pointer-events-none"></div>
 
-                                    {/* Subtle pulse background animation */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-transparent via-current to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite] transition-opacity duration-700 pointer-events-none"></div>
-
-                                    <div className="flex items-center gap-4 mb-2 sm:mb-0 relative z-10 w-full sm:w-auto">
-                                        <div className={`p-3 rounded-full bg-background/80 shadow-sm transition-transform duration-500 group-hover:scale-110 ${timeToCrack.color.split(' ')[1]}`}>
+                                    <div className="flex items-center gap-4 mb-4 sm:mb-0 relative z-10 w-full sm:w-auto">
+                                        <div className={`p-4 rounded-2xl bg-background/90 shadow-xl transition-all duration-500 group-hover:scale-125 group-hover:rotate-12 ${timeToCrack.color.split(' ')[1]}`}>
                                             {timeToCrack.icon}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-foreground">Time to Crack</p>
-                                            <p className="text-xs text-muted-foreground font-medium">Estimated offline attack time</p>
+                                            <p className="text-lg font-black text-foreground tracking-tight">Hacker Guess Time</p>
+                                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Estimated defense time</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-baseline gap-1.5 relative z-10 w-full sm:w-auto justify-end flex-wrap overflow-visible" key={timeToCrack.value + timeToCrack.unit}>
-                                        <span className={`text-4xl sm:text-5xl font-black tracking-tight pl-1 ${timeToCrack.color.split(' ')[1]} drop-shadow-sm animate-in slide-in-from-bottom-6 fade-in zoom-in-75 duration-500 ease-out`}>
+                                    <div className="flex items-baseline gap-2 relative z-10 w-full sm:w-auto justify-end flex-wrap overflow-visible" key={timeToCrack.value + timeToCrack.unit}>
+                                        <span className={`text-5xl sm:text-6xl font-black tracking-tighter pl-1 ${timeToCrack.color.split(' ')[1]} drop-shadow-md animate-in slide-in-from-bottom-8 fade-in zoom-in-75 duration-700 ease-out`}>
                                             {timeToCrack.value}
                                         </span>
                                         {timeToCrack.unit && (
-                                            <span className={`text-sm sm:text-base font-bold uppercase tracking-widest ${timeToCrack.color.split(' ')[1]} opacity-90 backdrop-blur-md px-2.5 py-1 rounded-md bg-background/40 shadow-sm animate-in slide-in-from-left-4 fade-in duration-700 delay-150 fill-mode-backwards border border-current/10`}>
+                                            <span className={`text-xs sm:text-sm font-black uppercase tracking-widest ${timeToCrack.color.split(' ')[1]} opacity-90 backdrop-blur-md px-3 py-1.5 rounded-xl bg-background/60 shadow-lg animate-in slide-in-from-right-6 fade-in duration-1000 delay-200 fill-mode-backwards border-2 border-current/10`}>
                                                 {timeToCrack.unit}
                                             </span>
                                         )}
                                     </div>
-                                </div>
+                                </motion.div>
 
                                 {/* Length Slider */}
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center mb-6">
-                                        <label className="text-sm font-medium">Password Length</label>
-                                        <span className="text-3xl font-bold text-primary px-4 py-1 bg-primary/10 rounded-lg shadow-inner">
-                                            {length}
-                                        </span>
+                                <div className="space-y-6 px-2">
+                                    <div className="flex justify-between items-end mb-4">
+                                        <label className="text-sm font-black uppercase tracking-widest text-muted-foreground">CODE LENGTH</label>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-5xl font-black text-primary drop-shadow-sm">
+                                                {length}
+                                            </span>
+                                            <span className="text-sm font-bold text-muted-foreground uppercase">Symbols</span>
+                                        </div>
                                     </div>
-                                    <div className="relative w-full h-3 bg-muted rounded-full overflow-visible flex items-center">
+                                    <div className="relative w-full h-4 bg-muted rounded-full overflow-visible flex items-center border-2 border-border/50">
                                         {/* Filled Track */}
-                                        <div
-                                            className="absolute left-0 h-full bg-primary rounded-full pointer-events-none"
-                                            style={{ width: `${((length - 8) / (128 - 8)) * 100}%` }}
-                                        ></div>
+                                        <motion.div
+                                            className="absolute left-0 h-full bg-gradient-to-r from-primary to-indigo-500 rounded-full pointer-events-none shadow-[0_0_15px_rgba(var(--primary),0.3)]"
+                                            animate={{ width: `${((length - 8) / (128 - 8)) * 100}%` }}
+                                        ></motion.div>
                                         {/* Thumb */}
-                                        <div
-                                            className="absolute w-6 h-6 bg-primary border-4 border-background rounded-full shadow-md pointer-events-none transition-transform"
-                                            style={{ left: `calc(${((length - 8) / (128 - 8)) * 100}% - 12px)` }}
-                                        ></div>
+                                        <motion.div
+                                            className="absolute w-10 h-10 bg-primary border-4 border-background rounded-2xl shadow-xl pointer-events-none transition-all flex items-center justify-center cursor-grab active:cursor-grabbing"
+                                            animate={{ left: `calc(${((length - 8) / (128 - 8)) * 100}% - 20px)` }}
+                                        >
+                                            <div className="w-1.5 h-4 bg-background/50 rounded-full mx-0.5" />
+                                            <div className="w-1.5 h-4 bg-background/50 rounded-full mx-0.5" />
+                                        </motion.div>
                                         {/* Invisible Input */}
                                         <input
                                             type="range"
@@ -469,52 +494,67 @@ export default function PasswordGenerator() {
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         />
                                     </div>
-                                    <div className="flex justify-between text-xs text-muted-foreground font-medium pt-2">
-                                        <span>8</span>
-                                        <span>64</span>
-                                        <span>128</span>
+                                    <div className="flex justify-between text-[10px] text-muted-foreground font-black tracking-tighter uppercase px-1">
+                                        <span>Tiny</span>
+                                        <span>Pro</span>
+                                        <span>Super Huge</span>
                                     </div>
                                 </div>
 
                                 {/* Toggles Map */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${useUppercase ? 'border-primary/50 bg-primary/5' : 'hover:bg-accent/50'}`}>
-                                        <input type="checkbox" checked={useUppercase} onChange={() => setUseUppercase(!useUppercase)} className="w-5 h-5 accent-primary rounded" />
+                                    <label className={`group flex items-center gap-4 p-5 border-4 rounded-3xl cursor-pointer transition-all hover:scale-[1.02] active:scale-95 ${useUppercase ? 'border-primary/40 bg-primary/5 shadow-lg shadow-primary/5' : 'border-border/50 hover:bg-muted/30'}`}>
+                                        <div className={`w-8 h-8 rounded-xl border-4 flex items-center justify-center transition-colors ${useUppercase ? 'bg-primary border-primary text-primary-foreground' : 'border-muted-foreground/30'}`}>
+                                            {useUppercase && <Check className="w-5 h-5 font-black" />}
+                                        </div>
+                                        <input type="checkbox" checked={useUppercase} onChange={() => setUseUppercase(!useUppercase)} className="hidden" />
                                         <div>
-                                            <p className="font-medium">Uppercase</p>
-                                            <p className="text-xs text-muted-foreground font-mono">A-Z</p>
+                                            <p className="font-black text-lg">BIG Letters</p>
+                                            <p className="text-xs text-muted-foreground font-black font-mono tracking-widest">ABC...</p>
                                         </div>
                                     </label>
 
-                                    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${useLowercase ? 'border-primary/50 bg-primary/5' : 'hover:bg-accent/50'}`}>
-                                        <input type="checkbox" checked={useLowercase} onChange={() => setUseLowercase(!useLowercase)} className="w-5 h-5 accent-primary rounded" />
+                                    <label className={`group flex items-center gap-4 p-5 border-4 rounded-3xl cursor-pointer transition-all hover:scale-[1.02] active:scale-95 ${useLowercase ? 'border-emerald-500/40 bg-emerald-500/5 shadow-lg shadow-emerald-500/5' : 'border-border/50 hover:bg-muted/30'}`}>
+                                        <div className={`w-8 h-8 rounded-xl border-4 flex items-center justify-center transition-colors ${useLowercase ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-muted-foreground/30'}`}>
+                                            {useLowercase && <Check className="w-5 h-5 font-black" />}
+                                        </div>
+                                        <input type="checkbox" checked={useLowercase} onChange={() => setUseLowercase(!useLowercase)} className="hidden" />
                                         <div>
-                                            <p className="font-medium">Lowercase</p>
-                                            <p className="text-xs text-muted-foreground font-mono">a-z</p>
+                                            <p className="font-black text-lg">small letters</p>
+                                            <p className="text-xs text-muted-foreground font-black font-mono tracking-widest">abc...</p>
                                         </div>
                                     </label>
 
-                                    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${useNumbers ? 'border-primary/50 bg-primary/5' : 'hover:bg-accent/50'}`}>
-                                        <input type="checkbox" checked={useNumbers} onChange={() => setUseNumbers(!useNumbers)} className="w-5 h-5 accent-primary rounded" />
+                                    <label className={`group flex items-center gap-4 p-5 border-4 rounded-3xl cursor-pointer transition-all hover:scale-[1.02] active:scale-95 ${useNumbers ? 'border-amber-500/40 bg-amber-500/5 shadow-lg shadow-amber-500/5' : 'border-border/50 hover:bg-muted/30'}`}>
+                                        <div className={`w-8 h-8 rounded-xl border-4 flex items-center justify-center transition-colors ${useNumbers ? 'bg-amber-500 border-amber-500 text-white' : 'border-muted-foreground/30'}`}>
+                                            {useNumbers && <Check className="w-5 h-5 font-black" />}
+                                        </div>
+                                        <input type="checkbox" checked={useNumbers} onChange={() => setUseNumbers(!useNumbers)} className="hidden" />
                                         <div>
-                                            <p className="font-medium">Numbers</p>
-                                            <p className="text-xs text-muted-foreground font-mono">0-9</p>
+                                            <p className="font-black text-lg">Lucky Numbers</p>
+                                            <p className="text-xs text-muted-foreground font-black font-mono tracking-widest">123...</p>
                                         </div>
                                     </label>
 
-                                    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${useSymbols ? 'border-primary/50 bg-primary/5' : 'hover:bg-accent/50'}`}>
-                                        <input type="checkbox" checked={useSymbols} onChange={() => setUseSymbols(!useSymbols)} className="w-5 h-5 accent-primary rounded" />
+                                    <label className={`group flex items-center gap-4 p-5 border-4 rounded-3xl cursor-pointer transition-all hover:scale-[1.02] active:scale-95 ${useSymbols ? 'border-indigo-500/40 bg-indigo-500/5 shadow-lg shadow-indigo-500/5' : 'border-border/50 hover:bg-muted/30'}`}>
+                                        <div className={`w-8 h-8 rounded-xl border-4 flex items-center justify-center transition-colors ${useSymbols ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-muted-foreground/30'}`}>
+                                            {useSymbols && <Check className="w-5 h-5 font-black" />}
+                                        </div>
+                                        <input type="checkbox" checked={useSymbols} onChange={() => setUseSymbols(!useSymbols)} className="hidden" />
                                         <div>
-                                            <p className="font-medium">Symbols</p>
-                                            <p className="text-xs text-muted-foreground font-mono">!@#$*%_+</p>
+                                            <p className="font-black text-lg">Secret Symbols</p>
+                                            <p className="text-xs text-muted-foreground font-black font-mono tracking-widest">!@#...</p>
                                         </div>
                                     </label>
 
-                                    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors col-span-1 sm:col-span-2 ${excludeSimilar ? 'border-primary/50 bg-primary/5' : 'hover:bg-accent/50'}`}>
-                                        <input type="checkbox" checked={excludeSimilar} onChange={() => setExcludeSimilar(!excludeSimilar)} className="w-5 h-5 accent-primary rounded" />
+                                    <label className={`group flex items-center gap-4 p-5 border-4 rounded-3xl cursor-pointer transition-all hover:scale-[1.01] active:scale-95 col-span-1 sm:col-span-2 ${excludeSimilar ? 'border-purple-500/40 bg-purple-500/5 shadow-lg shadow-purple-500/5' : 'border-border/50 hover:bg-muted/30'}`}>
+                                        <div className={`w-8 h-8 rounded-xl border-4 flex items-center justify-center transition-colors ${excludeSimilar ? 'bg-purple-500 border-purple-500 text-white' : 'border-muted-foreground/30'}`}>
+                                            {excludeSimilar && <Check className="w-5 h-5 font-black" />}
+                                        </div>
+                                        <input type="checkbox" checked={excludeSimilar} onChange={() => setExcludeSimilar(!excludeSimilar)} className="hidden" />
                                         <div>
-                                            <p className="font-medium">Exclude Similar Characters</p>
-                                            <p className="text-xs text-muted-foreground">Removes ambiguous characters like (1, l, I) and (0, O)</p>
+                                            <p className="font-black text-lg">No Confusing Letters</p>
+                                            <p className="text-xs text-muted-foreground font-bold">Removes tricky look-alikes like (1, l, I) and (0, O)</p>
                                         </div>
                                     </label>
                                 </div>
@@ -524,155 +564,172 @@ export default function PasswordGenerator() {
                 </div>
 
                 {/* Right Column: Mini History & Pinning */}
-                <div className="lg:col-span-4 space-y-4">
+                <div className="lg:col-span-4 space-y-6">
                     {!masterPassword ? (
-                        <Card className="shadow-sm border-border flex flex-col h-[450px]">
-                            <div className="p-4 border-b border-border bg-card flex justify-between items-center rounded-t-xl">
-                                <h3 className="font-semibold flex items-center gap-2">
-                                    History
+                        <Card className="shadow-2xl border-4 border-border rounded-3xl flex flex-col h-[500px] overflow-hidden">
+                            <div className="p-6 border-b-4 border-border bg-muted/30 flex justify-between items-center">
+                                <h3 className="font-black flex items-center gap-2 text-lg uppercase tracking-wider">
+                                    Your Secret Vault
                                 </h3>
                             </div>
-                            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
+                            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
+                                <AnimatePresence mode="wait">
                                 {!vaultSetup ? (
-                                    <>
-                                        <div className="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center">
-                                            <ShieldAlert size={24} />
+                                    <motion.div 
+                                        key="setup"
+                                        initial={{ scale: 0.9, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        className="space-y-6"
+                                    >
+                                        <div className="w-20 h-20 bg-rose-500/10 text-rose-500 rounded-3xl flex items-center justify-center mx-auto shadow-inner border-4 border-rose-500/20">
+                                            <ShieldAlert size={40} />
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-lg">Setup Required</h4>
-                                            <p className="text-xs text-muted-foreground mt-1 mb-4">
-                                                You need to setup a Master Password in the Settings page to use the Vault and History.
+                                            <h4 className="font-black text-2xl">Setup Required!</h4>
+                                            <p className="text-sm text-muted-foreground font-medium mt-2">
+                                                To save your secret codes, you need to create a Master Password first.
                                             </p>
                                         </div>
-                                        <Button onClick={() => navigate('/dashboard/settings')} className="w-full" size="sm">
-                                            Go to Settings
+                                        <Button onClick={() => navigate('/dashboard/settings')} className="w-full py-6 rounded-2xl font-black text-lg shadow-xl shadow-rose-500/20" size="lg">
+                                            GO TO SETTINGS 🚀
                                         </Button>
-                                    </>
+                                    </motion.div>
                                 ) : (
-                                    <>
-                                        <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center">
-                                            <Lock size={24} />
+                                    <motion.div 
+                                        key="locked"
+                                        initial={{ scale: 0.9, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        className="w-full space-y-6"
+                                    >
+                                        <div className="w-20 h-20 bg-primary/10 text-primary rounded-3xl flex items-center justify-center mx-auto shadow-inner border-4 border-primary/20">
+                                            <Lock size={40} />
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-lg">Vault Locked</h4>
-                                            <p className="text-xs text-muted-foreground mt-1 mb-4">
-                                                Unlock your vault to securely save and view your password history on the cloud. Generated passwords are kept locally until unlocked.
+                                            <h4 className="font-black text-2xl">Vault Locked</h4>
+                                            <p className="text-sm text-muted-foreground font-medium mt-2">
+                                                Enter your secret password to see your saved codes!
                                             </p>
                                         </div>
                                         <form onSubmit={handleUnlock} className="w-full space-y-4 text-left">
-                                            <div className="space-y-1">
+                                            <div className="space-y-2">
                                                 <PasswordInput
                                                     label="Master Password"
-                                                    placeholder="..."
+                                                    placeholder="Enter secret..."
                                                     value={unlockPassword}
                                                     onChange={(e: any) => setUnlockPassword(e.target.value)}
                                                     required
                                                 />
-                                                {unlockError && <p className="text-xs text-destructive text-left">{unlockError}</p>}
+                                                {unlockError && <p className="text-sm font-bold text-rose-500 text-left px-1">{unlockError}</p>}
                                             </div>
-                                            <Button type="submit" className="w-full" size="sm" disabled={isVerifying}>
-                                                {isVerifying ? 'Verifying...' : 'Unlock History'}
+                                            <Button type="submit" className="w-full py-6 rounded-2xl font-black text-lg shadow-xl shadow-primary/20" size="lg" disabled={isVerifying}>
+                                                {isVerifying ? 'OPENING...' : 'UNLOCK VAULT 🔓'}
                                             </Button>
                                         </form>
-                                    </>
+                                    </motion.div>
                                 )}
+                                </AnimatePresence>
                             </div>
                         </Card>
                     ) : (
-                        <Card className="shadow-sm border-border flex flex-col max-h-[700px]">
-                            <div className="p-4 border-b border-border bg-card flex justify-between items-center sticky top-0 z-10 rounded-t-xl">
-                                <h3 className="font-semibold flex items-center gap-2">
-                                    History
-                                    <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full flex items-center gap-1">
-                                        <ShieldCheck size={10} /> Sync
+                        <Card className="shadow-2xl border-4 border-border rounded-3xl flex flex-col max-h-[800px] overflow-hidden">
+                            <div className="p-6 border-b-4 border-border bg-muted/30 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
+                                <h3 className="font-black flex items-center gap-2 text-lg uppercase tracking-wider">
+                                    SAVED CODES
+                                    <span className="text-[10px] px-2.5 py-1 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center gap-1 border border-emerald-500/20">
+                                        <ShieldCheck size={10} /> CLOUD SYNC
                                     </span>
                                 </h3>
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setMasterPassword(null)}
-                                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors bg-accent/50 hover:bg-accent px-1.5 py-1 rounded"
+                                        className="p-2 text-muted-foreground hover:text-foreground transition-all bg-accent/50 hover:bg-accent rounded-xl border border-border"
                                         title="Lock Vault"
                                     >
-                                        <Lock size={12} />
+                                        <Lock size={16} />
                                     </button>
                                     {history.filter(h => !h.pinned).length > 0 && (
                                         <button
                                             onClick={clearHistory}
-                                            className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors bg-destructive/10 hover:bg-destructive/20 px-1.5 py-1 rounded"
+                                            className="p-2 text-muted-foreground hover:text-rose-500 transition-all bg-rose-500/10 hover:bg-rose-500/20 rounded-xl border border-rose-500/20"
                                             title="Clear Unpinned"
                                         >
-                                            <Trash2 size={12} />
+                                            <Trash2 size={16} />
                                         </button>
                                     )}
                                 </div>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-2 space-y-2">
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                                <AnimatePresence mode="popLayout">
                                 {isLoadingHistory ? (
-                                    <div className="text-center p-6 text-muted-foreground flex flex-col items-center justify-center opacity-70">
-                                        <RefreshCw size={24} className="mb-2 animate-spin text-primary opacity-50" />
-                                        <p className="text-sm">Loading history...</p>
+                                    <div className="text-center p-12 text-muted-foreground flex flex-col items-center justify-center space-y-4">
+                                        <RefreshCw size={32} className="animate-spin text-primary" />
+                                        <p className="font-black uppercase tracking-widest text-sm">Searching Vault...</p>
                                     </div>
                                 ) : sortedHistory.length === 0 ? (
-                                    <div className="text-center p-6 text-muted-foreground flex flex-col items-center justify-center opacity-70">
-                                        <RefreshCw size={24} className="mb-2 opacity-50" />
-                                        <p className="text-sm">No history yet.</p>
-                                        <p className="text-xs mt-1">Generate a password to see it here.</p>
+                                    <div className="text-center p-12 text-muted-foreground flex flex-col items-center justify-center space-y-4">
+                                        <Ghost size={48} className="opacity-20" />
+                                        <p className="font-black uppercase tracking-widest text-sm">Vault is Empty!</p>
+                                        <p className="text-xs font-medium">Make some codes to see them here.</p>
                                     </div>
                                 ) : (
-                                    sortedHistory.map((item) => (
-                                        <div
+                                    sortedHistory.map((item, index) => (
+                                        <motion.div
                                             key={item.id}
-                                            className={`group relative flex flex-col p-3 rounded-lg border text-sm transition-all hover:shadow-sm ${item.pinned ? 'bg-primary/5 border-primary/30' : 'bg-card border-border hover:border-border/80'}`}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: index * 0.05 }}
+                                            className={`group relative flex flex-col p-4 rounded-2xl border-4 text-sm transition-all hover:shadow-xl hover:-translate-y-1 ${item.pinned ? 'bg-primary/5 border-primary/30 shadow-lg shadow-primary/5' : 'bg-card border-border hover:border-primary/20'}`}
                                         >
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="font-mono truncate mr-2 w-3/4 select-all text-xs sm:text-sm">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="font-mono truncate mr-3 w-3/4 select-all text-sm sm:text-base font-black tracking-wider text-foreground">
                                                     {item.password}
                                                 </div>
-                                                <div className="flex shrink-0 gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex shrink-0 gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all">
                                                     <button
                                                         onClick={() => togglePin(item.id)}
-                                                        className={`p-1.5 rounded-md transition-colors ${item.pinned ? 'text-amber-500 hover:bg-amber-500/10' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
-                                                        title={item.pinned ? "Unpin password" : "Pin password"}
+                                                        className={`p-2 rounded-xl transition-all hover:scale-110 ${item.pinned ? 'text-amber-500 bg-amber-500/10 border border-amber-500/20' : 'text-muted-foreground hover:bg-muted border border-transparent'}`}
+                                                        title={item.pinned ? "Unpin code" : "Pin code"}
                                                     >
-                                                        <Star size={14} fill={item.pinned ? "currentColor" : "none"} />
+                                                        <Star size={16} fill={item.pinned ? "currentColor" : "none"} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleCopy(item.password, item.id)}
-                                                        className="p-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+                                                        className="p-2 rounded-xl text-muted-foreground hover:bg-primary/10 hover:text-primary border border-transparent transition-all hover:scale-110"
                                                         title="Copy"
                                                     >
-                                                        {copiedHistoryId === item.id ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                                                        {copiedHistoryId === item.id ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
                                                     </button>
                                                     {!item.pinned && (
                                                         <button
                                                             onClick={() => removeHistoryItem(item.id)}
-                                                            className="p-1.5 rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                                                            title="Remove"
+                                                            className="p-2 rounded-xl text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 border border-transparent transition-all hover:scale-110"
+                                                            title="Delete"
                                                         >
-                                                            <Trash2 size={14} />
+                                                            <Trash2 size={16} />
                                                         </button>
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] text-muted-foreground">
-                                                <span>
-                                                    {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(new Date(item.createdAt))}
+                                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                                                <span className="flex items-center gap-1">
+                                                    <Clock size={10} /> {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric' }).format(new Date(item.createdAt))}
                                                 </span>
                                                 <span className="flex items-center gap-1">
                                                     {item.entropy >= 80 ? (
-                                                        <span className="text-emerald-500 flex items-center gap-0.5"><ShieldCheck size={10} /> Strong</span>
+                                                        <span className="text-indigo-500 flex items-center gap-1 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20"><Sparkles size={10} /> SUPER</span>
                                                     ) : item.entropy >= 60 ? (
-                                                        <span className="text-green-400 flex items-center gap-0.5"><ShieldCheck size={10} /> Good</span>
+                                                        <span className="text-emerald-500 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20"><ShieldCheck size={10} /> MASTER</span>
                                                     ) : item.entropy >= 40 ? (
-                                                        <span className="text-yellow-500 flex items-center gap-0.5"><ShieldHalf size={10} /> Fair</span>
+                                                        <span className="text-amber-500 flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20"><ShieldHalf size={10} /> GUARD</span>
                                                     ) : (
-                                                        <span className="text-destructive flex items-center gap-0.5"><Shield size={10} /> Weak</span>
+                                                        <span className="text-rose-500 flex items-center gap-1 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20"><Shield size={10} /> BASIC</span>
                                                     )}
                                                 </span>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))
                                 )}
+                                </AnimatePresence>
                             </div>
                         </Card>
                     )}

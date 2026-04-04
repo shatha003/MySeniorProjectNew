@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import {
     Image as ImageIcon,
@@ -18,7 +19,16 @@ import {
     Info,
     ExternalLink,
     Search,
-    ShieldCheck
+    ShieldCheck,
+    Sparkles,
+    ShieldAlert,
+    LocateFixed,
+    Zap,
+    Lightbulb,
+    ChevronDown,
+    ChevronUp,
+    History,
+    SmartphoneCharging
 } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 
@@ -93,13 +103,31 @@ interface HistoryItem {
 }
 
 // Helper to render a row in a metadata table
-function MetadataRow({ label, value, isLast = false }: { label: string; value: string | number; isLast?: boolean }) {
+function MetadataRow({ label, value, isLast = false, highlight = false }: { label: string; value: string | number; isLast?: boolean; highlight?: boolean }) {
     if (!value && value !== 0) return null;
     return (
-        <div className={`flex justify-between items-center text-sm py-2 ${!isLast ? 'border-b border-border' : ''}`}>
-            <span className="text-muted-foreground">{label}</span>
-            <span className="font-medium text-right ml-4 max-w-[60%] truncate" title={String(value)}>{value}</span>
+        <div className={`flex justify-between items-center text-sm py-2.5 ${!isLast ? 'border-b border-border/50' : ''}`}>
+            <span className="text-muted-foreground font-medium">{label}</span>
+            <span className={`font-semibold text-right ml-4 max-w-[60%] truncate ${highlight ? 'text-primary' : ''}`} title={String(value)}>{value}</span>
         </div>
+    );
+}
+
+function PrivacyTip({ title, children, icon: Icon = Lightbulb }: { title: string; children: React.ReactNode; icon?: any }) {
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-3 p-3 bg-primary/5 border border-primary/10 rounded-lg flex gap-3 items-start"
+        >
+            <div className="p-1.5 bg-primary/10 rounded-md text-primary shrink-0">
+                <Icon size={14} />
+            </div>
+            <div className="space-y-1">
+                <p className="text-[10px] font-bold text-primary uppercase tracking-wider">{title}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{children}</p>
+            </div>
+        </motion.div>
     );
 }
 
@@ -112,6 +140,7 @@ export default function ImagePrivacy() {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [history, setHistory] = useState<HistoryItem[]>([]);
+    const [showAdvanced, setShowAdvanced] = useState(false);
 
     const trackActivity = useTrackActivity();
 
@@ -220,7 +249,7 @@ export default function ImagePrivacy() {
                 await invoke('strip_image_metadata', { path: selectedFilePath, outputPath: savePath });
                 setIsCleaned(true);
                 updateLatestHistoryStatus('cleaned');
-                setSuccessMessage("Success! EXIF metadata completely removed and image saved.");
+                setSuccessMessage("Mission Accomplished! Your photo is now private and super safe to share! 🚀");
             }
         } catch (e) {
             console.error(e);
@@ -241,338 +270,440 @@ export default function ImagePrivacy() {
 
     return (
         <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto mb-10">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Image Privacy</h1>
-                <p className="text-muted-foreground">
-                    Extract, review, and remove sensitive EXIF metadata hidden inside your images.
-                </p>
+            <div className="flex flex-col gap-3">
+                <motion.div 
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className="flex items-center gap-4"
+                >
+                    <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 rotate-3">
+                        <Search size={32} />
+                    </div>
+                    <div>
+                        <h1 className="text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">Photo Detective 🕵️</h1>
+                        <p className="text-muted-foreground font-medium">
+                            Find and erase hidden secrets in your photos before sharing them!
+                        </p>
+                    </div>
+                </motion.div>
             </div>
 
             {error && (
-                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-3 text-destructive">
-                    <AlertTriangle size={20} />
-                    <p className="font-medium">{error}</p>
-                </div>
+                <motion.div 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-center gap-3 text-destructive"
+                >
+                    <ShieldAlert size={24} className="animate-pulse" />
+                    <p className="font-bold">{error}</p>
+                </motion.div>
             )}
 
             {!hasImage || !metadata ? (
                 <div className="space-y-6">
-                    <Card>
+                    <Card className="border-none bg-gradient-to-br from-primary/5 via-background to-accent/20 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <ImageIcon />
-                                Select an Image
+                            <CardTitle className="flex items-center gap-2 text-2xl font-bold">
+                                <ImageIcon className="text-primary" />
+                                Start Your Mission
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 rounded-xl p-12 flex flex-col items-center justify-center text-center transition-colors cursor-pointer" onClick={handleUpload}>
-                                <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mb-6 text-primary">
+                            <motion.div 
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="border-3 border-dashed border-primary/20 hover:border-primary/50 rounded-3xl p-16 flex flex-col items-center justify-center text-center transition-all bg-background/40 backdrop-blur-sm cursor-pointer shadow-sm hover:shadow-xl hover:shadow-primary/5" 
+                                onClick={handleUpload}
+                            >
+                                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary relative">
                                     {isProcessing ? (
-                                        <span className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></span>
+                                        <div className="relative">
+                                            <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
+                                            <span className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></span>
+                                        </div>
                                     ) : (
-                                        <ImageIcon size={32} />
+                                        <>
+                                            <ImageIcon size={48} className="relative z-10" />
+                                            <Sparkles size={24} className="absolute -top-1 -right-1 text-amber-500 animate-bounce" />
+                                        </>
                                     )}
                                 </div>
-                                <h3 className="text-xl font-medium mb-2">Upload a photo to analyze</h3>
-                                <p className="text-sm text-muted-foreground mb-4">Supports JPEG and PNG formats</p>
-                                <button className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-md pointer-events-none">
-                                    Select Image
+                                <h3 className="text-2xl font-black mb-2 tracking-tight">Select a Photo to Scan</h3>
+                                <p className="text-base text-muted-foreground mb-6 font-medium max-w-md">
+                                    We'll search for hidden map data, camera info, and other secrets.
+                                </p>
+                                <button className="px-8 py-3 bg-primary text-primary-foreground font-bold text-lg rounded-2xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all transform pointer-events-none flex items-center gap-2">
+                                    <Zap size={20} />
+                                    Choose Photo
                                 </button>
-                            </div>
+                            </motion.div>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Clock size={20} />
-                                Recent Scans
+                    <Card className="border-muted/30">
+                        <CardHeader className="pb-3 border-b border-border/50">
+                            <CardTitle className="text-lg flex items-center gap-2 font-bold">
+                                <History size={20} className="text-primary" />
+                                Your Recent Missions
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="pt-4">
                             {history.length > 0 ? (
-                                <div className="space-y-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {history.map((scan) => (
-                                        <div
+                                        <motion.div
                                             key={scan.id}
-                                            className="flex items-center justify-between p-3 rounded-lg border border-border bg-card/50 hover:bg-accent/50 transition-colors"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="flex items-center justify-between p-4 rounded-2xl border border-border/50 bg-card/30 hover:bg-accent/30 transition-all duration-300"
                                         >
                                             <div className="flex items-center gap-3 overflow-hidden">
-                                                <div className={`p-1.5 rounded-full shrink-0 ${scan.status === 'clean' ? 'bg-emerald-500/10 text-emerald-500' :
+                                                <div className={`p-2 rounded-xl shrink-0 ${scan.status === 'clean' ? 'bg-emerald-500/10 text-emerald-500' :
                                                     scan.status === 'has_exif' ? 'bg-amber-500/10 text-amber-500' :
                                                         'bg-primary/10 text-primary'
                                                     }`}>
-                                                    {scan.status === 'clean' ? <ShieldCheck size={16} /> :
-                                                        scan.status === 'has_exif' ? <AlertTriangle size={16} /> :
-                                                            <CheckCircle size={16} />}
+                                                    {scan.status === 'clean' ? <ShieldCheck size={18} /> :
+                                                        scan.status === 'has_exif' ? <ShieldAlert size={18} /> :
+                                                            <Sparkles size={18} />}
                                                 </div>
-                                                <div className="truncate pr-4">
-                                                    <p className="font-medium text-sm truncate">{scan.fileName}</p>
-                                                    <p className="text-xs text-muted-foreground">{scan.date}</p>
+                                                <div className="truncate pr-2">
+                                                    <p className="font-bold text-sm truncate">{scan.fileName}</p>
+                                                    <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
+                                                        <Clock size={10} />
+                                                        {scan.date}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className={`text-xs font-semibold px-2 py-1 rounded-md border shrink-0 ${scan.status === 'clean' ? 'border-emerald-500/20 text-emerald-500 bg-emerald-500/5' :
+                                            <div className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-xl border shrink-0 ${scan.status === 'clean' ? 'border-emerald-500/20 text-emerald-500 bg-emerald-500/5' :
                                                 scan.status === 'has_exif' ? 'border-amber-500/20 text-amber-500 bg-amber-500/5' :
                                                     'border-primary/20 text-primary bg-primary/5'
                                                 }`}>
-                                                {scan.status.toUpperCase().replace('_', ' ')}
+                                                {scan.status === 'clean' ? 'SAFE' :
+                                                    scan.status === 'has_exif' ? 'FOUND SECRETS' :
+                                                        'CLEARED!'}
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="py-8 text-center text-muted-foreground border border-dashed rounded-lg bg-card/50">
-                                    <Search className="mx-auto mb-2 opacity-50" size={32} />
-                                    <p>No recent scans. Your image scan history will appear here.</p>
+                                <div className="py-12 text-center text-muted-foreground border-2 border-dashed border-muted/20 rounded-2xl bg-muted/5">
+                                    <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Search className="opacity-50" size={32} />
+                                    </div>
+                                    <p className="font-bold">No missions yet!</p>
+                                    <p className="text-xs">Your photo scan history will appear here.</p>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
                 </div>
             ) : (
-                <div className="space-y-5 animate-in fade-in duration-500">
+                <div className="space-y-6 animate-in fade-in duration-500">
                     {/* Header bar */}
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 bg-card border border-border rounded-lg">
-                        <div className="flex items-center gap-3 overflow-hidden">
-                            <div className="p-3 bg-primary/10 rounded-lg text-primary flex-shrink-0">
-                                <ImageIcon size={24} />
+                    <motion.div 
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 bg-card/50 backdrop-blur-md border border-primary/10 rounded-3xl shadow-xl shadow-primary/5"
+                    >
+                        <div className="flex items-center gap-4 overflow-hidden">
+                            <div className="p-4 bg-primary rounded-2xl text-primary-foreground shadow-lg shadow-primary/20 rotate-2">
+                                <ImageIcon size={32} />
                             </div>
                             <div className="overflow-hidden">
-                                <h2 className="text-lg font-semibold truncate" title={metadata.fileName}>{metadata.fileName}</h2>
-                                <p className="text-sm text-muted-foreground">
-                                    {metadata.dimensions} • {metadata.fileSize} • {metadata.fileProperties.megapixels} MP
+                                <h2 className="text-2xl font-black truncate max-w-[200px] md:max-w-md" title={metadata.fileName}>{metadata.fileName}</h2>
+                                <p className="text-sm font-bold text-primary/60">
+                                    {metadata.dimensions} • {metadata.fileProperties.megapixels} Megapixels
                                 </p>
                             </div>
                         </div>
                         <div className="flex gap-3 flex-shrink-0 w-full md:w-auto">
                             {!isCleaned ? (
-                                <button
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
                                     onClick={handleClean}
                                     disabled={isProcessing || !metadata.hasExif}
-                                    className="flex-1 md:flex-none justify-center flex items-center gap-2 px-5 py-2.5 bg-destructive text-destructive-foreground font-medium rounded-md hover:bg-destructive/90 transition-colors disabled:opacity-50"
+                                    className="flex-1 md:flex-none justify-center flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-black rounded-2xl hover:shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50 shadow-lg shadow-primary/10"
                                 >
                                     {isProcessing ? (
-                                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                                        <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
                                     ) : (
-                                        <Eraser size={18} />
+                                        <Sparkles size={20} />
                                     )}
-                                    Strip Metadata
-                                </button>
+                                    Magic Eraser
+                                </motion.button>
                             ) : (
-                                <button
-                                    className="flex-1 md:flex-none justify-center flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white font-medium rounded-md"
-                                    disabled
+                                <div
+                                    className="flex-1 md:flex-none justify-center flex items-center gap-2 px-8 py-3.5 bg-emerald-500 text-white font-black rounded-2xl shadow-lg shadow-emerald-500/20"
                                 >
-                                    <CheckCircle size={18} />
-                                    Cleaned
-                                </button>
+                                    <CheckCircle size={20} />
+                                    Photo Safe!
+                                </div>
                             )}
                             <button
                                 onClick={resetState}
-                                className="flex-1 md:flex-none justify-center px-5 py-2.5 border border-border bg-background hover:bg-accent font-medium rounded-md transition-colors"
+                                className="flex-1 md:flex-none justify-center px-6 py-3.5 border-2 border-border bg-background hover:bg-accent font-bold rounded-2xl transition-all"
                             >
                                 Start Over
                             </button>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {successMessage && (
-                        <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
-                            <CheckCircle size={20} />
-                            <p className="font-medium">{successMessage}</p>
-                        </div>
+                        <motion.div 
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-3xl flex items-center gap-4 text-emerald-600 dark:text-emerald-400"
+                        >
+                            <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                                <Sparkles size={24} />
+                            </div>
+                            <div>
+                                <p className="text-xl font-black">Success!</p>
+                                <p className="font-medium opacity-80">{successMessage}</p>
+                            </div>
+                        </motion.div>
                     )}
 
                     {/* ========== ALWAYS-VISIBLE FILE INFO ========== */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* File Properties */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                                    <FileText size={16} className="text-primary" />
-                                    File Information
+                        <Card className="border-none shadow-md shadow-primary/5 bg-card/40 backdrop-blur-sm">
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-base font-black flex items-center gap-2">
+                                    <FileText size={18} className="text-primary" />
+                                    File Info
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div>
-                                    <MetadataRow label="File Name" value={metadata.fileName} />
-                                    <MetadataRow label="File Type" value={metadata.fileProperties.fileType} />
-                                    <MetadataRow label="Extension" value={metadata.fileProperties.fileTypeExtension} />
-                                    <MetadataRow label="MIME Type" value={metadata.fileProperties.mimeType} />
-                                    <MetadataRow label="File Size" value={metadata.fileProperties.fileSizeDisplay} isLast />
+                                <div className="space-y-1">
+                                    <MetadataRow label="Type" value={metadata.fileProperties.fileType} />
+                                    <MetadataRow label="Format" value={metadata.fileProperties.fileTypeExtension} />
+                                    <MetadataRow label="Size" value={metadata.fileProperties.fileSizeDisplay} isLast highlight />
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* Image Details */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                                    <Ruler size={16} className="text-primary" />
-                                    Image Details
+                        <Card className="border-none shadow-md shadow-primary/5 bg-card/40 backdrop-blur-sm">
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-base font-black flex items-center gap-2">
+                                    <Ruler size={18} className="text-primary" />
+                                    Photo Shape
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div>
-                                    <MetadataRow label="Image Width" value={metadata.fileProperties.imageWidth} />
-                                    <MetadataRow label="Image Height" value={metadata.fileProperties.imageHeight} />
-                                    <MetadataRow label="Image Size" value={metadata.fileProperties.imageSize} />
-                                    <MetadataRow label="Megapixels" value={metadata.fileProperties.megapixels} />
-                                    <MetadataRow label="Color Type" value={metadata.fileProperties.colorType} />
-                                    <MetadataRow label="Bit Depth" value={metadata.fileProperties.bitDepth} isLast />
+                                <div className="space-y-1">
+                                    <MetadataRow label="Width" value={metadata.fileProperties.imageWidth} />
+                                    <MetadataRow label="Height" value={metadata.fileProperties.imageHeight} />
+                                    <MetadataRow label="Quality" value={`${metadata.fileProperties.megapixels} MP`} isLast highlight />
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* System Timestamps */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                                    <Clock size={16} className="text-primary" />
-                                    System Timestamps
+                        <Card className="border-none shadow-md shadow-primary/5 bg-card/40 backdrop-blur-sm">
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-base font-black flex items-center gap-2">
+                                    <Clock size={18} className="text-primary" />
+                                    System Times
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div>
+                                <div className="space-y-1">
                                     <MetadataRow label="Created" value={metadata.datetime.created} />
-                                    <MetadataRow label="Modified" value={metadata.datetime.modified} />
-                                    <MetadataRow label="Accessed" value={metadata.datetime.accessed} isLast />
+                                    <MetadataRow label="Modified" value={metadata.datetime.modified} isLast highlight />
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
 
                     {/* ========== EXIF STATUS ========== */}
-                    {!metadata.hasExif && !isCleaned && (
-                        <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
-                            <CheckCircle size={20} />
-                            <div>
-                                <p className="font-medium">No sensitive EXIF metadata was found in this image.</p>
-                                <p className="text-sm opacity-80 mt-0.5">The file properties above are standard and cannot be stripped.</p>
-                            </div>
-                        </div>
-                    )}
+                    <AnimatePresence>
+                        {!metadata.hasExif && !isCleaned && (
+                            <motion.div 
+                                initial={{ y: 10, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-3xl flex items-center gap-4 text-emerald-600 dark:text-emerald-400 shadow-sm"
+                            >
+                                <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                                    <ShieldCheck size={24} />
+                                </div>
+                                <div>
+                                    <p className="text-lg font-black tracking-tight">Super Clean!</p>
+                                    <p className="text-sm font-medium opacity-80">Detective found no secret info in this photo. It's safe to share!</p>
+                                </div>
+                            </motion.div>
+                        )}
 
-                    {metadata.hasExif && !isCleaned && (
-                        <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center gap-3 text-amber-600 dark:text-amber-400">
-                            <AlertTriangle size={20} />
-                            <div>
-                                <p className="font-medium">EXIF metadata detected — {metadata.exifFieldCount} fields found</p>
-                                <p className="text-sm opacity-80 mt-0.5">This image contains embedded metadata that may reveal private info. Review below and strip if needed.</p>
-                            </div>
-                        </div>
-                    )}
+                        {metadata.hasExif && !isCleaned && (
+                            <motion.div 
+                                initial={{ y: 10, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="p-5 bg-amber-500/10 border border-amber-500/20 rounded-3xl flex items-center gap-4 text-amber-600 dark:text-amber-400 shadow-sm"
+                            >
+                                <div className="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center">
+                                    <ShieldAlert size={24} />
+                                </div>
+                                <div>
+                                    <p className="text-lg font-black tracking-tight">Secrets Detected!</p>
+                                    <p className="text-sm font-medium opacity-80">We found {metadata.exifFieldCount} hidden bits of info that could reveal your privacy.</p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* ========== EXIF METADATA CARDS ========== */}
                     {metadata.hasExif && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* GPS Location Data — HIGH RISK */}
-                            <Card className={`relative overflow-hidden transition-opacity ${isCleaned ? 'opacity-50' : ''}`}>
-                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/80 backdrop-blur-sm z-10"><span className="font-bold text-lg rotate-12 bg-destructive/20 text-destructive px-4 py-1 border-2 border-destructive rounded-md">CLEARED</span></div>}
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium text-destructive flex items-center gap-2">
-                                        <MapPin size={16} />
-                                        HIGH RISK: GPS Location
+                            <Card className={`relative overflow-hidden transition-all duration-500 border-none shadow-lg ${isCleaned ? 'opacity-40 grayscale-[0.5]' : 'ring-2 ring-destructive/20 bg-destructive/5'}`}>
+                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/40 backdrop-blur-[2px] z-10"><span className="font-black text-2xl rotate-12 bg-emerald-500 text-white px-6 py-2 shadow-xl rounded-2xl">ERASED! ✨</span></div>}
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-base font-black text-destructive flex items-center gap-2">
+                                        <LocateFixed size={20} />
+                                        Hidden Map Info
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="p-3 bg-destructive/5 rounded-lg border border-destructive/10">
-                                        <p className="font-medium mb-2">{metadata.gps.location}</p>
-                                        <div className="space-y-1 text-sm text-muted-foreground font-mono">
-                                            <p>Lat: {metadata.gps.latitude || 'N/A'}</p>
-                                            <p>Lon: {metadata.gps.longitude || 'N/A'}</p>
+                                    <div className="p-4 bg-background/50 rounded-2xl border border-destructive/10 shadow-inner">
+                                        <p className="font-bold text-sm mb-3 text-destructive/80">{metadata.gps.location || 'Location Found'}</p>
+                                        <div className="space-y-1.5 text-xs text-muted-foreground font-mono bg-destructive/5 p-2 rounded-lg">
+                                            <p>Latitude: {metadata.gps.latitude || 'Secret'}</p>
+                                            <p>Longitude: {metadata.gps.longitude || 'Secret'}</p>
                                         </div>
-                                        {metadata.gps.googleMapsUrl && (
+                                        {metadata.gps.googleMapsUrl && !isCleaned && (
                                             <button
                                                 onClick={() => openUrl(metadata.gps.googleMapsUrl)}
-                                                className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 bg-destructive/10 hover:bg-destructive/20 text-destructive font-medium text-sm rounded-md transition-colors border border-destructive/20"
+                                                className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-destructive text-destructive-foreground font-bold text-sm rounded-xl transition-all shadow-md shadow-destructive/20 hover:shadow-destructive/40 active:scale-95"
                                             >
                                                 <ExternalLink size={14} />
-                                                View on Google Maps
+                                                See on Map
                                             </button>
                                         )}
                                     </div>
+                                    {!isCleaned && (
+                                        <PrivacyTip title="Why this is a secret?">
+                                            This shows exactly where you took the photo. If you're at home, others might find out where you live!
+                                        </PrivacyTip>
+                                    )}
                                 </CardContent>
                             </Card>
 
                             {/* Device Info — MEDIUM RISK */}
-                            <Card className={`relative overflow-hidden transition-opacity ${isCleaned ? 'opacity-50' : ''}`}>
-                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/80 backdrop-blur-sm z-10"><span className="font-bold text-lg rotate-12 bg-destructive/20 text-destructive px-4 py-1 border-2 border-destructive rounded-md">CLEARED</span></div>}
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium text-amber-500 flex items-center gap-2">
-                                        <Smartphone size={16} />
-                                        MEDIUM RISK: Device Info
+                            <Card className={`relative overflow-hidden transition-all duration-500 border-none shadow-lg ${isCleaned ? 'opacity-40 grayscale-[0.5]' : 'ring-2 ring-amber-500/20 bg-amber-500/5'}`}>
+                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/40 backdrop-blur-[2px] z-10"><span className="font-black text-2xl rotate-12 bg-emerald-500 text-white px-6 py-2 shadow-xl rounded-2xl">ERASED! ✨</span></div>}
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-base font-black text-amber-600 flex items-center gap-2">
+                                        <SmartphoneCharging size={20} />
+                                        Camera Identity
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div>
-                                        <MetadataRow label="Make" value={metadata.camera.make || 'N/A'} />
-                                        <MetadataRow label="Model" value={metadata.camera.model || 'N/A'} />
-                                        <MetadataRow label="Software" value={metadata.camera.software || 'N/A'} isLast />
+                                    <div className="bg-background/50 rounded-2xl p-2 border border-amber-500/10 shadow-inner">
+                                        <MetadataRow label="Brand" value={metadata.camera.make || 'Secret'} />
+                                        <MetadataRow label="Model" value={metadata.camera.model || 'Secret'} />
+                                        <MetadataRow label="App Used" value={metadata.camera.software || 'Secret'} isLast />
                                     </div>
+                                    {!isCleaned && (
+                                        <PrivacyTip title="Did you know?" icon={Smartphone}>
+                                            This info tells people what kind of phone or camera you use.
+                                        </PrivacyTip>
+                                    )}
                                 </CardContent>
                             </Card>
 
                             {/* EXIF Timestamps */}
-                            <Card className={`relative overflow-hidden transition-opacity ${isCleaned ? 'opacity-50' : ''}`}>
-                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/80 backdrop-blur-sm z-10"><span className="font-bold text-lg rotate-12 bg-destructive/20 text-destructive px-4 py-1 border-2 border-destructive rounded-md">CLEARED</span></div>}
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                        <Calendar size={16} />
-                                        EXIF Timestamps
+                            <Card className={`relative overflow-hidden transition-all duration-500 border-none shadow-lg ${isCleaned ? 'opacity-40' : 'bg-card/40'}`}>
+                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/40 backdrop-blur-[2px] z-10"><span className="font-black text-2xl rotate-12 bg-emerald-500 text-white px-6 py-2 shadow-xl rounded-2xl">ERASED! ✨</span></div>}
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-base font-black text-primary/80 flex items-center gap-2">
+                                        <Calendar size={20} />
+                                        Time Record
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div>
-                                        <MetadataRow label="Original" value={metadata.datetime.original || 'N/A'} />
-                                        <MetadataRow label="Digitized" value={metadata.datetime.digitized || 'N/A'} isLast />
+                                    <div className="bg-background/30 rounded-2xl p-2 border border-primary/5">
+                                        <MetadataRow label="Taken on" value={metadata.datetime.original || 'Secret'} />
+                                        <MetadataRow label="Saved on" value={metadata.datetime.digitized || 'Secret'} isLast />
                                     </div>
+                                    {!isCleaned && (
+                                        <PrivacyTip title="Time Travel" icon={Clock}>
+                                            This shows the exact second you clicked the photo!
+                                        </PrivacyTip>
+                                    )}
                                 </CardContent>
                             </Card>
 
                             {/* Camera Settings */}
-                            <Card className={`relative overflow-hidden transition-opacity ${isCleaned ? 'opacity-50' : ''}`}>
-                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/80 backdrop-blur-sm z-10"><span className="font-bold text-lg rotate-12 bg-destructive/20 text-destructive px-4 py-1 border-2 border-destructive rounded-md">CLEARED</span></div>}
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                        <Camera size={16} />
-                                        Camera Settings
+                            <Card className={`relative overflow-hidden transition-all duration-500 border-none shadow-lg ${isCleaned ? 'opacity-40' : 'bg-card/40'}`}>
+                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/40 backdrop-blur-[2px] z-10"><span className="font-black text-2xl rotate-12 bg-emerald-500 text-white px-6 py-2 shadow-xl rounded-2xl">ERASED! ✨</span></div>}
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-base font-black text-primary/80 flex items-center gap-2">
+                                        <Camera size={20} />
+                                        Photo Settings
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div>
-                                        <MetadataRow label="Aperture" value={metadata.settings.aperture || 'N/A'} />
-                                        <MetadataRow label="Exposure" value={metadata.settings.exposure || 'N/A'} />
-                                        <MetadataRow label="ISO" value={metadata.settings.iso || 'N/A'} />
-                                        <MetadataRow label="Focal Length" value={metadata.settings.focalLength || 'N/A'} isLast />
+                                    <div className="bg-background/30 rounded-2xl p-2 border border-primary/5">
+                                        <MetadataRow label="Eye (Aperture)" value={metadata.settings.aperture || 'Secret'} />
+                                        <MetadataRow label="ISO (Light)" value={metadata.settings.iso || 'Secret'} />
+                                        <MetadataRow label="Focus" value={metadata.settings.focalLength || 'Secret'} isLast />
                                     </div>
+                                    {!isCleaned && (
+                                        <PrivacyTip title="Tech Talk" icon={Zap}>
+                                            These are technical settings your camera used to make the photo look good.
+                                        </PrivacyTip>
+                                    )}
                                 </CardContent>
                             </Card>
 
-                            {/* Additional Technical Info */}
-                            <Card className={`md:col-span-2 relative overflow-hidden transition-opacity ${isCleaned ? 'opacity-50' : ''}`}>
-                                {isCleaned && <div className="absolute inset-0 flex items-center justify-center bg-card/80 backdrop-blur-sm z-10"><span className="font-bold text-lg rotate-12 bg-destructive/20 text-destructive px-4 py-1 border-2 border-destructive rounded-md">CLEARED</span></div>}
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                        <Info size={16} />
-                                        Additional EXIF Data
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                                        <div>
-                                            <MetadataRow label="Flash" value={metadata.settings.flash || 'N/A'} />
-                                            <MetadataRow label="White Balance" value={metadata.settings.whiteBalance || 'N/A'} />
-                                            <MetadataRow label="Orientation" value={metadata.settings.orientation || 'N/A'} isLast />
-                                        </div>
-                                        <div>
-                                            <MetadataRow label="X Resolution" value={metadata.settings.xResolution || 'N/A'} />
-                                            <MetadataRow label="Y Resolution" value={metadata.settings.yResolution || 'N/A'} />
-                                            <MetadataRow label="Resolution Unit" value={metadata.settings.resolutionUnit || 'N/A'} isLast />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            {/* Additional Technical Info Toggle */}
+                            <div className="md:col-span-2">
+                                <button 
+                                    onClick={() => setShowAdvanced(!showAdvanced)}
+                                    className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors mx-auto mb-2 uppercase tracking-widest"
+                                >
+                                    {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                    {showAdvanced ? 'Hide Advanced Tech Info' : 'Show Advanced Tech Info'}
+                                </button>
+                                
+                                <AnimatePresence>
+                                    {showAdvanced && (
+                                        <motion.div
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: 'auto', opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className="overflow-hidden"
+                                        >
+                                            <Card className={`relative overflow-hidden transition-all duration-500 border-none shadow-md ${isCleaned ? 'opacity-40' : 'bg-muted/30'}`}>
+                                                <CardHeader className="pb-3">
+                                                    <CardTitle className="text-sm font-black text-muted-foreground flex items-center gap-2">
+                                                        <Info size={16} />
+                                                        Extra Technical Bits
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                                                        <div>
+                                                            <MetadataRow label="Flash" value={metadata.settings.flash || 'N/A'} />
+                                                            <MetadataRow label="White Balance" value={metadata.settings.whiteBalance || 'N/A'} />
+                                                            <MetadataRow label="Orientation" value={metadata.settings.orientation || 'N/A'} isLast />
+                                                        </div>
+                                                        <div>
+                                                            <MetadataRow label="X Res" value={metadata.settings.xResolution || 'N/A'} />
+                                                            <MetadataRow label="Y Res" value={metadata.settings.yResolution || 'N/A'} />
+                                                            <MetadataRow label="Unit" value={metadata.settings.resolutionUnit || 'N/A'} isLast />
+                                                        </div>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
                     )}
                 </div>
