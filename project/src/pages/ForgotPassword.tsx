@@ -44,13 +44,13 @@ export default function ForgotPassword() {
     } catch (err: any) {
       console.error(err)
       if (err.code === 'auth/user-not-found') {
-        setError('No account found with this email address.')
+        setError('No account found with that email 🤷')
       } else if (err.code === 'auth/invalid-email') {
-        setError('Please enter a valid email address.')
+        setError('Hmm, that does not look like a valid email 🤔')
       } else if (err.code === 'auth/too-many-requests') {
-        setError('Too many attempts. Please try again later.')
+        setError('Whoa, too many tries! Take a break and try again later ⏳')
       } else {
-        setError('Something went wrong. Please try again.')
+        setError('Oops! Something went wrong. Try again! 😅')
       }
     } finally {
       setLoading(false)

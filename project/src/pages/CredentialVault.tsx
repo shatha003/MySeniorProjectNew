@@ -1,52 +1,115 @@
 import { useState, useEffect } from 'react';
-import { Card } from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import PasswordInput from '../components/ui/PasswordInput';
-import { ShieldAlert, Plus, Search, Trash2, Copy, ExternalLink, Lock, Check, ArrowLeft, PenLine, Globe, CreditCard, Eye, EyeOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+    KeyRound,
+    Lock,
+    Plus,
+    Search,
+    Trash2,
+    Copy,
+    Check,
+    ShieldAlert,
+    Globe,
+    ArrowLeft,
+    Star,
+    Eye,
+    EyeOff,
+    CreditCard,
+} from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { addCredential, getUserCredentials, deleteCredential, CredentialItem } from '../services/credentialService';
 import { invoke } from '@tauri-apps/api/core';
 import { hasVaultSetup, verifyMasterPassword } from '../services/vaultService';
 import { useNavigate } from 'react-router-dom';
-import { POPULAR_SERVICES, getServiceById, ServiceInfo } from '../data/serviceIcons';
+import { getServiceById, ServiceInfo, POPULAR_SERVICES } from '../data/serviceIcons';
+import { useTheme } from '@/components/theme-provider';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import PasswordInput from '../components/ui/PasswordInput';
 
-type ModalStep = 'pick-type' | 'pick-service' | 'fill-details' | 'fill-card-details';
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { type: 'spring', stiffness: 280, damping: 22 },
+    },
+};
+
+interface DecryptedCard {
+    cardNumber: string;
+    cardholderName: string;
+    expiry: string;
+    cvv: string;
+}
+
+const CARD_BRANDS = [
+    { name: 'Visa', pattern: /^4/, gradient: 'linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%)', accent: '#4fc3f7', logo: 'VISA', emoji: '💙' },
+    { name: 'Mastercard', pattern: /^5[1-5]/, gradient: 'linear-gradient(135deg, #eb001b 0%, #f79e1b 100%)', accent: '#ff6f00', logo: 'MC', emoji: '🧡' },
+    { name: 'Amex', pattern: /^3[47]/, gradient: 'linear-gradient(135deg, #006fcf 0%, #00aeef 100%)', accent: '#00d4aa', logo: 'AMEX', emoji: '💚' },
+    { name: 'Discover', pattern: /^6(?:011|5)/, gradient: 'linear-gradient(135deg, #ff6000 0%, #ff8c00 100%)', accent: '#ffab40', logo: 'DISC', emoji: '🧡' },
+];
+
+function getCardBrand(number: string) {
+    const clean = number.replace(/\D/g, '');
+    for (const brand of CARD_BRANDS) {
+        if (brand.pattern.test(clean)) return brand;
+    }
+    return { name: 'Card', pattern: /^/, gradient: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)', accent: '#c084fc', logo: 'CARD', emoji: '💜' };
+}
+
+function formatCardNumber(value: string) {
+    const digits = value.replace(/\D/g, '').slice(0, 16);
+    return digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+}
+
+function formatExpiryDate(value: string) {
+    let clean = value.replace(/\D/g, '').slice(0, 4);
+    if (clean.length >= 2) {
+        const mm = parseInt(clean.substring(0, 2));
+        if (mm > 12) clean = '12' + clean.substring(2);
+        if (mm === 0 && clean.length >= 2) clean = '01' + clean.substring(2);
+        return clean.substring(0, 2) + '/' + clean.substring(2);
+    }
+    return clean;
+}
 
 export default function CredentialVault() {
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === 'dark';
+
     const { user, masterPassword, setMasterPassword } = useAuthStore();
     const [search, setSearch] = useState('');
     const [credentials, setCredentials] = useState<CredentialItem[]>([]);
     const [loading, setLoading] = useState(true);
     const trackActivity = useTrackActivity();
+    const navigate = useNavigate();
 
-    // Lock Screen State
     const [unlockPassword, setUnlockPassword] = useState('');
     const [unlockError, setUnlockError] = useState('');
     const [vaultSetup, setVaultSetup] = useState(true);
     const [isVerifying, setIsVerifying] = useState(false);
-    const navigate = useNavigate();
 
-    // Modal State
-    const [activeTab, setActiveTab] = useState<'logins' | 'cards'>('logins');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalStep, setModalStep] = useState<ModalStep>('pick-service');
-    const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+    const [modalStep, setModalStep] = useState<'type' | 'service' | 'form' | 'card-form'>('type');
     const [serviceSearch, setServiceSearch] = useState('');
     const [newCred, setNewCred] = useState({ name: '', username: '', domain: '', password: '' });
     const [newCard, setNewCard] = useState({ name: '', cardNumber: '', cardholderName: '', expiry: '', cvv: '' });
     const [isSaving, setIsSaving] = useState(false);
 
-    // Prompt State
-    const [isPromptOpen, setIsPromptOpen] = useState(false);
-    const [promptPassword, setPromptPassword] = useState('');
-    const [promptError, setPromptError] = useState('');
-    const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
-
-    // Decryption State
     const [decryptedPasswords, setDecryptedPasswords] = useState<Record<string, string>>({});
-    const [decryptedCards, setDecryptedCards] = useState<Record<string, any>>({});
+    const [revealedPasswords, setRevealedPasswords] = useState<Record<string, boolean>>({});
+    const [decryptedCards, setDecryptedCards] = useState<Record<string, DecryptedCard>>({});
+    const [revealedCards, setRevealedCards] = useState<Record<string, boolean>>({});
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -78,7 +141,6 @@ export default function CredentialVault() {
             setUnlockError('Password is too short');
             return;
         }
-
         setIsVerifying(true);
         try {
             const isValid = await verifyMasterPassword(user.uid, unlockPassword);
@@ -87,67 +149,22 @@ export default function CredentialVault() {
                 setUnlockError('');
                 setUnlockPassword('');
             } else {
-                setUnlockError('Incorrect Master Password');
+                setUnlockError('Wrong password! Try again 🔑');
             }
         } catch (error: any) {
             if (error.message === 'vault_not_initialized') {
                 setVaultSetup(false);
             } else {
-                setUnlockError('Verification failed');
+                setUnlockError('Something went wrong');
             }
         } finally {
             setIsVerifying(false);
         }
     };
 
-    const formatCardNumber = (value: string) => {
-        const digits = value.replace(/\D/g, '').slice(0, 16);
-        return digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
-    };
-
-    const formatExpiryDate = (value: string) => {
-        let clean = value.replace(/\D/g, '').slice(0, 4);
-        if (clean.length >= 2) {
-            const mm = parseInt(clean.substring(0, 2));
-            if (mm > 12) clean = '12' + clean.substring(2);
-            if (mm === 0) clean = '01' + clean.substring(2);
-            return clean.substring(0, 2) + '/' + clean.substring(2);
-        }
-        return clean;
-    };
-
-    const formatCVV = (value: string) => {
-        return value.replace(/\D/g, '').slice(0, 4);
-    };
-
-    const getCardBrand = (number: string) => {
-        const clean = number.replace(/\D/g, '');
-        if (clean.startsWith('4')) return 'Visa';
-        if (/^5[1-5]/.test(clean) || /^2[2-7]/.test(clean)) return 'Mastercard';
-        if (/^3[47]/.test(clean)) return 'Amex';
-        if (/^6(?:011|5)/.test(clean)) return 'Discover';
-        return null;
-    };
-
-    const getBrandLogo = (brand: string | null) => {
-        switch (brand) {
-            case 'Visa':
-                return <img src="/Logo-visa-icon.png" alt="Visa" className="h-8 w-auto object-contain drop-shadow-md" />;
-            case 'Mastercard':
-                return <img src="/MasterCard_Logo.png" alt="Mastercard" className="h-12 w-auto object-contain drop-shadow-md" />;
-            case 'Amex':
-                return <img src="/American_Express_logo.png" alt="Amex" className="h-10 w-auto object-contain drop-shadow-md" />;
-            case 'Discover':
-                return <img src="/discover-2-logo-png-transparent.png" alt="Discover" className="h-8 w-auto object-contain drop-shadow-md" />;
-            default:
-                return <CreditCard size={28} className="text-white/80 drop-shadow-md" />;
-        }
-    };
-
     const openModal = () => {
         setIsModalOpen(true);
-        setModalStep('pick-type');
-        setSelectedServiceId(null);
+        setModalStep('type');
         setServiceSearch('');
         setNewCred({ name: '', username: '', domain: '', password: '' });
         setNewCard({ name: '', cardNumber: '', cardholderName: '', expiry: '', cvv: '' });
@@ -155,60 +172,39 @@ export default function CredentialVault() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setModalStep('pick-service');
-        setSelectedServiceId(null);
+        setModalStep('type');
         setServiceSearch('');
         setNewCred({ name: '', username: '', domain: '', password: '' });
         setNewCard({ name: '', cardNumber: '', cardholderName: '', expiry: '', cvv: '' });
     };
 
     const handleSelectService = (service: ServiceInfo) => {
-        setSelectedServiceId(service.id);
-        setNewCred(prev => ({
-            ...prev,
-            name: service.name,
-            domain: service.domain,
-        }));
-        setModalStep('fill-details');
-    };
-
-    const handleSelectCustom = () => {
-        setSelectedServiceId('custom');
-        setNewCred({ name: '', username: '', domain: '', password: '' });
-        setModalStep('fill-details');
+        setNewCred({ name: service.name, username: '', domain: service.domain, password: '' });
+        setModalStep('form');
     };
 
     const handleSaveCredential = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !masterPassword) return;
-
         try {
             setIsSaving(true);
-
-            // Encrypt the password using Rust backend
             const encryptedData = await invoke<string>('encrypt_text', {
                 plaintext: newCred.password,
                 password: masterPassword,
                 algorithm: 'AES-256-GCM'
             });
-
             await addCredential(user.uid, {
                 type: 'login',
                 name: newCred.name,
                 username: newCred.username,
                 domain: newCred.domain,
                 encryptedData,
-                serviceId: selectedServiceId || undefined,
             });
-
-            await trackActivity('create_credential', { name: newCred.name, domain: newCred.domain });
-
+            await trackActivity('create_credential', { name: newCred.name });
             closeModal();
-            loadCredentials(); // Refresh list
-
+            loadCredentials();
         } catch (error: any) {
             console.error('Failed to save credential:', error);
-            alert(`Failed to save credential: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -217,37 +213,32 @@ export default function CredentialVault() {
     const handleSaveCard = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !masterPassword) return;
-
         try {
             setIsSaving(true);
-            const cardDataJson = JSON.stringify({
-                cardNumber: newCard.cardNumber,
+            const cardData = JSON.stringify({
+                cardNumber: newCard.cardNumber.replace(/\s/g, ''),
+                cardholderName: newCard.cardholderName,
                 expiry: newCard.expiry,
                 cvv: newCard.cvv,
-                cardholderName: newCard.cardholderName
             });
-
             const encryptedData = await invoke<string>('encrypt_text', {
-                plaintext: cardDataJson,
+                plaintext: cardData,
                 password: masterPassword,
                 algorithm: 'AES-256-GCM'
             });
-
+            const brand = getCardBrand(newCard.cardNumber);
             await addCredential(user.uid, {
                 type: 'card',
-                name: newCard.name,
+                name: newCard.name || `${brand.name} Card`,
                 username: newCard.cardholderName,
-                domain: 'Credit Card',
+                domain: brand.name,
                 encryptedData,
             });
-
-            await trackActivity('create_credential', { name: newCard.name, domain: 'Credit Card' });
-
+            await trackActivity('create_credential', { name: newCard.name, type: 'card' });
             closeModal();
             loadCredentials();
         } catch (error: any) {
             console.error('Failed to save card:', error);
-            alert(`Failed to save card: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -255,790 +246,931 @@ export default function CredentialVault() {
 
     const handleDelete = async (id: string) => {
         if (!user || !id) return;
-        if (confirm('Are you sure you want to delete this credential?')) {
-            try {
-                await deleteCredential(user.uid, id);
-                setCredentials(credentials.filter(c => c.id !== id));
-            } catch (error) {
-                console.error('Failed to delete credential:', error);
-            }
+        try {
+            await deleteCredential(user.uid, id);
+            setCredentials(credentials.filter(c => c.id !== id));
+        } catch (error) {
+            console.error('Failed to delete credential:', error);
         }
     };
 
-    const handleCopyPassword = async (item: CredentialItem, type: 'username' | 'password') => {
+    const handleCopy = async (item: CredentialItem, type: 'username' | 'password') => {
+        if (!user || !masterPassword) return;
         if (type === 'username') {
             navigator.clipboard.writeText(item.username);
             setCopiedId(`${item.id}-user`);
             setTimeout(() => setCopiedId(null), 2000);
             return;
         }
-
-        if (!masterPassword || !item.id) return;
-
-        const executeCopy = async () => {
-            try {
-                let plainText = decryptedPasswords[item.id!];
-
-                if (!plainText) {
-                    plainText = await invoke<string>('decrypt_text', {
-                        encoded: item.encryptedData,
-                        password: masterPassword
-                    });
-                    setDecryptedPasswords(prev => ({ ...prev, [item.id!]: plainText }));
-                }
-
-                await navigator.clipboard.writeText(plainText);
-                setCopiedId(`${item.id}-pass`);
-                setTimeout(() => setCopiedId(null), 2000);
-            } catch (error) {
-                console.error('Decryption failed:', error);
-                alert('Failed to decrypt. Incorrect Master Password?');
-            }
-        };
-
-        setPendingAction(() => executeCopy);
-        setIsPromptOpen(true);
-    };
-
-    const filteredCredentials = credentials.filter(c =>
-        c.type !== 'card' &&
-        (c.name.toLowerCase().includes(search.toLowerCase()) ||
-            c.domain.toLowerCase().includes(search.toLowerCase()))
-    );
-
-    const filteredCards = credentials.filter(c =>
-        c.type === 'card' &&
-        (c.name.toLowerCase().includes(search.toLowerCase()) ||
-            c.username.toLowerCase().includes(search.toLowerCase()))
-    );
-
-    const handleDecryptCard = async (item: CredentialItem) => {
-        if (!masterPassword || !item.id) return;
-        if (decryptedCards[item.id]) {
-            // Toggle off
-            setDecryptedCards(prev => {
-                const next = { ...prev };
-                delete next[item.id!];
-                return next;
-            });
-            return;
-        }
-
-        const executeDecrypt = async () => {
-            try {
-                const plainText = await invoke<string>('decrypt_text', {
+        try {
+            let plainText = decryptedPasswords[item.id!];
+            if (!plainText) {
+                plainText = await invoke<string>('decrypt_text', {
                     encoded: item.encryptedData,
                     password: masterPassword
                 });
-                const data = JSON.parse(plainText);
-                setDecryptedCards(prev => ({ ...prev, [item.id!]: data }));
-            } catch (error) {
-                console.error('Decryption failed:', error);
-                alert('Failed to decrypt card details. Incorrect Master Password?');
+                setDecryptedPasswords(prev => ({ ...prev, [item.id!]: plainText }));
             }
-        };
-
-        setPendingAction(() => executeDecrypt);
-        setIsPromptOpen(true);
+            await navigator.clipboard.writeText(plainText);
+            setCopiedId(`${item.id}-pass`);
+            setTimeout(() => setCopiedId(null), 2000);
+        } catch (error) {
+            console.error('Decryption failed:', error);
+        }
     };
 
-    const handleCopyText = (text: string, id: string) => {
+    const toggleReveal = async (item: CredentialItem) => {
+        if (!user || !masterPassword || !item.id) return;
+        const id = item.id;
+        if (revealedPasswords[id]) {
+            setRevealedPasswords(prev => ({ ...prev, [id]: false }));
+            return;
+        }
+        try {
+            let plainText = decryptedPasswords[id];
+            if (!plainText) {
+                plainText = await invoke<string>('decrypt_text', {
+                    encoded: item.encryptedData,
+                    password: masterPassword
+                });
+                setDecryptedPasswords(prev => ({ ...prev, [id]: plainText }));
+            }
+            setRevealedPasswords(prev => ({ ...prev, [id]: true }));
+        } catch (error) {
+            console.error('Decryption failed:', error);
+        }
+    };
+
+    const toggleRevealCard = async (item: CredentialItem) => {
+        if (!user || !masterPassword || !item.id) return;
+        const id = item.id;
+        if (revealedCards[id]) {
+            setRevealedCards(prev => ({ ...prev, [id]: false }));
+            return;
+        }
+        try {
+            let plainText = decryptedCards[id];
+            if (!plainText) {
+                const decrypted = await invoke<string>('decrypt_text', {
+                    encoded: item.encryptedData,
+                    password: masterPassword
+                });
+                plainText = JSON.parse(decrypted);
+                setDecryptedCards(prev => ({ ...prev, [id]: plainText }));
+            }
+            setRevealedCards(prev => ({ ...prev, [id]: true }));
+        } catch (error) {
+            console.error('Card decryption failed:', error);
+        }
+    };
+
+    const handleCopyCardField = (text: string, fieldId: string) => {
         navigator.clipboard.writeText(text);
-        setCopiedId(id);
+        setCopiedId(fieldId);
         setTimeout(() => setCopiedId(null), 2000);
     };
+
+    const logins = credentials.filter(c => c.type !== 'card');
+    const cards = credentials.filter(c => c.type === 'card');
+
+    const filteredLogins = logins.filter(c =>
+        c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.domain.toLowerCase().includes(search.toLowerCase()) ||
+        c.username.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const filteredCards = cards.filter(c =>
+        c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.domain.toLowerCase().includes(search.toLowerCase()) ||
+        c.username.toLowerCase().includes(search.toLowerCase())
+    );
 
     const filteredServices = POPULAR_SERVICES.filter(s =>
         s.name.toLowerCase().includes(serviceSearch.toLowerCase()) ||
         s.domain.toLowerCase().includes(serviceSearch.toLowerCase())
     );
 
-    // Render Service Icon for credential cards
-    const renderCredentialIcon = (item: CredentialItem) => {
-        const serviceId = (item as any).serviceId;
-        const service = serviceId ? getServiceById(serviceId) : null;
+    const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900';
+    const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500';
+    const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
+    const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
-        if (service) {
-            return (
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center select-none overflow-hidden">
-                    <div className="w-8 h-8">{service.icon}</div>
-                </div>
-            );
-        }
-
-        // Fallback: letter avatar
-        return (
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-lg select-none">
-                {item.name.charAt(0).toUpperCase()}
-            </div>
-        );
-    };
-
-    // Lock Screen View
     if (!masterPassword) {
         return (
-            <div className="flex items-center justify-center h-full animate-in fade-in duration-500">
-                <Card className="w-full max-w-md p-8 flex flex-col items-center text-center space-y-6">
-                    {!vaultSetup ? (
-                        <>
-                            <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mb-2">
-                                <ShieldAlert size={32} />
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold tracking-tight">Setup Required</h2>
-                                <p className="text-muted-foreground mt-2">
-                                    You need to setup a Master Password in the Settings page to use the Vault.
-                                </p>
-                            </div>
-                            <Button onClick={() => navigate('/dashboard/settings')} className="w-full">
-                                Go to Settings
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
-                                <Lock size={32} />
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold tracking-tight">Vault Locked</h2>
-                                <p className="text-muted-foreground mt-2">
-                                    Enter your Master Password to unlock your secure credentials.
-                                </p>
-                            </div>
+            <motion.div
+                className="relative min-h-full pb-10"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <div className="fixed inset-0 pointer-events-none z-0">
+                    <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl"
+                        style={{ background: isDark ? 'radial-gradient(circle, rgba(255,10,84,0.06), transparent 70%)' : 'radial-gradient(circle, rgba(77,0,255,0.04), transparent 70%)' }} />
+                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl"
+                        style={{ background: isDark ? 'radial-gradient(circle, rgba(138,180,248,0.04), transparent 70%)' : 'radial-gradient(circle, rgba(255,10,84,0.03), transparent 70%)' }} />
+                </div>
 
-                            <form onSubmit={handleUnlock} className="w-full space-y-4">
-                                <div className="space-y-1">
-                                    <PasswordInput
-                                        label="Master Password"
-                                        placeholder="..."
-                                        value={unlockPassword}
-                                        onChange={(e: any) => setUnlockPassword(e.target.value)}
-                                        required
-                                    />
-                                    {unlockError && <p className="text-sm text-destructive text-left">{unlockError}</p>}
+                <div className="relative z-10 flex items-center justify-center min-h-[80vh] px-4">
+                    <motion.div variants={itemVariants} className="w-full max-w-md">
+                        {!vaultSetup ? (
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 md:p-10 shadow-2xl text-center space-y-8 relative overflow-hidden`}>
+                                <div className="absolute -top-16 -right-16 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl" />
+                                <div className="relative z-10">
+                                    <motion.div
+                                        className="w-28 h-28 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto shadow-xl shadow-amber-500/20"
+                                        animate={{ rotate: [0, -5, 5, -5, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                                    >
+                                        <ShieldAlert className="text-white" size={52} />
+                                    </motion.div>
+                                    <div className="space-y-3 mt-8">
+                                        <h2 className={`text-3xl font-black ${headingColor}`}>Almost There! 🎉</h2>
+                                        <p className={`text-lg font-medium ${mutedText}`}>
+                                            Set up a Master Password in Settings first to use the Vault.
+                                        </p>
+                                    </div>
+                                    <Button onClick={() => navigate('/dashboard/settings')} className="w-full py-5 rounded-2xl font-display text-lg font-black shadow-xl mt-6 bg-gradient-to-r from-amber-400 to-orange-500 hover:scale-105 transition-transform">
+                                        GO TO SETTINGS 🚀
+                                    </Button>
                                 </div>
-                                <Button type="submit" className="w-full" disabled={isVerifying}>
-                                    {isVerifying ? 'Verifying...' : 'Unlock Vault'}
-                                </Button>
-                            </form>
-                        </>
-                    )}
-                </Card>
-            </div>
+                            </div>
+                        ) : (
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 md:p-10 shadow-2xl text-center space-y-8 relative overflow-hidden`}>
+                                <div className="absolute -top-16 -right-16 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+                                <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+
+                                <div className="relative z-10">
+                                    <motion.div
+                                        className="w-28 h-28 bg-gradient-to-br from-neon-crimson to-neon-violet rounded-3xl flex items-center justify-center mx-auto shadow-xl shadow-neon-crimson/20 relative"
+                                        animate={{ y: [0, -8, 0] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <Lock className="text-white" size={52} />
+                                        <div className="absolute inset-0 bg-white/10 rounded-3xl animate-pulse" />
+                                    </motion.div>
+
+                                    <div className="space-y-3 mt-8">
+                                        <h2 className={`text-3xl font-black ${headingColor}`}>Vault Locked 🔒</h2>
+                                        <p className={`text-lg font-medium ${mutedText}`}>
+                                            Type your Master Password to unlock your secrets! 🤫
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handleUnlock} className="space-y-5 mt-8">
+                                        <PasswordInput
+                                            label=""
+                                            placeholder="Your Master Password..."
+                                            value={unlockPassword}
+                                            onChange={(e: any) => { setUnlockPassword(e.target.value); setUnlockError(''); }}
+                                            required
+                                        />
+                                        <AnimatePresence>
+                                            {unlockError && (
+                                                <motion.div
+                                                    className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold"
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                >
+                                                    <span>😟</span>
+                                                    <span>{unlockError}</span>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+
+                                        <motion.button
+                                            type="submit"
+                                            disabled={isVerifying || unlockPassword.length < 4}
+                                            className={`w-full flex justify-center items-center gap-3 py-5 rounded-2xl font-display text-lg font-black transition-all shadow-xl disabled:opacity-40 disabled:cursor-not-allowed ${isDark
+                                                    ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white'
+                                                    : 'bg-gradient-to-r from-primary to-violet-600 text-white'
+                                                }`}
+                                            whileHover={!isVerifying && unlockPassword.length >= 4 ? { y: -4, scale: 1.02 } : {}}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            {isVerifying ? (
+                                                <>
+                                                    <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white" />
+                                                    Checking...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Lock size={22} />
+                                                    UNLOCK! 🔓
+                                                </>
+                                            )}
+                                        </motion.button>
+                                    </form>
+
+                                    <div className={`mt-8 p-4 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+                                        <p className={`text-sm font-medium ${mutedText}`}>
+                                            <span className="text-lg">💡</span> <strong className={headingColor}>Tip:</strong> Your Master Password is the key to all your secrets. Keep it safe!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </motion.div>
+                </div>
+            </motion.div>
         );
     }
 
-    // Main Vault View
     return (
-        <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-6xl mx-auto h-full flex flex-col">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-3xl font-bold tracking-tight">Credential Vault</h1>
-                    <p className="text-muted-foreground">
-                        Securely store and manage your login information offline.
-                    </p>
-                </div>
-                <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setMasterPassword(null)}>
-                        <Lock size={16} className="mr-2" />
-                        Lock
-                    </Button>
-                    <Button onClick={openModal} className="shadow-md">
-                        <Plus size={18} className="mr-2" />
-                        {activeTab === 'cards' ? 'New Card' : 'New Login'}
-                    </Button>
-                </div>
+        <motion.div
+            className="relative min-h-full pb-10"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl"
+                    style={{ background: isDark ? 'radial-gradient(circle, rgba(255,10,84,0.06), transparent 70%)' : 'radial-gradient(circle, rgba(77,0,255,0.04), transparent 70%)' }} />
             </div>
 
-            {/* Custom Tabs */}
-            <div className="flex gap-2 p-1 bg-card rounded-lg border border-border w-max">
-                <button
-                    onClick={() => setActiveTab('logins')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'logins'
-                        ? 'bg-primary text-primary-foreground shadow-sm'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                        }`}
-                >
-                    Logins
-                </button>
-                <button
-                    onClick={() => setActiveTab('cards')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'cards'
-                        ? 'bg-primary text-primary-foreground shadow-sm'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                        }`}
-                >
-                    Payment Cards
-                </button>
-            </div>
+            <div className="relative z-10 space-y-8 max-w-6xl mx-auto">
+                <motion.div variants={itemVariants} className="relative">
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 md:p-10 shadow-xl overflow-hidden relative`}>
+                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
 
-            <Card className="flex-1 flex flex-col overflow-hidden border-border/60 shadow-sm relative">
-                <div className="p-4 border-b border-border bg-card/50 flex flex-col sm:flex-row justify-between gap-4">
-                    <div className="relative max-w-md w-full">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
-                            <Search size={18} />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search vault..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-input rounded-md bg-background focus:ring-primary focus:border-primary transition-colors text-sm"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <ShieldAlert size={16} className="text-amber-500" />
-                        AES-256-GCM Encrypted
-                    </div>
-                </div>
-
-                <div className="flex-1 overflow-auto p-4 bg-muted/10">
-                    {loading ? (
-                        <div className="flex items-center justify-center h-40 text-muted-foreground">Loading credentials...</div>
-                    ) : activeTab === 'logins' ? (
-                        filteredCredentials.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
-                                <ShieldAlert size={48} className="mb-4 opacity-50" />
-                                <p>No logins found. Add one to get started.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                {filteredCredentials.map((item) => (
-                                    <div key={item.id} className="group flex flex-col p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:shadow-md transition-all">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="flex items-center gap-3">
-                                                {renderCredentialIcon(item)}
-                                                <div>
-                                                    <h3 className="font-semibold text-foreground line-clamp-1">{item.name}</h3>
-                                                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                                        {item.domain}
-                                                        <ExternalLink size={10} />
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="relative">
-                                                <button
-                                                    onClick={() => handleDelete(item.id!)}
-                                                    className="p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    title="Delete Credential"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-3 flex-1">
-                                            <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md group/field hover:bg-muted/50 transition-colors">
-                                                <div className="truncate text-sm text-muted-foreground w-[80%]">{item.username}</div>
-                                                <button
-                                                    onClick={() => handleCopyPassword(item, 'username')}
-                                                    className="opacity-0 group-hover/field:opacity-100 hover:text-primary transition-all p-1"
-                                                >
-                                                    {copiedId === `${item.id}-user` ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                                </button>
-                                            </div>
-                                            <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md group/field hover:bg-muted/50 transition-colors">
-                                                <div className="text-sm font-mono text-muted-foreground tracking-widest">
-                                                    {decryptedPasswords[item.id!] ? '••••••••' : '••••••••••••••'}
-                                                </div>
-                                                <button
-                                                    onClick={() => handleCopyPassword(item, 'password')}
-                                                    className="opacity-0 group-hover/field:opacity-100 hover:text-primary transition-all p-1"
-                                                    title="Copy Password"
-                                                >
-                                                    {copiedId === `${item.id}-pass` ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-4 pt-4 border-t border-border flex items-center text-xs text-muted-foreground">
-                                            <span>Added {item.createdAt ? new Date((item.createdAt as any).seconds * 1000).toLocaleDateString() : 'Recently'}</span>
-                                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30`}>
+                                        <KeyRound size={24} />
                                     </div>
-                                ))}
+                                    <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
+                                        My Vault
+                                    </h1>
+                                </div>
+                                <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
+                                    All your passwords and cards in one super safe place! 🔐
+                                </p>
                             </div>
-                        )
-                    ) : (
-                        filteredCards.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
-                                <CreditCard size={48} className="mb-4 opacity-50" />
-                                <p>No payment cards found. Add one to get started.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                {filteredCards.map((item) => {
-                                    const decrypted = decryptedCards[item.id!];
-                                    const isDecrypted = !!decrypted;
 
-                                    // Determine card brand
-                                    let brandName = 'Credit Card';
-                                    if (isDecrypted && decrypted.cardNumber) {
-                                        if (decrypted.cardNumber.startsWith('4')) brandName = 'Visa';
-                                        else if (/^5[1-5]/.test(decrypted.cardNumber)) brandName = 'Mastercard';
-                                        else if (/^3[47]/.test(decrypted.cardNumber)) brandName = 'Amex';
-                                        else if (/^6(?:011|5)/.test(decrypted.cardNumber)) brandName = 'Discover';
-                                    }
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
+                                    <Star size={20} fill="currentColor" className="animate-bounce" />
+                                    <div className="flex flex-col">
+                                        <span className="text-xl font-black leading-none">+10 XP</span>
+                                        <span className="text-[10px] uppercase font-bold tracking-wider">Per Save</span>
+                                    </div>
+                                </div>
+                                <Button variant="outline" onClick={() => setMasterPassword(null)} className="rounded-2xl font-black">
+                                    <Lock size={16} />
+                                    Lock
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-8 shadow-lg relative overflow-hidden`}>
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <div className="relative flex-1">
+                                <div className={`absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none ${mutedText}`}>
+                                    <Search size={22} />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search your vault..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className={`block w-full pl-14 pr-6 py-4 rounded-2xl border-2 bg-transparent text-lg font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
+                                />
+                            </div>
+                            <motion.button
+                                onClick={openModal}
+                                className={`flex justify-center items-center gap-3 px-8 py-4 font-display text-lg font-black rounded-2xl transition-all shadow-xl ${isDark
+                                        ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:scale-105'
+                                        : 'bg-gradient-to-r from-primary to-violet-600 text-white hover:scale-105'
+                                    }`}
+                                whileHover={{ y: -4 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <Plus size={22} />
+                                Add New!
+                            </motion.button>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Cards Section */}
+                {cards.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                        <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                            <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center gap-3 bg-primary/5`}>
+                                <span className="text-3xl">💳</span>
+                                <h2 className={`font-display text-2xl font-black ${headingColor}`}>My Cards</h2>
+                                <span className={`ml-auto px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${isDark ? 'bg-primary/10 text-primary' : 'bg-primary/10 text-primary'}`}>{cards.length} Saved</span>
+                            </div>
+
+                            <div className="p-6 md:p-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {filteredCards.map((item) => {
+                                        const isRevealed = revealedCards[item.id!];
+                                        const cardData = decryptedCards[item.id!];
+                                        const brand = getCardBrand(cardData?.cardNumber || '');
+                                        const isCopied = copiedId === `${item.id}-cardnum`;
+
+                                        return (
+                                            <motion.div
+                                                key={item.id}
+                                                className="relative rounded-3xl overflow-hidden shadow-xl transition-all cursor-default"
+                                                whileHover={{ y: -5, scale: 1.02 }}
+                                                style={{ background: brand.gradient }}
+                                            >
+                                                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-white/10 blur-xl" />
+                                                <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-white/5 blur-xl" />
+
+                                                <div className="relative z-10 p-6 text-white space-y-5">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-sm">
+                                                            <span className="text-sm">{brand.emoji}</span>
+                                                            <span className="text-xs font-black uppercase tracking-wider">{item.name || brand.name}</span>
+                                                        </div>
+                                                        <span className="text-lg font-black italic tracking-wider opacity-70">{brand.logo}</span>
+                                                    </div>
+
+                                                    <div className="w-12 h-9 rounded-md bg-gradient-to-br from-[#e0be70] via-[#cbad60] to-[#b39548] shadow-sm border border-black/20 relative overflow-hidden">
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <div className="w-6 h-full border-x border-black/15 rounded-[2px]" />
+                                                        </div>
+                                                        <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-black/15" />
+                                                    </div>
+
+                                                    <div className="space-y-1">
+                                                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Card Number</p>
+                                                        <p className="font-mono text-xl sm:text-2xl tracking-[0.15em] drop-shadow-md text-white/95">
+                                                            {isRevealed && cardData ?
+                                                                cardData.cardNumber.replace(/(.{4})/g, '$1 ').trim() :
+                                                                '•••• •••• •••• ••••'
+                                                            }
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="flex justify-between items-end">
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Your Name</p>
+                                                            <p className="tracking-wider uppercase font-bold text-white/90 text-sm">
+                                                                {isRevealed && cardData ? cardData.cardholderName : '••••••••'}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex gap-4 text-right">
+                                                            <div className="space-y-1">
+                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Expires</p>
+                                                                <p className="tracking-wider font-mono text-sm font-bold text-white/90">
+                                                                    {isRevealed && cardData ? cardData.expiry : '••/••'}
+                                                                </p>
+                                                            </div>
+                                                            <div className="space-y-1">
+                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Secret</p>
+                                                                <p className="tracking-wider font-mono text-sm font-bold text-white/90">
+                                                                    {isRevealed && cardData ? '•'.repeat(cardData.cvv.length) : '•••'}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2 pt-3 border-t border-white/15">
+                                                        <motion.button
+                                                            onClick={() => toggleRevealCard(item)}
+                                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all ${isRevealed ? 'bg-white/20 text-white' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white'}`}
+                                                            whileHover={{ scale: 1.05 }}
+                                                            whileTap={{ scale: 0.95 }}
+                                                        >
+                                                            {isRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+                                                            {isRevealed ? 'Hide' : 'Show'}
+                                                        </motion.button>
+
+                                                        {isRevealed && cardData && (
+                                                            <motion.button
+                                                                onClick={() => handleCopyCardField(cardData.cardNumber, `${item.id}-cardnum`)}
+                                                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all ${isCopied ? 'bg-emerald-500/30 text-emerald-300' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white'}`}
+                                                                whileHover={{ scale: 1.05 }}
+                                                                whileTap={{ scale: 0.95 }}
+                                                            >
+                                                                {isCopied ? <Check size={14} /> : <Copy size={14} />}
+                                                                {isCopied ? 'Copied!' : 'Copy'}
+                                                            </motion.button>
+                                                        )}
+
+                                                        <motion.button
+                                                            onClick={() => handleDelete(item.id!)}
+                                                            className="flex items-center justify-center p-2.5 rounded-xl bg-red-500/20 text-red-300 hover:bg-red-500/30 hover:text-red-200 transition-all"
+                                                            whileHover={{ scale: 1.05 }}
+                                                            whileTap={{ scale: 0.95 }}
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </motion.button>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Logins Section */}
+                <AnimatePresence mode="wait">
+                    {loading ? (
+                        <motion.div
+                            key="loading"
+                            variants={itemVariants}
+                            className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-16 text-center shadow-lg`}
+                        >
+                            <div className="relative w-24 h-24 mx-auto mb-6">
+                                <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
+                                <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                                <div className="absolute inset-0 flex items-center justify-center text-primary">
+                                    <KeyRound size={32} className="animate-pulse" />
+                                </div>
+                            </div>
+                            <h3 className={`text-2xl font-black ${headingColor}`}>Loading your vault...</h3>
+                        </motion.div>
+                    ) : filteredLogins.length === 0 && filteredCards.length === 0 ? (
+                        <motion.div
+                            key="empty"
+                            variants={itemVariants}
+                            className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}
+                        >
+                            <div className="p-16 text-center">
+                                <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <Globe className="text-primary/20" size={48} />
+                                </div>
+                                <h3 className={`text-2xl font-black ${headingColor}`}>
+                                    {search ? 'No matches found!' : 'Your vault is empty!'}
+                                </h3>
+                                <p className={`text-lg ${mutedText} mt-2`}>
+                                    {search ? 'Try a different search.' : 'Tap "Add New" to save your first password or card.'}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ) : filteredLogins.length > 0 ? (
+                        <motion.div
+                            key="list"
+                            variants={itemVariants}
+                            className="space-y-4"
+                        >
+                            <div className={`p-4 flex items-center gap-3`}>
+                                <KeyRound className="text-primary" size={20} />
+                                <h2 className={`font-display text-xl font-black ${headingColor}`}>Saved Logins</h2>
+                                <span className={`ml-auto text-sm font-bold ${mutedText}`}>{filteredLogins.length} Total</span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {filteredLogins.map((item) => {
+                                    const serviceId = (item as any).serviceId;
+                                    const service = serviceId ? getServiceById(serviceId) : null;
+                                    const isRevealed = revealedPasswords[item.id!];
+                                    const plainText = decryptedPasswords[item.id!];
 
                                     return (
-                                        <div key={item.id} className="relative group w-full aspect-[1.586/1] min-h-[220px] rounded-2xl p-6 text-white shadow-xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/40 border border-white/10"
-                                            style={{
-                                                background: brandName === 'Visa' ? 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)' :
-                                                    brandName === 'Mastercard' ? 'linear-gradient(135deg, #171717 0%, #262626 100%)' :
-                                                        brandName === 'Amex' ? 'linear-gradient(135deg, #475569 0%, #1e293b 100%)' :
-                                                            brandName === 'Discover' ? 'linear-gradient(135deg, #7c2d12 0%, #450a0a 100%)' :
-                                                                'linear-gradient(135deg, #18181b 0%, #09090b 100%)'
-                                            }}>
-
-                                            {/* Glass reflection effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none mix-blend-overlay" />
-                                            {/* Glow blob */}
-                                            <div className="absolute -top-32 -right-32 w-[150%] h-[150%] bg-white/5 blur-3xl rounded-full pointer-events-none" />
-
-                                            <div className="flex justify-between items-start relative z-10 w-full">
-                                                <div className="flex items-center gap-4">
-                                                    {/* Realistic EMV Chip */}
-                                                    <div className="relative w-12 h-9 rounded-md bg-gradient-to-br from-[#e0be70] via-[#cbad60] to-[#b39548] shadow-sm border border-black/20 overflow-hidden flex flex-col justify-between py-1.5 opacity-90">
-                                                        <div className="h-[1px] w-full bg-black/20" />
-                                                        <div className="h-[1px] w-full bg-black/20" />
-                                                        <div className="h-[1px] w-full bg-black/20" />
-                                                        <div className="absolute inset-0 flex items-center justify-center">
-                                                            <div className="w-5 h-full border-x border-black/20 rounded-[2px]" />
+                                        <motion.div
+                                            key={item.id}
+                                            className={`group rounded-3xl border-2 ${borderColor} ${cardBg} p-6 shadow-lg transition-all hover:border-primary/30`}
+                                            whileHover={{ y: -5 }}
+                                            layout
+                                        >
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
+                                                    {service ? (
+                                                        <div className="w-8 h-8">{service.icon}</div>
+                                                    ) : (
+                                                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black text-xl">
+                                                            {item.name.charAt(0).toUpperCase()}
                                                         </div>
-                                                        <div className="absolute right-2 top-0 bottom-0 w-[1px] bg-black/20" />
-                                                    </div>
-
-                                                    {/* Contactless Symbol */}
-                                                    <svg className="w-6 h-6 text-white/60 opacity-80 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <path d="M8.5 21.3c-2.1-3.3-2.1-7.6 0-10.9m4.5 12.8c-3.5-5.1-3.5-11.7 0-16.8m5.1 18.6c-4.8-6.8-4.8-15.6 0-22.4" />
-                                                    </svg>
+                                                    )}
                                                 </div>
 
-                                                <div className="font-bold text-xl italic tracking-wider flex items-center justify-end h-10 w-24 drop-shadow-md">
-                                                    {brandName === 'Credit Card' ? <span className="opacity-80 drop-shadow-md text-right whitespace-nowrap">Credit Card</span> : getBrandLogo(brandName)}
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className={`font-black text-lg truncate ${headingColor}`}>{item.name}</h3>
+                                                    <p className={`text-sm font-medium truncate ${mutedText}`}>{item.username}</p>
+                                                    <p className={`text-xs font-bold mt-1 ${mutedText} opacity-60`}>{item.domain}</p>
                                                 </div>
                                             </div>
 
-                                            {/* delete button */}
-                                            <button
-                                                onClick={() => handleDelete(item.id!)}
-                                                className="absolute bottom-4 right-4 p-2 rounded-full bg-black/40 hover:bg-destructive/90 text-white opacity-0 group-hover:opacity-100 transition-all z-20 backdrop-blur-sm shadow-lg"
-                                                title="Delete Card"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-
-                                            <div className="mt-auto relative z-10 w-full mb-1">
-                                                <div className="flex items-center justify-between mb-4 w-full group/number">
-                                                    <div className="font-mono text-[22px] sm:text-[26px] font-medium tracking-[0.12em] sm:tracking-[0.18em] drop-shadow-md text-white/95 truncate">
-                                                        {isDecrypted && decrypted.cardNumber ?
-                                                            decrypted.cardNumber.replace(/(.{4})/g, '$1 ').trim() :
-                                                            '•••• •••• •••• ••••'
-                                                        }
-                                                    </div>
-                                                    <div className="flex bg-black/20 rounded-lg p-1 backdrop-blur-sm opacity-0 group-hover/number:opacity-100 transition-opacity mr-2 sm:mr-0 shrink-0">
-                                                        <button onClick={() => handleDecryptCard(item)} className="p-1.5 text-white/70 hover:text-white transition-colors rounded-md hover:bg-white/10" title="Toggle Decryption">
-                                                            {isDecrypted ? <EyeOff size={16} /> : <Eye size={16} />}
-                                                        </button>
-                                                        {isDecrypted && decrypted.cardNumber && (
-                                                            <button
-                                                                onClick={() => handleCopyText(decrypted.cardNumber, `${item.id}-card`)}
-                                                                className="p-1.5 text-white/70 hover:text-white transition-colors rounded-md hover:bg-white/10"
-                                                                title="Copy Card Number"
-                                                            >
-                                                                {copiedId === `${item.id}-card` ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
-                                                            </button>
-                                                        )}
-                                                    </div>
+                                            <div className={`mt-5 flex items-center justify-between p-4 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+                                                <div className="flex items-center gap-2 min-w-0 flex-1">
+                                                    <Lock size={14} className={mutedText} />
+                                                    <span className="font-mono text-sm tracking-wider truncate">
+                                                        {isRevealed && plainText ? plainText : '••••••••••••'}
+                                                    </span>
                                                 </div>
-
-                                                <div className="flex justify-between items-end w-full">
-                                                    <div className="flex flex-col w-[55%]">
-                                                        <span className="text-[9px] uppercase tracking-[0.15em] text-white/50 mb-1 font-semibold">Cardholder</span>
-                                                        <span className="tracking-widest uppercase truncate font-medium text-white/90 drop-shadow-sm text-sm sm:text-base">
-                                                            {isDecrypted && decrypted.cardholderName ? decrypted.cardholderName : item.username || '••••••'}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex gap-4 sm:gap-6 w-[45%] justify-end pr-2">
-                                                        <div className="flex flex-col text-right">
-                                                            <span className="text-[9px] uppercase tracking-[0.15em] text-white/50 mb-1 font-semibold">Valid Thru</span>
-                                                            <span className="tracking-wider font-mono text-sm sm:text-[15px] font-medium text-white/90 drop-shadow-sm">
-                                                                {isDecrypted && decrypted.expiry ? decrypted.expiry : '••/••'}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex flex-col text-right">
-                                                            <span className="text-[9px] uppercase tracking-[0.15em] text-white/50 mb-1 font-semibold">CVV</span>
-                                                            <span className="tracking-wider font-mono text-sm sm:text-[15px] font-medium text-white/90 drop-shadow-sm">
-                                                                {isDecrypted && decrypted.cvv ? decrypted.cvv : '•••'}
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                                <div className="flex items-center gap-1 ml-3 shrink-0">
+                                                    <button
+                                                        onClick={() => toggleReveal(item)}
+                                                        className={`p-2 rounded-xl transition-all hover:scale-110 ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-200'} ${mutedText}`}
+                                                    >
+                                                        {isRevealed ? <EyeOff size={16} /> : <Eye size={16} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleCopy(item, 'password')}
+                                                        className={`p-2 rounded-xl transition-all hover:scale-110 ${copiedId === `${item.id}-pass` ? 'text-emerald-500 bg-emerald-500/10' : `${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-200'} ${mutedText}`}`}
+                                                    >
+                                                        {copiedId === `${item.id}-pass` ? <Check size={16} /> : <Copy size={16} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleCopy(item, 'username')}
+                                                        className={`p-2 rounded-xl transition-all hover:scale-110 ${copiedId === `${item.id}-user` ? 'text-emerald-500 bg-emerald-500/10' : `${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-200'} ${mutedText}`}`}
+                                                    >
+                                                        {copiedId === `${item.id}-user` ? <Check size={16} /> : <Copy size={16} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(item.id!)}
+                                                        className="p-2 rounded-xl text-gray-400 hover:bg-rose-500/10 hover:text-rose-500 transition-all hover:scale-110"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
                                                 </div>
                                             </div>
-
-                                            {/* Card Alias Name (top right floating) */}
-                                            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/30 px-4 py-1.5 rounded-full text-[11px] text-white/90 font-medium backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 shadow-sm border border-white/10">
-                                                {item.name}
-                                            </div>
-                                        </div>
+                                        </motion.div>
                                     );
                                 })}
                             </div>
-                        )
-                    )}
-                </div>
+                        </motion.div>
+                    ) : null}
+                </AnimatePresence>
+            </div>
 
-                {/* New Credential Modal Overlay */}
+            {/* Add Credential Modal */}
+            <AnimatePresence>
                 {isModalOpen && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm animate-in fade-in">
-                        <Card className="w-full max-w-lg p-6 shadow-xl border-border mx-4 overflow-hidden">
-
-                            {/* Step 0: Pick Type */}
-                            {modalStep === 'pick-type' && (
-                                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                    <div className="flex items-center justify-between mb-6">
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={closeModal}
+                    >
+                        <motion.div
+                            className={`rounded-3xl border-2 ${borderColor} ${cardBg} w-full max-w-lg mx-4 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto`}
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Step 1: Pick Type */}
+                            {modalStep === 'type' && (
+                                <div className="p-8">
+                                    <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className="text-xl font-bold">What would you like to add?</h2>
-                                            <p className="text-sm text-muted-foreground mt-1">Choose the type of credential to secure.</p>
+                                            <h2 className={`text-2xl font-black ${headingColor}`}>What to add?</h2>
+                                            <p className={`text-sm font-medium ${mutedText} mt-1`}>Pick what you want to save.</p>
                                         </div>
-                                        <button onClick={closeModal} className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors">
+                                        <button onClick={closeModal} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
                                             ✕
                                         </button>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <button
-                                            onClick={() => setModalStep('pick-service')}
-                                            className="flex flex-col items-center gap-4 p-6 rounded-2xl border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                                        <motion.button
+                                            onClick={() => setModalStep('service')}
+                                            className={`flex flex-col items-center gap-4 p-8 rounded-2xl border-2 transition-all ${isDark ? 'border-white/10 hover:border-primary/50 hover:bg-primary/5' : 'border-gray-200 hover:border-primary/50 hover:bg-primary/5'}`}
+                                            whileHover={{ y: -5, scale: 1.02 }}
+                                            whileTap={{ scale: 0.95 }}
                                         >
-                                            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                                <Lock size={32} />
+                                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-crimson to-neon-violet flex items-center justify-center text-white shadow-lg">
+                                                <KeyRound size={32} />
                                             </div>
                                             <div className="text-center">
-                                                <h3 className="font-bold text-lg">Login Account</h3>
-                                                <p className="text-xs text-muted-foreground mt-1 px-4">Websites, apps, and various services</p>
+                                                <h3 className={`font-black text-lg ${headingColor}`}>Login Account</h3>
+                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>Websites, apps, games</p>
                                             </div>
-                                        </button>
+                                        </motion.button>
 
-                                        <button
-                                            onClick={() => {
-                                                setActiveTab('cards');
-                                                setModalStep('fill-card-details');
-                                            }}
-                                            className="flex flex-col items-center gap-4 p-6 rounded-2xl border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                                        <motion.button
+                                            onClick={() => setModalStep('card-form')}
+                                            className={`flex flex-col items-center gap-4 p-8 rounded-2xl border-2 transition-all ${isDark ? 'border-white/10 hover:border-primary/50 hover:bg-primary/5' : 'border-gray-200 hover:border-primary/50 hover:bg-primary/5'}`}
+                                            whileHover={{ y: -5, scale: 1.02 }}
+                                            whileTap={{ scale: 0.95 }}
                                         >
-                                            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
                                                 <CreditCard size={32} />
                                             </div>
                                             <div className="text-center">
-                                                <h3 className="font-bold text-lg">Payment Card</h3>
-                                                <p className="text-xs text-muted-foreground mt-1 px-4">Credit, debit, and prepaid cards</p>
+                                                <h3 className={`font-black text-lg ${headingColor}`}>Bank Card</h3>
+                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>Credit & debit cards</p>
                                             </div>
-                                        </button>
+                                        </motion.button>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Step 1: Pick a Service */}
-                            {modalStep === 'pick-service' && (
-                                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <button
-                                            onClick={() => setModalStep('pick-type')}
-                                            className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
-                                        >
-                                            <ArrowLeft size={18} />
-                                        </button>
-                                        <div>
-                                            <h2 className="text-xl font-bold">Select Service</h2>
-                                            <p className="text-sm text-muted-foreground">Pick a service or create a custom one.</p>
+                            {/* Step 2: Pick Service */}
+                            {modalStep === 'service' && (
+                                <div className="p-6 md:p-8">
+                                    {/* Fun Header */}
+                                    <div className="text-center mb-6">
+                                        <div className="flex items-center justify-center gap-2 mb-2">
+                                            <button onClick={() => setModalStep('type')} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                                <ArrowLeft size={18} />
+                                            </button>
+                                            <span className="text-3xl">🎯</span>
                                         </div>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>Which App?</h2>
+                                        <p className={`text-sm font-medium ${mutedText} mt-1`}>Pick your app or make your own!</p>
                                     </div>
 
-                                    {/* Search Services */}
-                                    <div className="relative mb-4">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
-                                            <Search size={16} />
-                                        </div>
+                                    {/* Search Bar */}
+                                    <div className="relative mb-6">
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">🔍</span>
                                         <input
                                             type="text"
-                                            placeholder="Search services..."
+                                            placeholder="Search apps..."
                                             value={serviceSearch}
                                             onChange={(e) => setServiceSearch(e.target.value)}
-                                            className="block w-full pl-10 pr-3 py-2.5 border border-input rounded-lg bg-background focus:ring-primary focus:border-primary transition-colors text-sm"
+                                            className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                             autoFocus
                                         />
                                     </div>
 
                                     {/* Service Grid */}
-                                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-[320px] overflow-y-auto pr-1 pb-2">
-                                        {/* Custom entry option */}
-                                        <button
-                                            onClick={handleSelectCustom}
-                                            className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-[340px] overflow-y-auto pr-1 pb-2">
+                                        {/* Custom Option - Stands Out */}
+                                        <motion.button
+                                            onClick={() => { setNewCred({ name: '', username: '', domain: '', password: '' }); setModalStep('form'); }}
+                                            className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-dashed transition-all ${isDark ? 'border-primary/30 bg-primary/5 hover:bg-primary/10' : 'border-primary/40 bg-primary/5 hover:bg-primary/10'}`}
+                                            whileHover={{ y: -3, scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
                                         >
-                                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                                                <PenLine size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white shadow-lg">
+                                                <Plus size={24} />
                                             </div>
-                                            <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground truncate w-full text-center transition-colors">
-                                                Custom
-                                            </span>
-                                        </button>
+                                            <span className={`text-[10px] font-black ${isDark ? 'text-primary' : 'text-primary'}`}>My Own</span>
+                                        </motion.button>
 
+                                        {/* Service Icons */}
                                         {filteredServices.map((service) => (
-                                            <button
+                                            <motion.button
                                                 key={service.id}
                                                 onClick={() => handleSelectService(service)}
-                                                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border hover:border-primary/50 hover:bg-primary/5 hover:shadow-sm transition-all group"
+                                                className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all ${isDark ? 'border-white/5 bg-white/5 hover:border-primary/30 hover:bg-primary/5' : 'border-gray-100 bg-gray-50 hover:border-primary/30 hover:bg-primary/5'}`}
+                                                whileHover={{ y: -3, scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                             >
-                                                <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
-                                                    <div className="w-8 h-8 transition-transform group-hover:scale-110">
-                                                        {service.icon}
-                                                    </div>
+                                                <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md bg-white p-1">
+                                                    <div className="w-full h-full">{service.icon}</div>
                                                 </div>
-                                                <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground truncate w-full text-center transition-colors">
-                                                    {service.name}
-                                                </span>
-                                            </button>
+                                                <span className={`text-[10px] font-bold truncate w-full text-center ${headingColor}`}>{service.name}</span>
+                                            </motion.button>
                                         ))}
                                     </div>
 
+                                    {/* No Results */}
                                     {filteredServices.length === 0 && serviceSearch && (
-                                        <div className="text-center py-6 text-muted-foreground">
-                                            <Globe size={32} className="mx-auto mb-2 opacity-50" />
-                                            <p className="text-sm">No services match "{serviceSearch}"</p>
-                                            <button onClick={handleSelectCustom} className="text-sm text-primary hover:underline mt-1">
-                                                Add as custom entry →
+                                        <div className="text-center py-8">
+                                            <span className="text-4xl">🤷</span>
+                                            <p className={`text-sm font-bold mt-3 ${mutedText}`}>
+                                                No apps match "{serviceSearch}"
+                                            </p>
+                                            <button
+                                                onClick={() => { setNewCred({ name: '', username: '', domain: '', password: '' }); setModalStep('form'); }}
+                                                className="text-sm font-black text-primary hover:underline mt-2"
+                                            >
+                                                Add it anyway →
                                             </button>
                                         </div>
                                     )}
                                 </div>
                             )}
 
-                            {/* Step 2: Fill Details */}
-                            {modalStep === 'fill-details' && (
-                                <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <button
-                                            onClick={() => setModalStep('pick-service')}
-                                            className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
-                                        >
-                                            <ArrowLeft size={18} />
-                                        </button>
-                                        {selectedServiceId && selectedServiceId !== 'custom' ? (
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
-                                                    <div className="w-8 h-8">
-                                                        {getServiceById(selectedServiceId)?.icon}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h2 className="text-lg font-bold">{getServiceById(selectedServiceId)?.name}</h2>
-                                                    <p className="text-xs text-muted-foreground">{getServiceById(selectedServiceId)?.domain}</p>
-                                                </div>
-                                            </div>
-                                        ) : (
+                            {/* Step 3: Login Form */}
+                            {modalStep === 'form' && (
+                                <div className="p-8">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <button onClick={() => setModalStep('service')} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                                <ArrowLeft size={18} />
+                                            </button>
                                             <div>
-                                                <h2 className="text-lg font-bold">Custom Service</h2>
-                                                <p className="text-xs text-muted-foreground">Enter service details manually</p>
+                                                <h2 className={`text-xl font-black ${headingColor}`}>
+                                                    {newCred.name || 'Custom Login'}
+                                                </h2>
+                                                <p className={`text-xs font-medium ${mutedText}`}>
+                                                    {newCred.domain || 'Enter your details'}
+                                                </p>
                                             </div>
-                                        )}
+                                        </div>
+                                        <button onClick={closeModal} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                            ✕
+                                        </button>
                                     </div>
 
-                                    <form onSubmit={handleSaveCredential} className="space-y-4">
-                                        {/* Only show name/domain inputs for custom services */}
-                                        {selectedServiceId === 'custom' && (
-                                            <>
-                                                <div className="space-y-2">
-                                                    <Input
-                                                        label="Service Name"
-                                                        placeholder="e.g. My Bank Account"
-                                                        value={newCred.name}
-                                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, name: e.target.value })}
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <Input
-                                                        label="Domain / URL"
-                                                        placeholder="example.com"
-                                                        value={newCred.domain}
-                                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, domain: e.target.value })}
-                                                    />
-                                                </div>
-                                            </>
-                                        )}
-                                        <div className="space-y-2">
-                                            <Input
-                                                label="Username / Email"
-                                                placeholder="user@example.com"
-                                                value={newCred.username}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, username: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <PasswordInput
-                                                label="Password"
-                                                placeholder="Super secret password"
-                                                value={newCred.password}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, password: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
-                                            <Button type="button" variant="outline" onClick={closeModal}>
+                                    <form onSubmit={handleSaveCredential} className="space-y-5">
+                                        <Input
+                                            label="Username or Email"
+                                            placeholder="you@example.com"
+                                            value={newCred.username}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, username: e.target.value })}
+                                            required
+                                        />
+                                        <PasswordInput
+                                            label="Password"
+                                            placeholder="Your secret password"
+                                            value={newCred.password}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, password: e.target.value })}
+                                            required
+                                        />
+                                        <div className="flex gap-3 pt-4">
+                                            <Button type="button" variant="outline" onClick={closeModal} className="flex-1 rounded-2xl font-black">
                                                 Cancel
                                             </Button>
-                                            <Button type="submit" disabled={isSaving}>
-                                                {isSaving ? 'Encrypting...' : 'Save encrypted'}
+                                            <Button type="submit" disabled={isSaving} className="flex-1 rounded-2xl font-black shadow-xl">
+                                                {isSaving ? 'Saving...' : 'Save It! 🔒'}
                                             </Button>
                                         </div>
                                     </form>
                                 </div>
                             )}
 
-                            {/* Step 3: Fill Card Details */}
-                            {modalStep === 'fill-card-details' && (
-                                <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <button
-                                            onClick={() => setModalStep('pick-type')}
-                                            className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
-                                        >
-                                            <ArrowLeft size={18} />
-                                        </button>
+                            {/* Step 4: Card Form - Kid Friendly */}
+                            {modalStep === 'card-form' && (
+                                <div className="p-6 md:p-8">
+                                    <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center bg-primary/10 text-primary">
-                                                <CreditCard size={20} />
-                                            </div>
+                                            <button onClick={() => setModalStep('type')} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                                <ArrowLeft size={18} />
+                                            </button>
                                             <div>
-                                                <h2 className="text-lg font-bold">New Payment Card</h2>
-                                                <p className="text-xs text-muted-foreground">Securely store card details</p>
+                                                <h2 className={`text-xl font-black ${headingColor}`}>Add Your Card 💳</h2>
+                                                <p className={`text-xs font-medium ${mutedText}`}>Your card info is super encrypted! 🔐</p>
                                             </div>
                                         </div>
+                                        <button onClick={closeModal} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                            ✕
+                                        </button>
                                     </div>
+
+                                    {/* Live Card Preview */}
+                                    <motion.div
+                                        className="mb-6 rounded-2xl overflow-hidden shadow-xl relative"
+                                        style={{ background: getCardBrand(newCard.cardNumber).gradient }}
+                                        layout
+                                    >
+                                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-white/10 blur-xl" />
+                                        <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-white/5 blur-xl" />
+
+                                        <div className="relative z-10 p-5 text-white space-y-4">
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-10 h-7 rounded-md bg-gradient-to-br from-[#e0be70] via-[#cbad60] to-[#b39548] shadow-sm border border-black/20 relative overflow-hidden">
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <div className="w-4 h-full border-x border-black/15 rounded-[1px]" />
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-sm">{getCardBrand(newCard.cardNumber).emoji}</span>
+                                                </div>
+                                                <span className="text-lg font-black italic tracking-wider opacity-70">
+                                                    {getCardBrand(newCard.cardNumber).logo}
+                                                </span>
+                                            </div>
+
+                                            <p className="font-mono text-lg sm:text-xl tracking-[0.15em] drop-shadow-md text-white/95">
+                                                {newCard.cardNumber ? formatCardNumber(newCard.cardNumber) : '•••• •••• •••• ••••'}
+                                            </p>
+
+                                            <div className="flex justify-between items-end">
+                                                <div>
+                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">Your Name</p>
+                                                    <p className="tracking-wider uppercase font-bold text-white/90 text-xs">
+                                                        {newCard.cardholderName || 'YOUR NAME'}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">Expires</p>
+                                                    <p className="tracking-wider font-mono text-xs font-bold text-white/90">
+                                                        {newCard.expiry || 'MM/YY'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
 
                                     <form onSubmit={handleSaveCard} className="space-y-4">
                                         <div className="space-y-2">
-                                            <Input
-                                                label="Card Alias (e.g. Primary Debit)"
-                                                placeholder="My Main Card"
+                                            <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
+                                                <span className="text-lg">🏷️</span>
+                                                Card Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. My Piggy Bank Card"
                                                 value={newCard.name}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCard({ ...newCard, name: e.target.value })}
-                                                required
+                                                onChange={(e) => setNewCard({ ...newCard, name: e.target.value })}
+                                                className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                             />
                                         </div>
+
                                         <div className="space-y-2">
-                                            <Input
-                                                label="Cardholder Name"
-                                                placeholder="John Doe"
-                                                value={newCard.cardholderName}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCard({ ...newCard, cardholderName: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="space-y-2 relative group-card-input">
-                                            <Input
-                                                label="Card Number"
+                                            <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
+                                                <span className="text-lg">🔢</span>
+                                                Card Number
+                                            </label>
+                                            <input
+                                                type="text"
                                                 placeholder="0000 0000 0000 0000"
-                                                value={newCard.cardNumber}
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCard({ ...newCard, cardNumber: formatCardNumber(e.target.value) })}
+                                                value={formatCardNumber(newCard.cardNumber)}
+                                                onChange={(e) => setNewCard({ ...newCard, cardNumber: e.target.value })}
+                                                maxLength={19}
+                                                className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-mono font-bold tracking-wider focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                                 required
-                                                className="pr-14"
                                             />
-                                            <div className="absolute right-3.5 bottom-[7px] flex items-center h-9 w-12 justify-center border-l border-border/50 pl-3">
-                                                <div className="flex items-center justify-center animate-in fade-in zoom-in duration-300">
-                                                    {getBrandLogo(getCardBrand(newCard.cardNumber))}
-                                                </div>
-                                            </div>
                                         </div>
+
+                                        <div className="space-y-2">
+                                            <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
+                                                <span className="text-lg">👤</span>
+                                                Your Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Name on the card"
+                                                value={newCard.cardholderName}
+                                                onChange={(e) => setNewCard({ ...newCard, cardholderName: e.target.value })}
+                                                className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
+                                                required
+                                            />
+                                        </div>
+
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <Input
-                                                    label="Expiry Date"
+                                                <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
+                                                    <span className="text-lg">📅</span>
+                                                    Expires
+                                                </label>
+                                                <input
+                                                    type="text"
                                                     placeholder="MM/YY"
                                                     value={newCard.expiry}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCard({ ...newCard, expiry: formatExpiryDate(e.target.value) })}
+                                                    onChange={(e) => setNewCard({ ...newCard, expiry: formatExpiryDate(e.target.value) })}
+                                                    maxLength={5}
+                                                    className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-mono font-bold tracking-wider focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <PasswordInput
-                                                    label="CVV"
+                                                <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
+                                                    <span className="text-lg">🔒</span>
+                                                    Secret Code
+                                                </label>
+                                                <input
+                                                    type="password"
                                                     placeholder="123"
                                                     value={newCard.cvv}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCard({ ...newCard, cvv: formatCVV(e.target.value) })}
+                                                    onChange={(e) => setNewCard({ ...newCard, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                                                    maxLength={4}
+                                                    className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-mono font-bold tracking-wider focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                                     required
                                                 />
                                             </div>
                                         </div>
-                                        <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
-                                            <Button type="button" variant="outline" onClick={closeModal}>
+
+                                        <div className="flex gap-3 pt-4">
+                                            <motion.button
+                                                type="button"
+                                                onClick={closeModal}
+                                                className={`flex-1 py-4 rounded-2xl font-black text-sm transition-all ${isDark ? 'border-2 border-white/10 text-white/70 hover:bg-white/5' : 'border-2 border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
                                                 Cancel
-                                            </Button>
-                                            <Button type="submit" disabled={isSaving}>
-                                                {isSaving ? 'Encrypting...' : 'Save encrypted'}
-                                            </Button>
+                                            </motion.button>
+                                            <motion.button
+                                                type="submit"
+                                                disabled={isSaving || !newCard.cardNumber || !newCard.cardholderName || !newCard.expiry || !newCard.cvv}
+                                                className="flex-1 flex justify-center items-center gap-2 py-4 rounded-2xl font-display text-sm font-black transition-all shadow-xl disabled:opacity-40 disabled:cursor-not-allowed bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                                                whileHover={!isSaving && newCard.cardNumber && newCard.cardholderName && newCard.expiry && newCard.cvv ? { y: -4, scale: 1.02 } : {}}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                {isSaving ? (
+                                                    <>
+                                                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white" />
+                                                        Saving...
+                                                    </>
+                                                ) : (
+                                                    <>Save Card! 💳</>
+                                                )}
+                                            </motion.button>
+                                        </div>
+
+                                        <div className={`mt-4 p-3 rounded-xl ${isDark ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-emerald-50 border border-emerald-200'} text-center`}>
+                                            <p className={`text-xs font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                                                🔐 Your card info is encrypted and super safe!
+                                            </p>
                                         </div>
                                     </form>
                                 </div>
                             )}
-                        </Card>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 )}
-
-                {/* Master Password Verification Prompt */}
-                {isPromptOpen && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm animate-in fade-in">
-                        <Card className="w-full max-w-xs p-6 shadow-xl border-border mx-4 flex flex-col items-center text-center space-y-4">
-                            <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
-                                <Lock size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-bold">Verify Identity</h3>
-                                <p className="text-xs text-muted-foreground mt-1 px-4">Enter master password to access sensitive data.</p>
-                            </div>
-
-                            <form onSubmit={async (e) => {
-                                e.preventDefault();
-                                if (promptPassword === masterPassword) {
-                                    setPromptError('');
-                                    setPromptPassword('');
-                                    setIsPromptOpen(false);
-                                    if (pendingAction) await pendingAction();
-                                } else {
-                                    setPromptError('Incorrect Master Password');
-                                }
-                            }} className="w-full space-y-4 mt-2">
-                                <div className="space-y-1">
-                                    <PasswordInput
-                                        label=""
-                                        placeholder="Master Password"
-                                        value={promptPassword}
-                                        onChange={(e: any) => setPromptPassword(e.target.value)}
-                                        required
-                                    />
-                                    {promptError && <p className="text-xs text-destructive text-left mt-1">{promptError}</p>}
-                                </div>
-                                <div className="flex justify-end gap-2 text-sm pt-2">
-                                    <Button type="button" variant="outline" className="w-1/2" onClick={() => {
-                                        setIsPromptOpen(false);
-                                        setPromptPassword('');
-                                        setPromptError('');
-                                        setPendingAction(null);
-                                    }}>
-                                        Cancel
-                                    </Button>
-                                    <Button type="submit" className="w-1/2">
-                                        Verify
-                                    </Button>
-                                </div>
-                            </form>
-                        </Card>
-                    </div>
-                )}
-            </Card>
-        </div>
+            </AnimatePresence>
+        </motion.div>
     );
 }

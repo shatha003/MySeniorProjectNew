@@ -50,7 +50,7 @@ export default function Login() {
       navigate('/dashboard')
     } catch (err: any) {
       console.error(err)
-      setError('Invalid email or password.')
+      setError('Hmm, that does not look right. Try again! 🤔')
     } finally {
       setLoading(false)
     }
@@ -99,10 +99,10 @@ export default function Login() {
             </span>
           </div>
           <h2 className={`font-cyber text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Welcome back
+            Welcome back! 👋
           </h2>
           <p className={`text-sm ${mutedText}`}>
-            Sign in to your account to continue
+            Sign in to your account and let's go!
           </p>
         </motion.div>
 
@@ -155,7 +155,7 @@ export default function Login() {
               to="/forgot-password"
               className={`text-xs font-medium ${linkColor}`}
             >
-              Forgot password?
+              Forgot password? 🔑
             </Link>
           </motion.div>
 
@@ -182,7 +182,7 @@ export default function Login() {
               size="lg"
               loading={loading}
             >
-              Sign In
+              Let's Go! 🚀
             </Button>
           </motion.div>
         </form>
@@ -206,7 +206,7 @@ export default function Login() {
             to="/register"
             className={`font-semibold ${linkColor}`}
           >
-            Create one
+            Join us! ✨
           </Link>
         </motion.p>
       </motion.div>

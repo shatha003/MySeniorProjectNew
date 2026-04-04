@@ -55,23 +55,23 @@ export default function Register() {
     const newErrors: Record<string, string> = {}
 
     if (!formData.email) {
-      newErrors.email = 'Email is required'
+      newErrors.email = 'Oops! We need your email 📧'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email'
+      newErrors.email = 'Hmm, that email does not look quite right 🤔'
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = 'Do not forget your password! 🔒'
     } else if (formData.password.length < 12) {
-      newErrors.password = 'Password must be at least 12 characters'
+      newErrors.password = 'Make it longer — at least 12 characters! 💪'
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match'
+      newErrors.confirmPassword = 'Oops! Those passwords do not match 🔄'
     }
 
     if (!agreedToTerms) {
-      newErrors.terms = 'You must agree to the terms'
+      newErrors.terms = 'Please agree to the rules first! 📋'
     }
 
     setErrors(newErrors)
@@ -97,7 +97,7 @@ export default function Register() {
       } catch (err: any) {
         console.error("Error in createUserWithEmailAndPassword:", err)
         if (err.code === 'auth/email-already-in-use') {
-          throw new Error('This email is already registered.')
+          throw new Error('That email is already taken! Try another one 🤷')
         }
         throw err
       }
@@ -126,7 +126,7 @@ export default function Register() {
       navigate('/dashboard')
     } catch (err: any) {
       console.error("Final catch block:", err)
-      let errorMessage = err.message || 'Failed to create an account.'
+      let errorMessage = err.message || 'Oops! Something went wrong. Try again! 😅'
       setErrors({ email: errorMessage, submit: errorMessage })
     } finally {
       setLoading(false)
@@ -181,10 +181,10 @@ export default function Register() {
             </span>
           </div>
           <h2 className={`font-cyber text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Create account
+            Join the Team! 🚀
           </h2>
           <p className={`text-sm ${mutedText}`}>
-            Initialize your security profile
+            Create your account and start your adventure
           </p>
         </motion.div>
 
@@ -341,7 +341,7 @@ export default function Register() {
               loading={loading}
               disabled={!agreedToTerms}
             >
-              Create Account
+              Join Now! ✨
             </Button>
           </motion.div>
         </form>
@@ -365,7 +365,7 @@ export default function Register() {
             to="/login"
             className={`font-semibold ${linkColor}`}
           >
-            Sign in
+            Sign in! 👋
           </Link>
         </motion.p>
       </motion.div>

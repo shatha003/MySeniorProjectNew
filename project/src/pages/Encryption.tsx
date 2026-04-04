@@ -1,25 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { invoke } from '@tauri-apps/api/core';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
-import { Lock, Unlock, Copy, Check, ArrowLeftRight, Eye, EyeOff, ShieldCheck, AlertTriangle, Info } from 'lucide-react';
+import { Lock, Unlock, Copy, Check, Eye, EyeOff, ShieldCheck, AlertTriangle, Key, RotateCcw, Star, Shield, Zap } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
+import { useTheme } from '@/components/theme-provider';
 
-type Mode = 'encrypt' | 'decrypt';
-type Algorithm = 'AES-256-GCM' | 'AES-128-CBC' | 'ChaCha20-Poly1305';
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { type: 'spring', stiffness: 280, damping: 22 },
+    },
+};
 
 export default function Encryption() {
-    const [mode, setMode] = useState<Mode>('encrypt');
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === 'dark';
+
+    const [mode, setMode] = useState<'encrypt' | 'decrypt'>('encrypt');
     const [inputText, setInputText] = useState('');
     const [password, setPassword] = useState('');
     const [outputText, setOutputText] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [algorithm, setAlgorithm] = useState<Algorithm>('AES-256-GCM');
     const [copied, setCopied] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [hasResult, setHasResult] = useState(false);
     const [error, setError] = useState('');
-    const [timeTaken, setTimeTaken] = useState(0);
+    const [scanProgress, setScanProgress] = useState(0);
+
     const trackActivity = useTrackActivity();
+
+    useEffect(() => {
+        if (isProcessing) {
+            setScanProgress(0);
+            const interval = setInterval(() => {
+                setScanProgress(prev => {
+                    if (prev >= 95) {
+                        clearInterval(interval);
+                        return 95;
+                    }
+                    return prev + Math.random() * 15;
+                });
+            }, 200);
+            return () => clearInterval(interval);
+        }
+    }, [isProcessing]);
 
     const handleProcess = async () => {
         if (!inputText.trim() || !password.trim()) return;
@@ -27,14 +61,13 @@ export default function Encryption() {
         setIsProcessing(true);
         setError('');
         setHasResult(false);
-        const start = performance.now();
 
         try {
             if (mode === 'encrypt') {
                 const result = await invoke<string>('encrypt_text', {
                     plaintext: inputText,
                     password: password,
-                    algorithm: algorithm,
+                    algorithm: 'AES-256-GCM',
                 });
                 setOutputText(result);
                 await trackActivity('generate_encryption');
@@ -46,11 +79,11 @@ export default function Encryption() {
                 setOutputText(result);
             }
             setHasResult(true);
+            setScanProgress(100);
         } catch (err) {
-            const msg = typeof err === 'string' ? err : (err instanceof Error ? err.message : 'Unknown error');
+            const msg = typeof err === 'string' ? err : (err instanceof Error ? err.message : 'Wrong password or bad data!');
             setError(msg);
         } finally {
-            setTimeTaken(Math.round(performance.now() - start));
             setIsProcessing(false);
         }
     };
@@ -61,306 +94,343 @@ export default function Encryption() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const handleSwap = () => {
-        setMode(mode === 'encrypt' ? 'decrypt' : 'encrypt');
-        setInputText(outputText);
-        setOutputText('');
-        setHasResult(false);
-        setError('');
-    };
-
     const handleClear = () => {
         setInputText('');
         setPassword('');
         setOutputText('');
         setHasResult(false);
         setError('');
-        setTimeTaken(0);
+        setScanProgress(0);
     };
 
-    const algorithms: { value: Algorithm; label: string; description: string }[] = [
-        { value: 'AES-256-GCM', label: 'AES-256-GCM', description: 'Military-grade (Recommended)' },
-        { value: 'AES-128-CBC', label: 'AES-128-CBC', description: 'Standard encryption' },
-        { value: 'ChaCha20-Poly1305', label: 'ChaCha20-Poly1305', description: 'High performance' },
-    ];
+    const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900';
+    const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500';
+    const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
+    const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
+
+    const passwordStrength = password.length < 6
+        ? { label: 'Too Short!', color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', emoji: '😟' }
+        : password.length < 10
+            ? { label: 'Getting Better!', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', emoji: '🙂' }
+            : { label: 'Super Strong!', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', emoji: '💪' };
 
     return (
-        <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Encryption Tool</h1>
-                <p className="text-muted-foreground">
-                    Encrypt and decrypt text securely using industry-standard algorithms. All operations run locally via the Rust backend.
-                </p>
+        <motion.div
+            className="relative min-h-full pb-10"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl"
+                    style={{ background: isDark ? 'radial-gradient(circle, rgba(255,10,84,0.06), transparent 70%)' : 'radial-gradient(circle, rgba(77,0,255,0.04), transparent 70%)' }} />
             </div>
 
-            {/* Mode Toggle */}
-            <div className="flex items-center gap-2 p-1 bg-muted rounded-lg w-fit">
-                <button
-                    onClick={() => { setMode('encrypt'); setOutputText(''); setHasResult(false); setError(''); }}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium transition-all ${mode === 'encrypt'
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                        }`}
-                >
-                    <Lock size={16} />
-                    Encrypt
-                </button>
-                <button
-                    onClick={() => { setMode('decrypt'); setOutputText(''); setHasResult(false); setError(''); }}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium transition-all ${mode === 'decrypt'
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                        }`}
-                >
-                    <Unlock size={16} />
-                    Decrypt
-                </button>
-            </div>
+            <div className="relative z-10 space-y-8 max-w-3xl mx-auto">
+                {/* Hero Header */}
+                <motion.div variants={itemVariants} className="relative">
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 md:p-10 shadow-xl overflow-hidden relative`}>
+                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Input/Output Panel */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Input */}
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-base flex items-center gap-2">
-                                {mode === 'encrypt' ? <Lock size={18} /> : <Unlock size={18} />}
-                                {mode === 'encrypt' ? 'Plaintext Input' : 'Ciphertext Input'}
-                            </CardTitle>
-                            <CardDescription>
-                                {mode === 'encrypt'
-                                    ? 'Enter the text you want to encrypt.'
-                                    : 'Paste the encrypted text to decrypt.'}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <textarea
-                                value={inputText}
-                                onChange={(e) => { setInputText(e.target.value); setHasResult(false); setError(''); }}
-                                placeholder={mode === 'encrypt' ? 'Type or paste your plaintext here...' : 'Paste the encrypted ciphertext here...'}
-                                rows={6}
-                                className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm font-mono resize-none focus:ring-primary focus:border-primary transition-colors placeholder:text-muted-foreground/60"
-                            />
-                        </CardContent>
-                    </Card>
-
-                    {/* Password */}
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Encryption Key</CardTitle>
-                            <CardDescription>
-                                {mode === 'encrypt'
-                                    ? 'Set a strong password to protect your data. You will need this to decrypt.'
-                                    : 'Enter the same password that was used during encryption.'}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="relative">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter encryption password..."
-                                    className="w-full rounded-md border border-input bg-background pl-4 pr-12 py-3 text-sm font-mono focus:ring-primary focus:border-primary transition-colors"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-crimson to-neon-violet flex items-center justify-center text-white shadow-lg shadow-neon-crimson/30`}>
+                                        <Shield size={28} />
+                                    </div>
+                                    <h1 className={`font-display text-3xl md:text-4xl font-black tracking-tight ${headingColor}`}>
+                                        Secret Messages
+                                    </h1>
+                                </div>
+                                <p className={`text-lg font-medium ${mutedText}`}>
+                                    Turn your messages into secret code that only your friends can read! 🤫
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
 
-                    {/* Action */}
-                    <div className="flex flex-wrap items-center gap-3">
-                        <button
-                            onClick={handleProcess}
-                            disabled={!inputText.trim() || !password.trim() || isProcessing}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-md font-medium text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${mode === 'encrypt'
-                                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md'
-                                    : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md'
-                                }`}
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Processing...
-                                </>
-                            ) : (
-                                <>
-                                    {mode === 'encrypt' ? <Lock size={16} /> : <Unlock size={16} />}
-                                    {mode === 'encrypt' ? 'Encrypt Text' : 'Decrypt Text'}
-                                </>
-                            )}
-                        </button>
-
-                        {hasResult && (
-                            <button
-                                onClick={handleSwap}
-                                className="flex items-center gap-2 px-4 py-3 rounded-md border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                            >
-                                <ArrowLeftRight size={16} />
-                                Swap & {mode === 'encrypt' ? 'Decrypt' : 'Encrypt'}
-                            </button>
-                        )}
-
-                        <button
-                            onClick={handleClear}
-                            className="flex items-center gap-2 px-4 py-3 rounded-md border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                        >
-                            Clear
-                        </button>
-                    </div>
-
-                    {/* Error */}
-                    {error && (
-                        <div className="animate-in fade-in duration-300 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
-                            <AlertTriangle size={18} className="text-destructive shrink-0 mt-0.5" />
-                            <p className="text-sm text-destructive font-medium">{error}</p>
+                            <div className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
+                                <Star size={20} fill="currentColor" className="animate-bounce" />
+                                <div className="flex flex-col">
+                                    <span className="text-xl font-black leading-none">+10 XP</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Use</span>
+                                </div>
+                            </div>
                         </div>
-                    )}
+                    </div>
+                </motion.div>
 
-                    {/* Output */}
-                    {hasResult && (
-                        <Card className="animate-in fade-in slide-in-from-bottom-2 duration-300 border-emerald-500/20">
-                            <CardHeader className="pb-3">
-                                <div className="flex items-center justify-between">
-                                    <CardTitle className="text-base flex items-center gap-2">
-                                        <ShieldCheck size={18} className="text-emerald-500" />
-                                        {mode === 'encrypt' ? 'Encrypted Output' : 'Decrypted Output'}
-                                    </CardTitle>
-                                    <button
-                                        onClick={handleCopy}
-                                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-border hover:bg-accent transition-colors"
-                                    >
-                                        {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                                        {copied ? 'Copied!' : 'Copy'}
-                                    </button>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="bg-muted/50 rounded-md border border-border p-4 font-mono text-sm break-all max-h-48 overflow-y-auto whitespace-pre-wrap">
-                                    {outputText}
-                                </div>
-                                {mode === 'encrypt' && (
-                                    <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
-                                        <Info size={12} />
-                                        Save this output and your password. Without the password, data cannot be recovered.
-                                    </p>
-                                )}
-                            </CardContent>
-                        </Card>
-                    )}
+                {/* Main Card - All in One */}
+                <motion.div variants={itemVariants}>
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-8 shadow-lg relative overflow-hidden`}>
+                        {/* Mode Toggle */}
+                        <div className="flex items-center gap-2 p-1 bg-muted/50 rounded-2xl w-fit mb-8">
+                            <motion.button
+                                onClick={() => { setMode('encrypt'); setOutputText(''); setHasResult(false); setError(''); }}
+                                className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-black transition-all ${mode === 'encrypt'
+                                        ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white shadow-lg'
+                                        : `${mutedText} hover:text-foreground`
+                                    }`}
+                                whileHover={mode !== 'encrypt' ? { scale: 1.05 } : {}}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <Lock size={18} />
+                                Lock It 🔒
+                            </motion.button>
+                            <motion.button
+                                onClick={() => { setMode('decrypt'); setOutputText(''); setHasResult(false); setError(''); }}
+                                className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-black transition-all ${mode === 'decrypt'
+                                        ? 'bg-gradient-to-r from-emerald-400 to-teal-500 text-white shadow-lg'
+                                        : `${mutedText} hover:text-foreground`
+                                    }`}
+                                whileHover={mode !== 'decrypt' ? { scale: 1.05 } : {}}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <Unlock size={18} />
+                                Unlock It 🔓
+                            </motion.button>
+                        </div>
 
-                    {/* Details — shown below output */}
-                    {hasResult && (
-                        <Card className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            <CardHeader className="pb-3">
-                                <CardTitle className="text-base">Operation Details</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Mode</p>
-                                        <p className="font-semibold capitalize">{mode}</p>
-                                    </div>
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Algorithm</p>
-                                        <p className="font-mono text-xs font-semibold">{algorithm}</p>
-                                    </div>
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Time Taken</p>
-                                        <p className="font-semibold">{timeTaken} ms</p>
-                                    </div>
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Input Length</p>
-                                        <p className="font-semibold">{inputText.length} chars</p>
-                                    </div>
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Output Length</p>
-                                        <p className="font-semibold">{outputText.length} chars</p>
-                                    </div>
-                                    <div className="p-3 bg-muted/40 rounded-lg border border-border">
-                                        <p className="text-xs text-muted-foreground mb-1">Password Strength</p>
-                                        <p className={`font-semibold ${password.length < 8 ? 'text-destructive' :
-                                                password.length < 12 ? 'text-amber-500' : 'text-emerald-500'
-                                            }`}>
-                                            {password.length < 8 ? 'Weak' :
-                                                password.length < 12 ? 'Fair' : 'Strong'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-                </div>
-
-                {/* Sidebar Settings */}
-                <div className="space-y-6">
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Algorithm</CardTitle>
-                            <CardDescription>Choose the encryption standard.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                            {algorithms.map((alg) => (
-                                <button
-                                    key={alg.value}
-                                    onClick={() => setAlgorithm(alg.value)}
-                                    className={`w-full flex items-center justify-between p-3 rounded-lg border text-left transition-all ${algorithm === alg.value
-                                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
-                                            : 'border-border hover:border-primary/30 hover:bg-accent/50'
-                                        }`}
+                        <AnimatePresence mode="wait">
+                            {!hasResult ? (
+                                <motion.div
+                                    key="input"
+                                    className="space-y-6"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
                                 >
+                                    {/* Message Input */}
                                     <div>
-                                        <p className={`text-sm font-medium ${algorithm === alg.value ? 'text-primary' : 'text-foreground'}`}>
-                                            {alg.label}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">{alg.description}</p>
+                                        <label className={`flex items-center gap-2 text-sm font-black mb-3 ${headingColor}`}>
+                                            {mode === 'encrypt' ? (
+                                                <>
+                                                    <Zap size={16} className="text-yellow-500" />
+                                                    Your Message
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Lock size={16} className="text-purple-500" />
+                                                    Secret Code
+                                                </>
+                                            )}
+                                        </label>
+                                        <textarea
+                                            value={inputText}
+                                            onChange={(e) => { setInputText(e.target.value); setError(''); }}
+                                            placeholder={mode === 'encrypt' ? 'Type your secret message here...' : 'Paste the secret code here...'}
+                                            rows={4}
+                                            className={`w-full rounded-2xl border-2 bg-transparent px-5 py-4 text-sm font-mono resize-none focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
+                                        />
                                     </div>
-                                    {algorithm === alg.value && (
-                                        <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
-                                    )}
-                                </button>
-                            ))}
-                        </CardContent>
-                    </Card>
 
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-base flex items-center gap-2">
-                                <AlertTriangle size={16} className="text-amber-500" />
-                                Security Notes
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3 text-xs text-muted-foreground">
-                            <div className="flex items-start gap-2">
-                                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-emerald-500" />
-                                <span>All encryption runs <strong className="text-foreground">natively in Rust</strong> — nothing is sent to any server.</span>
+                                    {/* Password */}
+                                    <div>
+                                        <label className={`flex items-center gap-2 text-sm font-black mb-3 ${headingColor}`}>
+                                            <Key size={16} className="text-blue-500" />
+                                            Secret Password
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="Pick a password only you know..."
+                                                className={`block w-full pl-5 pr-14 py-4 rounded-2xl border-2 bg-transparent text-sm font-mono focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className={`absolute inset-y-0 right-0 pr-5 flex items-center transition-colors ${mutedText} hover:text-foreground`}
+                                            >
+                                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                            </button>
+                                        </div>
+
+                                        {/* Password Strength */}
+                                        {password && (
+                                            <motion.div
+                                                className={`mt-3 flex items-center gap-3 p-3 rounded-xl ${passwordStrength.bg} border ${passwordStrength.border}`}
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                            >
+                                                <span className="text-lg">{passwordStrength.emoji}</span>
+                                                <span className={`text-sm font-black ${passwordStrength.color}`}>
+                                                    {passwordStrength.label}
+                                                </span>
+                                            </motion.div>
+                                        )}
+                                    </div>
+
+                                    {/* Action Button */}
+                                    <motion.button
+                                        onClick={handleProcess}
+                                        disabled={!inputText.trim() || !password.trim() || isProcessing}
+                                        className={`w-full flex justify-center items-center gap-3 px-10 py-5 font-display text-lg font-black rounded-2xl transition-all shadow-xl disabled:opacity-40 disabled:cursor-not-allowed ${mode === 'encrypt'
+                                                ? 'bg-gradient-to-r from-neon-crimson to-neon-violet text-white hover:scale-[1.02]'
+                                                : 'bg-gradient-to-r from-emerald-400 to-teal-500 text-white hover:scale-[1.02]'
+                                            }`}
+                                        whileHover={!isProcessing && inputText.trim() && password.trim() ? { y: -4 } : {}}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        {isProcessing ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
+                                                Working on it...
+                                            </>
+                                        ) : (
+                                            <>
+                                                {mode === 'encrypt' ? <Lock size={22} /> : <Unlock size={22} />}
+                                                {mode === 'encrypt' ? 'Lock My Message!' : 'Unlock It!'}
+                                            </>
+                                        )}
+                                    </motion.button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="result"
+                                    className="space-y-6"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                >
+                                    {/* Success Header */}
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${mode === 'encrypt' ? 'from-emerald-400 to-teal-500' : 'from-blue-400 to-cyan-500'} flex items-center justify-center text-white shadow-lg`}>
+                                            <ShieldCheck size={28} />
+                                        </div>
+                                        <div>
+                                            <div className={`text-xs font-black uppercase tracking-[0.2em] ${mode === 'encrypt' ? 'text-emerald-500' : 'text-blue-500'}`}>
+                                                Done!
+                                            </div>
+                                            <h2 className={`text-2xl font-black font-display ${headingColor}`}>
+                                                {mode === 'encrypt' ? 'Message Locked! 🔒' : 'Message Unlocked! 🔓'}
+                                            </h2>
+                                        </div>
+                                    </div>
+
+                                    {/* Output */}
+                                    <div className={`bg-muted/50 rounded-2xl border-2 ${isDark ? 'border-white/5' : 'border-gray-200'} p-5 font-mono text-sm break-all max-h-40 overflow-y-auto whitespace-pre-wrap`}>
+                                        {outputText}
+                                    </div>
+
+                                    {/* Copy + Clear Buttons */}
+                                    <div className="flex gap-4">
+                                        <motion.button
+                                            onClick={handleCopy}
+                                            className={`flex-1 flex justify-center items-center gap-2 px-6 py-4 rounded-2xl border-2 font-black text-sm transition-all ${copied
+                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
+                                                    : `${isDark ? 'border-white/10 text-white hover:border-primary/30 hover:bg-primary/5' : 'border-gray-200 text-gray-600 hover:border-primary/30 hover:bg-primary/5'}`
+                                                }`}
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            {copied ? <Check size={18} /> : <Copy size={18} />}
+                                            {copied ? 'Copied!' : 'Copy It!'}
+                                        </motion.button>
+
+                                        <motion.button
+                                            onClick={handleClear}
+                                            className={`flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 font-black text-sm transition-all ${isDark ? 'border-white/10 text-white hover:border-primary/30 hover:bg-primary/5' : 'border-gray-200 text-gray-600 hover:border-primary/30 hover:bg-primary/5'}`}
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <RotateCcw size={18} />
+                                            New Message
+                                        </motion.button>
+                                    </div>
+
+                                    {/* Tips */}
+                                    {mode === 'encrypt' && (
+                                        <motion.div
+                                            className={`flex items-start gap-3 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20`}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 0.3 }}
+                                        >
+                                            <span className="text-lg">💡</span>
+                                            <p className={`text-sm font-medium ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
+                                                <strong>Remember:</strong> Share the secret code AND the password with your friend. Without the password, nobody can read it!
+                                            </p>
+                                        </motion.div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Progress Bar */}
+                        <AnimatePresence>
+                            {isProcessing && (
+                                <motion.div
+                                    className="mt-6 space-y-3"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                >
+                                    <div className="flex justify-between items-center text-sm font-black uppercase tracking-wider">
+                                        <span className={mutedText}>
+                                            {mode === 'encrypt' ? 'Locking your message...' : 'Unlocking...'}
+                                        </span>
+                                        <span className={headingColor}>{Math.round(scanProgress)}%</span>
+                                    </div>
+                                    <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
+                                        <motion.div
+                                            className="h-full bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full relative"
+                                            style={{ width: `${scanProgress}%` }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <div className="absolute inset-0 bg-white/20 animate-shimmer bg-[length:200%_100%]" />
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Error */}
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div
+                                    className={`mt-6 p-5 rounded-2xl border-2 flex items-start gap-4 text-sm font-bold ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                >
+                                    <AlertTriangle size={24} className="shrink-0" />
+                                    <span>{error}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </motion.div>
+
+                {/* Fun Tips Card */}
+                <motion.div variants={itemVariants}>
+                    <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                        <div className={`p-6 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center gap-3 bg-primary/5`}>
+                            <span className="text-2xl">🎓</span>
+                            <h2 className={`font-display text-xl font-black ${headingColor}`}>How Does This Work?</h2>
+                        </div>
+
+                        <div className="p-6 md:p-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {[
+                                    { emoji: '🔐', title: 'Super Strong Lock', text: 'We use AES-256 — the same encryption that banks and governments use to keep secrets safe!' },
+                                    { emoji: '🎲', title: 'Always Different', text: 'Even if you encrypt the same message twice, the secret code looks totally different each time!' },
+                                    { emoji: '🏠', title: 'All On Your Computer', text: 'Your message never leaves your device. Everything happens right here — super private!' },
+                                    { emoji: '⚠️', title: 'Password = Key', text: 'If you forget your password, the message is gone forever. No one can get it back — not even us!' },
+                                ].map((tip, i) => (
+                                    <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-muted/30">
+                                        <span className="text-2xl shrink-0">{tip.emoji}</span>
+                                        <div>
+                                            <h3 className={`text-sm font-black mb-1 ${headingColor}`}>{tip.title}</h3>
+                                            <p className={`text-sm font-medium ${mutedText}`}>{tip.text}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="flex items-start gap-2">
-                                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-emerald-500" />
-                                <span>Key derivation uses <strong className="text-foreground">Argon2id</strong> for maximum resistance against brute-force.</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-emerald-500" />
-                                <span>A random <strong className="text-foreground">salt + IV</strong> is generated per encryption — identical inputs produce different outputs.</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                                <AlertTriangle size={14} className="shrink-0 mt-0.5 text-amber-500" />
-                                <span>If you lose your password, <strong className="text-foreground">data cannot be recovered</strong>.</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                                <Info size={14} className="shrink-0 mt-0.5 text-primary" />
-                                <span>Use a long, unique password for best results.</span>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
+                    </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }

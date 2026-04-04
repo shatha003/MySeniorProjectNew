@@ -223,7 +223,7 @@ export default function LinkScanner() {
                                         <LinkIcon size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Link Scanner
+                                        Link Checker
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>

@@ -239,7 +239,7 @@ export default function FileScanner() {
                                         <FileSearch size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        File Scanner
+                                        File Checker
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>

@@ -361,7 +361,7 @@ export default function ImagePrivacy() {
                                         <ImageIcon size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Image Privacy
+                                        Photo Secrets
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>

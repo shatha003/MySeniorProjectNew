@@ -8,7 +8,8 @@ export type ActivityType =
     | 'generate_password'
     | 'check_password'
     | 'generate_encryption'
-    | 'create_credential';
+    | 'create_credential'
+    | 'chat_ai';
 
 export interface Activity {
     id?: string;
@@ -27,6 +28,7 @@ export const ACTIVITY_POINTS: Record<ActivityType, number> = {
     check_password: 3,
     generate_encryption: 5,
     create_credential: 20,
+    chat_ai: 5,
 };
 
 export const ACTIVITY_LABELS: Record<ActivityType, string> = {
@@ -37,6 +39,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     check_password: 'Checked Password',
     generate_encryption: 'Generated Encryption',
     create_credential: 'Created Credential',
+    chat_ai: 'AI Chat Message',
 };
 
 export async function logActivity(

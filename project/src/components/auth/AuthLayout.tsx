@@ -56,10 +56,10 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
               whileHover={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
             />
-            <img src="/icon.png" alt="CHEA" className="w-28 h-28 sm:w-32 sm:h-32 object-contain relative z-10" />
+            <img src="/icon.png" alt="CHEA" className="w-58 h-58 sm:w-[225px] sm:h-[225px] object-contain relative z-10" />
           </motion.div>
           <span
-            className={`font-cyber text-sm font-bold tracking-[0.25em] uppercase ${
+            className={`font-cyber text-lg font-bold tracking-[0.25em] uppercase ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >

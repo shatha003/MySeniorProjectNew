@@ -4,26 +4,28 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUserProgressStore } from '../../store/useUserProgressStore';
-import { ThemeToggle } from '../ui/ThemeToggle';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../theme-provider';
+import { loadAvatar } from '../../lib/avatar';
 import {
-    LayoutDashboard,
-    Link as LinkIcon,
-    FileSearch,
-    Image as ImageIcon,
-    KeyRound,
-    ShieldAlert,
-    ShieldCheck,
-    Lock,
+    Home,
+    ScanSearch,
+    FileCheck,
+    Camera,
+    Wand2,
+    Shield,
+    LockKeyhole,
+    Vault,
+    BotMessageSquare,
     Settings,
     LogOut,
     Menu,
     X,
     Flame,
-    Bot,
+    Zap,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface NavItemProps {
     to: string;
@@ -41,12 +43,12 @@ const NavItem = ({ to, icon, label, onClick, end, isDark }: NavItemProps) => {
             end={end}
             onClick={onClick}
             className={({ isActive }) => cn(
-                "sidebar-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all group relative overflow-hidden",
+                "sidebar-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all group relative overflow-hidden font-display",
                 isActive
-                    ? "sidebar-nav-active font-medium"
+                    ? "sidebar-nav-active font-black"
                     : isDark
-                        ? "text-[#8AB4F8]/60 hover:text-[#F4F6FF]"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "text-[#8AB4F8]/60 hover:text-[#F4F6FF] font-bold"
+                        : "text-gray-600 hover:text-gray-900 font-bold"
             )}
         >
             {({ isActive }) => (
@@ -89,14 +91,25 @@ export default function DashboardLayout() {
     const isDark = resolvedTheme === 'dark';
 
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
-    const photoURL = user?.photoURL || null;
     const initials = displayName.charAt(0).toUpperCase();
+    const [customAvatar, setCustomAvatar] = useState<string | null>(null);
 
     useEffect(() => {
         if (user?.uid) {
             fetchProgress(user.uid);
+            const saved = loadAvatar();
+            if (saved) setCustomAvatar(saved.data);
         }
     }, [user?.uid, fetchProgress]);
+
+    useEffect(() => {
+        const handler = () => {
+            const saved = loadAvatar();
+            if (saved) setCustomAvatar(saved.data);
+        };
+        window.addEventListener('chea-avatar-changed', handler);
+        return () => window.removeEventListener('chea-avatar-changed', handler);
+    }, []);
 
     const level = progress?.level || 1;
     const streak = progress?.streakDays || 0;
@@ -143,15 +156,15 @@ export default function DashboardLayout() {
     };
 
     const navItems = [
-        { to: "/dashboard", icon: <LayoutDashboard size={18} />, label: "Dashboard", end: true },
-        { to: "/dashboard/link-scanner", icon: <LinkIcon size={18} />, label: "Link Scanner" },
-        { to: "/dashboard/file-scanner", icon: <FileSearch size={18} />, label: "File Scanner" },
-        { to: "/dashboard/metadata", icon: <ImageIcon size={18} />, label: "Image Privacy" },
-        { to: "/dashboard/password-gen", icon: <KeyRound size={18} />, label: "Password Gen" },
-        { to: "/dashboard/password-check", icon: <ShieldCheck size={18} />, label: "Password Checker" },
-        { to: "/dashboard/encryption", icon: <Lock size={18} />, label: "Encryption" },
-        { to: "/dashboard/vault", icon: <ShieldAlert size={18} />, label: "Credential Vault" },
-        { to: "/dashboard/ai-agent", icon: <Bot size={18} />, label: "AI Agent" },
+        { to: "/dashboard", icon: <Home size={18} />, label: "Home", end: true },
+        { to: "/dashboard/link-scanner", icon: <ScanSearch size={18} />, label: "Link Checker" },
+        { to: "/dashboard/file-scanner", icon: <FileCheck size={18} />, label: "File Checker" },
+        { to: "/dashboard/metadata", icon: <Camera size={18} />, label: "Photo Secrets" },
+        { to: "/dashboard/password-gen", icon: <Wand2 size={18} />, label: "Make Password" },
+        { to: "/dashboard/password-check", icon: <Shield size={18} />, label: "Test Password" },
+        { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: "Secret Codes" },
+        { to: "/dashboard/vault", icon: <Vault size={18} />, label: "Treasure Box" },
+        { to: "/dashboard/ai-agent", icon: <BotMessageSquare size={18} />, label: "Chat Buddy" },
     ];
 
     const sidebarBg = isDark ? 'bg-[#0A1128]' : 'bg-card';
@@ -191,7 +204,7 @@ export default function DashboardLayout() {
                     <img
                         src="/icon.png"
                         alt="CHEA"
-                        className="w-16 h-16 object-contain relative z-10"
+                        className="w-40 h-40 object-contain relative z-10"
                     />
                 </motion.div>
                 <span className="font-cyber text-sm font-bold tracking-[0.25em] uppercase" style={{ color: isDark ? '#F4F6FF' : '#121A33' }}>
@@ -201,8 +214,8 @@ export default function DashboardLayout() {
 
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
-                <div className={`mb-3 px-4 text-[0.6rem] font-cyber font-semibold uppercase tracking-[0.2em] ${sectionLabelColor}`}>
-                    Navigation
+                <div className={`mb-3 px-4 text-[0.6rem] font-display font-bold uppercase tracking-[0.2em] ${sectionLabelColor}`}>
+                    My Tools
                 </div>
                 {navItems.map((item) => (
                     <NavItem key={item.to} {...item} isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
@@ -214,7 +227,7 @@ export default function DashboardLayout() {
                 <NavItem to="/dashboard/settings" icon={<Settings size={18} />} label="Settings" isDark={isDark} />
                 <button
                     onClick={handleLogout}
-                    className={`sidebar-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left text-sm ${sectionLabelColor} ${logoutHover}`}
+                    className={`sidebar-nav-item font-display flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left text-sm font-bold ${sectionLabelColor} ${logoutHover}`}
                 >
                     <motion.span
                         whileHover={{ scale: 1.15 }}
@@ -222,7 +235,7 @@ export default function DashboardLayout() {
                     >
                         <LogOut size={18} />
                     </motion.span>
-                    <span>Log Out</span>
+                    <span className="font-display font-bold">Log Out</span>
                 </button>
             </div>
 
@@ -261,68 +274,146 @@ export default function DashboardLayout() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-                {/* Header */}
-                <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-4 md:px-8 z-10 sticky top-0">
-                    <div className="flex items-center gap-4">
-                        <button
-                            className="md:hidden p-2 rounded-md text-foreground/70 hover:bg-accent hover:text-foreground"
-                            onClick={() => setIsMobileMenuOpen(true)}
+                {/* Fun Kid-Friendly Header */}
+                <header className={`relative h-20 border-b ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between px-4 md:px-6 z-10 overflow-hidden`}>
+                    {/* Animated gradient background */}
+                    <div className={`absolute inset-0 ${isDark
+                        ? 'bg-gradient-to-r from-[#0A1128] via-[#0F1B3D] to-[#0A1128]'
+                        : 'bg-gradient-to-r from-white via-violet-50/30 to-white'
+                    }`} />
+                    {/* Floating decorative elements */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <motion.div
+                            className="absolute top-2 left-[15%] text-2xl opacity-10"
+                            animate={{ y: [0, -8, 0], rotate: [0, 10, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                         >
-                            <Menu size={24} />
-                        </button>
-                        <h2 className="text-lg font-medium hidden sm:block">Welcome back, {displayName}</h2>
+                            ⭐
+                        </motion.div>
+                        <motion.div
+                            className="absolute top-3 right-[25%] text-xl opacity-10"
+                            animate={{ y: [0, -6, 0], rotate: [0, -15, 0] }}
+                            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                        >
+                            🛡️
+                        </motion.div>
+                        <motion.div
+                            className="absolute bottom-1 left-[40%] text-lg opacity-8"
+                            animate={{ y: [0, -5, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        >
+                            🔐
+                        </motion.div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    {/* Left side - Greeting */}
+                    <div className="flex items-center gap-4 relative z-10">
+                        <motion.button
+                            className="md:hidden p-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            <Menu size={20} />
+                        </motion.button>
+
+                        <motion.div
+                            className="hidden sm:flex items-center gap-3"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <motion.span
+                                className="text-2xl"
+                                animate={{ rotate: [0, 15, 0] }}
+                                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                            >
+                                👋
+                            </motion.span>
+                            <div>
+                                <h2 className={`text-lg font-black ${isDark ? 'text-[#F4F6FF]' : 'text-gray-900'}`}>
+                                    Hey, {displayName}!
+                                </h2>
+                                <p className={`text-xs font-bold ${isDark ? 'text-[#8AB4F8]/50' : 'text-gray-400'}`}>
+                                    Ready for today's mission? 🚀
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Right side - Stats + Avatar */}
+                    <div className="flex items-center gap-3 relative z-10">
+                        {/* Streak Pill */}
+                        {streak > 0 && (
+                            <motion.div
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full ${isDark ? 'bg-orange-500/10 border border-orange-500/20' : 'bg-orange-50 border border-orange-200'}`}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.4 }}
+                            >
+                                <Flame size={14} className="text-orange-500" />
+                                <span className="text-xs font-black text-orange-500">{streak}</span>
+                            </motion.div>
+                        )}
+
+                        {/* XP Pill */}
+                        {progress && (
+                            <motion.div
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full ${isDark ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-emerald-50 border border-emerald-200'}`}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.5 }}
+                            >
+                                <Zap size={14} className="text-emerald-500" />
+                                <span className="text-xs font-black text-emerald-500">{progress.xp} XP</span>
+                            </motion.div>
+                        )}
+
+                        {/* Theme Toggle */}
                         <ThemeToggle />
-                        {/* User Avatar with Level Badge */}
-                        <div className="relative group">
-                            {photoURL ? (
+
+                        {/* Avatar with animated ring */}
+                        <motion.div
+                            className="relative"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            {/* Animated ring */}
+                            <motion.div
+                                className={`absolute inset-0 rounded-full ${
+                                    isDark
+                                        ? 'bg-gradient-to-r from-neon-crimson via-neon-violet to-neon-crimson'
+                                        : 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-500'
+                                }`}
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                style={{ padding: '2px' }}
+                            >
+                                <div className={`w-full h-full rounded-full ${isDark ? 'bg-[#0A1128]' : 'bg-white'}`} style={{ margin: '2px' }} />
+                            </motion.div>
+
+                            {/* Avatar */}
+                            {customAvatar ? (
                                 <img
-                                    src={photoURL}
+                                    src={customAvatar}
                                     alt={displayName}
-                                    referrerPolicy="no-referrer"
-                                    className={cn(
-                                        "h-10 w-10 rounded-full object-cover border-2 shadow-lg transition-all duration-300",
-                                        tierStyle.border,
-                                        tierStyle.glow,
-                                        isHighTier && "animate-pulse"
-                                    )}
+                                    className="relative w-11 h-11 rounded-full object-cover border-2 border-transparent shadow-lg"
                                 />
                             ) : (
-                                <div className={cn(
-                                    "h-10 w-10 rounded-full flex items-center justify-center font-semibold shadow-lg transition-all duration-300",
-                                    "bg-primary/20",
-                                    tierStyle.border,
-                                    tierStyle.glow,
-                                    isHighTier && "animate-pulse"
-                                )}>
-                                    <span className={cn("text-sm", tierStyle.text)}>{initials}</span>
+                                <div className={`relative w-11 h-11 rounded-full flex items-center justify-center font-black text-sm shadow-lg bg-gradient-to-br ${tierStyle.gradient} text-white`}>
+                                    {initials}
                                 </div>
                             )}
+
                             {/* Level Badge */}
-                            <div className={cn(
-                                "absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-md",
-                                tierStyle.bg,
-                                isHighTier && "animate-bounce"
-                            )}>
+                            <motion.div
+                                className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-black text-white shadow-md border-2 ${isDark ? 'border-[#0A1128]' : 'border-white'} ${tierStyle.bg}`}
+                                animate={isHighTier ? { scale: [1, 1.15, 1] } : {}}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
                                 {level}
-                            </div>
-                            {/* Tooltip */}
-                            <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-card border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[140px]">
-                                <div className="flex items-center gap-2">
-                                    <span className="font-bold">{level}</span>
-                                    <span className="text-muted-foreground">•</span>
-                                    <span className="text-sm">{level <= 3 ? 'Bronze' : level <= 6 ? 'Silver' : 'Gold'}</span>
-                                </div>
-                                {streak > 0 && (
-                                    <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-                                        <Flame size={12} className="text-orange-500" />
-                                        <span>{streak} day streak</span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </header>
 
@@ -337,25 +428,42 @@ export default function DashboardLayout() {
             </main>
 
             {/* Mobile Sidebar Overlay */}
-            {isMobileMenuOpen && (
-                <div className="md:hidden absolute inset-0 z-50 flex overflow-hidden">
-                    <div
-                        className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    />
-                    <aside className={`relative w-[280px] max-w-[85%] ${sidebarBg} h-full flex flex-col shadow-2xl sidebar-cyber ${isDark ? '' : 'sidebar-cyber-light'}`}>
-                        <div className="absolute top-4 right-4 z-20">
-                            <button
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="p-2 rounded-md hover:bg-accent/50 text-muted-foreground transition-all"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <SidebarContent mobile />
-                    </aside>
-                </div>
-            )}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        className="md:hidden absolute inset-0 z-50 flex overflow-hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        />
+                        <motion.aside
+                            className={`relative w-[280px] max-w-[85%] ${sidebarBg} h-full flex flex-col shadow-2xl sidebar-cyber ${isDark ? '' : 'sidebar-cyber-light'}`}
+                            initial={{ x: -280 }}
+                            animate={{ x: 0 }}
+                            exit={{ x: -280 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                        >
+                            <div className="absolute top-4 right-4 z-20">
+                                <motion.button
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="p-2 rounded-md hover:bg-accent/50 text-muted-foreground transition-all"
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <X size={20} />
+                                </motion.button>
+                            </div>
+                            <SidebarContent mobile />
+                        </motion.aside>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

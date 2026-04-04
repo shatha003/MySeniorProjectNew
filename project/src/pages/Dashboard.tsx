@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     Shield, ShieldAlert, Link as LinkIcon, FileSearch, KeyRound,
     Lock, Eye, Flame, Trophy, CheckCircle2, ChevronRight,
-    Activity, Star
+    Activity, Star, MessageSquare
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
@@ -13,6 +13,7 @@ import { useActivityStore } from '../store/useActivityStore';
 import { ActivityType } from '../services/activityService';
 import { getUserCredentials } from '../services/credentialService';
 import { useTheme } from '@/components/theme-provider';
+import { loadAvatar } from '../lib/avatar';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -42,6 +43,7 @@ const Dashboard = () => {
     const { activities, fetchActivities } = useActivityStore();
     const [credentialCount, setCredentialCount] = useState(0);
     const [animatedScore, setAnimatedScore] = useState(0);
+    const [customAvatar, setCustomAvatar] = useState<string | null>(null);
 
     useEffect(() => {
         if (user?.uid) {
@@ -49,8 +51,19 @@ const Dashboard = () => {
             fetchTasks(user.uid);
             fetchActivities(user.uid);
             getUserCredentials(user.uid).then(creds => setCredentialCount(creds.length));
+            const saved = loadAvatar();
+            if (saved) setCustomAvatar(saved.data);
         }
     }, [user?.uid, fetchProgress, fetchTasks, fetchActivities]);
+
+    useEffect(() => {
+        const handler = () => {
+            const saved = loadAvatar();
+            if (saved) setCustomAvatar(saved.data);
+        };
+        window.addEventListener('chea-avatar-changed', handler);
+        return () => window.removeEventListener('chea-avatar-changed', handler);
+    }, []);
 
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
 
@@ -121,7 +134,7 @@ const Dashboard = () => {
 
     const tools = [
         { 
-            name: "Link Scanner", 
+            name: "Link Checker", 
             description: "Check if any link is safe to click!",
             icon: <LinkIcon size={24} />, 
             to: "/dashboard/link-scanner", 
@@ -130,7 +143,7 @@ const Dashboard = () => {
             glow: "shadow-cyan-500/30"
         },
         { 
-            name: "File Scanner", 
+            name: "File Checker", 
             description: "Scan your files for hidden dangers.",
             icon: <FileSearch size={24} />, 
             to: "/dashboard/file-scanner", 
@@ -139,8 +152,8 @@ const Dashboard = () => {
             glow: "shadow-purple-500/30"
         },
         { 
-            name: "Image Privacy", 
-            description: "Hide secret messages inside your pictures!",
+            name: "Photo Secrets", 
+            description: "Find and hide secret messages inside your pictures!",
             icon: <Eye size={24} />, 
             to: "/dashboard/image-privacy", 
             xp: 10, 
@@ -148,7 +161,7 @@ const Dashboard = () => {
             glow: "shadow-rose-500/30"
         },
         { 
-            name: "Password Gen", 
+            name: "Make Password", 
             description: "Create super-strong passwords easily.",
             icon: <KeyRound size={24} />, 
             to: "/dashboard/password-gen", 
@@ -157,7 +170,7 @@ const Dashboard = () => {
             glow: "shadow-amber-500/30"
         },
         { 
-            name: "Password Check", 
+            name: "Test Password", 
             description: "Test how strong your password really is.",
             icon: <Shield size={24} />, 
             to: "/dashboard/password-check", 
@@ -166,7 +179,7 @@ const Dashboard = () => {
             glow: "shadow-teal-500/30"
         },
         { 
-            name: "Encryption", 
+            name: "Secret Codes", 
             description: "Lock your text with a secret key.",
             icon: <Lock size={24} />, 
             to: "/dashboard/encryption", 
@@ -175,8 +188,8 @@ const Dashboard = () => {
             glow: "shadow-violet-500/30"
         },
         { 
-            name: "Safe Vault", 
-            description: "Keep all your secret keys in one place.",
+            name: "Treasure Box", 
+            description: "Keep all your secret keys in one safe place.",
             icon: <ShieldAlert size={24} />, 
             to: "/dashboard/vault", 
             xp: 20, 
@@ -194,6 +207,7 @@ const Dashboard = () => {
             check_password: <Shield size={14} />,
             generate_encryption: <Lock size={14} />,
             create_credential: <ShieldAlert size={14} />,
+            chat_ai: <MessageSquare size={14} />,
         };
         return icons[type] || <Star size={14} />;
     };
@@ -247,13 +261,47 @@ const Dashboard = () => {
                         <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
                         
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
-                            <div className="space-y-2">
-                                <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                    Welcome back, {displayName}! 👋
-                                </h1>
-                                <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Ready to keep the internet safe today?
-                                </p>
+                            <div className="flex items-center gap-4">
+                                {/* Profile Avatar */}
+                                <motion.div
+                                    className="relative shrink-0"
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    {/* Animated ring */}
+                                    <motion.div
+                                        className={`absolute inset-0 rounded-full ${
+                                            isDark
+                                                ? 'bg-gradient-to-r from-neon-crimson via-neon-violet to-neon-crimson'
+                                                : 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-500'
+                                        }`}
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        style={{ padding: '2px' }}
+                                    >
+                                        <div className={`w-full h-full rounded-full ${isDark ? 'bg-cyber-dark' : 'bg-card'}`} style={{ margin: '2px' }} />
+                                    </motion.div>
+
+                                    {customAvatar ? (
+                                        <img
+                                            src={customAvatar}
+                                            alt={displayName}
+                                            className="relative w-16 h-16 rounded-full object-cover border-2 border-transparent shadow-lg"
+                                        />
+                                    ) : (
+                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center font-black text-xl shadow-lg bg-gradient-to-br ${tierStyle?.gradient || 'from-amber-500 to-orange-500'} text-white`}>
+                                            {displayName.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
+                                </motion.div>
+
+                                <div className="space-y-2">
+                                    <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
+                                        Welcome back, {displayName}! 👋
+                                    </h1>
+                                    <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
+                                        Ready to keep the internet safe today?
+                                    </p>
+                                </div>
                             </div>
 
                             {progress && tierStyle && (
@@ -375,7 +423,7 @@ const Dashboard = () => {
                                                 {task.completed && <CheckCircle2 size={14} />}
                                             </div>
                                             <span className={`text-sm font-bold ${task.completed ? 'line-through' : headingColor}`}>
-                                                {task.description.split(' ')[0]}...
+                                                {task.description}
                                             </span>
                                             <span className="ml-auto text-[10px] font-black text-primary">+{task.points}</span>
                                         </div>
@@ -395,7 +443,7 @@ const Dashboard = () => {
                         {/* Scanning Tools */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <Eye size={12} /> Scanning
+                                <Eye size={12} /> Scanning Tools
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {[tools[0], tools[1], tools[2]].map((tool, i) => (
@@ -423,7 +471,7 @@ const Dashboard = () => {
                         {/* Password Tools */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <KeyRound size={12} /> Password
+                                <KeyRound size={12} /> Password Tools
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {[tools[3], tools[4]].map((tool, i) => (
