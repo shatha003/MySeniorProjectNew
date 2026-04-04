@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 
 interface ButtonProps {
   children?: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'cyber'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   icon?: React.ReactNode
@@ -55,6 +55,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       destructive: `
         bg-destructive text-destructive-foreground
         hover:bg-destructive/90
+      `,
+      cyber: `
+        cyber-btn-glow text-white font-semibold tracking-wide
+        hover:brightness-110
       `
     }
 

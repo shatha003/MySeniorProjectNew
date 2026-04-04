@@ -2,7 +2,7 @@ import { forwardRef, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
+  label?: React.ReactNode
   error?: string
   icon?: React.ReactNode
   suffix?: React.ReactNode

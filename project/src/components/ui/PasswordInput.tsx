@@ -2,7 +2,7 @@ import { forwardRef, useState, useId } from 'react'
 import Input from './Input'
 
 interface PasswordInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  label: string
+  label: React.ReactNode
   error?: string
   showRequirements?: boolean
 }

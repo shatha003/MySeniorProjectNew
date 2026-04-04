@@ -1,5 +1,5 @@
 ## Writing Rules For Humanizing  
-### *HyperTool: A Comprehensive Cybersecurity Desktop Application*
+### CHEA: A Comprehensive Cybersecurity Desktop Application*
 
 ---
 
