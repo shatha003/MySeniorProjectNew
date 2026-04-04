@@ -5,6 +5,8 @@ import { auth } from '../../lib/firebase';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUserProgressStore } from '../../store/useUserProgressStore';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { motion } from 'framer-motion';
+import { useTheme } from '../theme-provider';
 import {
     LayoutDashboard,
     Link as LinkIcon,
@@ -20,7 +22,6 @@ import {
     X,
     Flame,
     Bot,
-    Calculator as CalculatorIcon,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -30,29 +31,49 @@ interface NavItemProps {
     label: string;
     onClick?: () => void;
     end?: boolean;
+    isDark: boolean;
 }
 
-const NavItem = ({ to, icon, label, onClick, end }: NavItemProps) => {
+const NavItem = ({ to, icon, label, onClick, end, isDark }: NavItemProps) => {
     return (
         <NavLink
             to={to}
             end={end}
             onClick={onClick}
             className={({ isActive }) => cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group relative overflow-hidden",
-                "hover:bg-primary/10 hover:text-primary",
-                isActive ? "bg-primary/15 text-primary font-medium" : "text-muted-foreground"
+                "sidebar-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all group relative overflow-hidden",
+                isActive
+                    ? "sidebar-nav-active font-medium"
+                    : isDark
+                        ? "text-[#8AB4F8]/60 hover:text-[#F4F6FF]"
+                        : "text-gray-600 hover:text-gray-900"
             )}
         >
             {({ isActive }) => (
                 <>
-                    {isActive && (
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md" />
-                    )}
-                    <span className={cn("transition-transform group-hover:scale-110", isActive && "text-primary")}>
+                    <motion.span
+                        className={cn(
+                            "transition-transform",
+                            isActive
+                                ? "text-[#FF0A54]"
+                                : isDark
+                                    ? "group-hover:text-[#FF0A54]/80"
+                                    : "group-hover:text-[#4D00FF]/80"
+                        )}
+                        whileHover={{ scale: 1.15 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    >
                         {icon}
-                    </span>
-                    <span>{label}</span>
+                    </motion.span>
+                    <span className="text-sm">{label}</span>
+                    {isActive && (
+                        <motion.div
+                            className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[#FF0A54]"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        />
+                    )}
                 </>
             )}
         </NavLink>
@@ -64,24 +85,22 @@ export default function DashboardLayout() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const user = useAuthStore((s) => s.user);
     const { progress, fetchProgress } = useUserProgressStore();
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === 'dark';
 
-    // Derive display values from the Firebase user object
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
     const photoURL = user?.photoURL || null;
     const initials = displayName.charAt(0).toUpperCase();
 
-    // Fetch user progress on mount
     useEffect(() => {
         if (user?.uid) {
             fetchProgress(user.uid);
         }
     }, [user?.uid, fetchProgress]);
 
-    // Get level info
     const level = progress?.level || 1;
     const streak = progress?.streakDays || 0;
 
-    // Tier-based styling
     const getTierStyle = (lvl: number) => {
         if (lvl <= 3) {
             return {
@@ -115,7 +134,6 @@ export default function DashboardLayout() {
 
     const handleLogout = async () => {
         try {
-            // Clear remember-me preference so next launch starts fresh
             localStorage.removeItem('chea-remember-me');
             await signOut(auth);
             navigate('/login');
@@ -125,45 +143,120 @@ export default function DashboardLayout() {
     };
 
     const navItems = [
-        { to: "/dashboard", icon: <LayoutDashboard size={20} />, label: "Dashboard", end: true },
-        { to: "/dashboard/link-scanner", icon: <LinkIcon size={20} />, label: "Link Scanner" },
-        { to: "/dashboard/file-scanner", icon: <FileSearch size={20} />, label: "File Scanner" },
-        { to: "/dashboard/metadata", icon: <ImageIcon size={20} />, label: "Image Privacy" },
-        { to: "/dashboard/password-gen", icon: <KeyRound size={20} />, label: "Password Gen" },
-        { to: "/dashboard/password-check", icon: <ShieldCheck size={20} />, label: "Password Checker" },
-        { to: "/dashboard/encryption", icon: <Lock size={20} />, label: "Encryption" },
-        { to: "/dashboard/vault", icon: <ShieldAlert size={20} />, label: "Credential Vault" },
-        { to: "/dashboard/ai-agent", icon: <Bot size={20} />, label: "AI Agent" },
+        { to: "/dashboard", icon: <LayoutDashboard size={18} />, label: "Dashboard", end: true },
+        { to: "/dashboard/link-scanner", icon: <LinkIcon size={18} />, label: "Link Scanner" },
+        { to: "/dashboard/file-scanner", icon: <FileSearch size={18} />, label: "File Scanner" },
+        { to: "/dashboard/metadata", icon: <ImageIcon size={18} />, label: "Image Privacy" },
+        { to: "/dashboard/password-gen", icon: <KeyRound size={18} />, label: "Password Gen" },
+        { to: "/dashboard/password-check", icon: <ShieldCheck size={18} />, label: "Password Checker" },
+        { to: "/dashboard/encryption", icon: <Lock size={18} />, label: "Encryption" },
+        { to: "/dashboard/vault", icon: <ShieldAlert size={18} />, label: "Credential Vault" },
+        { to: "/dashboard/ai-agent", icon: <Bot size={18} />, label: "AI Agent" },
     ];
+
+    const sidebarBg = isDark ? 'bg-[#0A1128]' : 'bg-card';
+    const sectionLabelColor = isDark ? 'text-[#8AB4F8]/40' : 'text-muted-foreground';
+    const logoutHover = isDark
+        ? 'hover:bg-red-500/10 hover:text-red-400'
+        : 'hover:bg-destructive/10 hover:text-destructive';
+    const footerBorderColor = isDark ? 'border-[#FF0A54]/10' : 'border-border';
+    const footerTextColor = isDark ? 'text-[#8AB4F8]/30' : 'text-gray-400';
+
+    const SidebarContent = ({ mobile = false }: { mobile?: boolean }) => (
+        <div className="flex flex-col h-full relative z-10">
+            {/* Logo */}
+            <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="flex flex-col items-center gap-2 py-5 px-4"
+            >
+                <motion.div
+                    className="relative cursor-pointer"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                >
+                    <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                            background: isDark
+                                ? 'radial-gradient(circle, rgba(255,10,84,0.25) 0%, rgba(255,10,84,0.08) 50%, transparent 70%)'
+                                : 'radial-gradient(circle, rgba(77,0,255,0.15) 0%, rgba(77,0,255,0.05) 50%, transparent 70%)',
+                            filter: 'blur(20px)',
+                        }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileHover={{ opacity: 1, scale: 1.2 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                    />
+                    <img
+                        src="/icon.png"
+                        alt="CHEA"
+                        className="w-16 h-16 object-contain relative z-10"
+                    />
+                </motion.div>
+                <span className="font-cyber text-sm font-bold tracking-[0.25em] uppercase" style={{ color: isDark ? '#F4F6FF' : '#121A33' }}>
+                    CHEA
+                </span>
+            </motion.div>
+
+            {/* Navigation */}
+            <div className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
+                <div className={`mb-3 px-4 text-[0.6rem] font-cyber font-semibold uppercase tracking-[0.2em] ${sectionLabelColor}`}>
+                    Navigation
+                </div>
+                {navItems.map((item) => (
+                    <NavItem key={item.to} {...item} isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                ))}
+            </div>
+
+            {/* Footer */}
+            <div className={`px-3 py-3 border-t ${footerBorderColor} space-y-0.5`}>
+                <NavItem to="/dashboard/settings" icon={<Settings size={18} />} label="Settings" isDark={isDark} />
+                <button
+                    onClick={handleLogout}
+                    className={`sidebar-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left text-sm ${sectionLabelColor} ${logoutHover}`}
+                >
+                    <motion.span
+                        whileHover={{ scale: 1.15 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    >
+                        <LogOut size={18} />
+                    </motion.span>
+                    <span>Log Out</span>
+                </button>
+            </div>
+
+            {/* Encryption badge */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className={`px-4 py-3 flex items-center gap-2 text-[0.6rem] ${footerTextColor}`}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span className="font-body tracking-wide">AES-256 Encrypted</span>
+            </motion.div>
+        </div>
+    );
 
     return (
         <div className="flex h-full w-full overflow-hidden bg-background">
             {/* Sidebar - Desktop */}
-            <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card">
-                <div className="p-6 flex items-center gap-3">
-                    <img src="/icon.png" alt="HyperTool Logo" className="w-8 h-8 object-contain drop-shadow-sm" />
-                    <h1 className="text-xl font-bold tracking-tight">HyperTool</h1>
-                </div>
-
-                <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                    <div className="mb-4 px-3 text-xs font-semibold uppercase text-muted-foreground tracking-wider">
-                        Main Menu
-                    </div>
-                    {navItems.map((item) => (
-                        <NavItem key={item.to} {...item} />
-                    ))}
-                </div>
-
-                <div className="p-4 border-t border-border space-y-1">
-                    <NavItem to="/dashboard/settings" icon={<Settings size={20} />} label="Settings" />
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors w-full text-left text-muted-foreground hover:bg-destructive/10 hover:text-destructive group"
-                    >
-                        <LogOut size={20} className="transition-transform group-hover:scale-110" />
-                        <span>Log Out</span>
-                    </button>
-                </div>
+            <aside className={`hidden md:flex flex-col w-64 ${sidebarBg} sidebar-cyber ${isDark ? '' : 'sidebar-cyber-light'}`}>
+                <SidebarContent />
             </aside>
 
             {/* Main Content Area */}
@@ -250,48 +343,16 @@ export default function DashboardLayout() {
                         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
                         onClick={() => setIsMobileMenuOpen(false)}
                     />
-                    <aside className="relative w-[280px] max-w-[85%] bg-card border-r border-border h-full flex flex-col shadow-2xl animate-in slide-in-from-left duration-300">
-                        <div className="p-6 flex items-center justify-between border-b border-border">
-                            <div className="flex items-center gap-3">
-                                <img src="/icon.png" alt="CHEA Logo" className="w-8 h-8 object-contain drop-shadow-sm" />
-                                <h1 className="text-xl font-bold">CHEA</h1>
-                            </div>
+                    <aside className={`relative w-[280px] max-w-[85%] ${sidebarBg} h-full flex flex-col shadow-2xl sidebar-cyber ${isDark ? '' : 'sidebar-cyber-light'}`}>
+                        <div className="absolute top-4 right-4 z-20">
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="p-2 rounded-md hover:bg-accent hover:text-foreground text-muted-foreground transition-all"
+                                className="p-2 rounded-md hover:bg-accent/50 text-muted-foreground transition-all"
                             >
-                                <X size={22} />
+                                <X size={20} />
                             </button>
                         </div>
-
-                        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-                            <div className="mb-4 px-2 text-xs font-semibold uppercase text-muted-foreground tracking-wider">
-                                Main Menu
-                            </div>
-                            {navItems.map((item) => (
-                                <NavItem
-                                    key={item.to}
-                                    {...item}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                />
-                            ))}
-                        </div>
-
-                        <div className="p-6 border-t border-border space-y-2">
-                            <NavItem
-                                to="/dashboard/settings"
-                                icon={<Settings size={20} />}
-                                label="Settings"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            />
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors w-full text-left text-muted-foreground hover:bg-destructive/10 hover:text-destructive group"
-                            >
-                                <LogOut size={20} className="transition-transform group-hover:scale-110" />
-                                <span>Log Out</span>
-                            </button>
-                        </div>
+                        <SidebarContent mobile />
                     </aside>
                 </div>
             )}
