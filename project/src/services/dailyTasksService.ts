@@ -67,8 +67,26 @@ export const DEFAULT_DAILY_TASKS: Omit<DailyTasksData, 'date' | 'totalScore' | '
             points: 15,
             completed: false,
         },
+        {
+            id: 'play_quiz',
+            type: 'quiz_round',
+            description: 'Play Quiz Arena',
+            target: 1,
+            current: 0,
+            points: 15,
+            completed: false,
+        },
+        {
+            id: 'spot_phish',
+            type: 'phishing_round',
+            description: 'Spot a Phish',
+            target: 1,
+            current: 0,
+            points: 15,
+            completed: false,
+        },
     ],
-    maxScore: 95,
+    maxScore: 125,
 };
 
 export async function getDailyTasks(userId: string): Promise<DailyTasksData | null> {

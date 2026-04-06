@@ -9,7 +9,11 @@ export type ActivityType =
     | 'check_password'
     | 'generate_encryption'
     | 'create_credential'
-    | 'chat_ai';
+    | 'chat_ai'
+    | 'quiz_round'
+    | 'phishing_round'
+    | 'quiz_streak'
+    | 'phishing_streak';
 
 export interface Activity {
     id?: string;
@@ -29,6 +33,10 @@ export const ACTIVITY_POINTS: Record<ActivityType, number> = {
     generate_encryption: 5,
     create_credential: 20,
     chat_ai: 5,
+    quiz_round: 15,
+    phishing_round: 15,
+    quiz_streak: 10,
+    phishing_streak: 10,
 };
 
 export const ACTIVITY_LABELS: Record<ActivityType, string> = {
@@ -40,6 +48,10 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     generate_encryption: 'Generated Encryption',
     create_credential: 'Created Credential',
     chat_ai: 'AI Chat Message',
+    quiz_round: 'Completed Quiz Round',
+    phishing_round: 'Completed Phishing Round',
+    quiz_streak: 'Quiz Streak Bonus',
+    phishing_streak: 'Phishing Streak Bonus',
 };
 
 export async function logActivity(

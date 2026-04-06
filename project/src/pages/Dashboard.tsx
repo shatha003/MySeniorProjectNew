@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     Shield, ShieldAlert, Link as LinkIcon, FileSearch, KeyRound,
     Lock, Eye, Flame, Trophy, CheckCircle2, ChevronRight,
-    Activity, Star, MessageSquare
+    Activity, Star, MessageSquare, Brain, Mail
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
@@ -208,6 +208,10 @@ const Dashboard = () => {
             generate_encryption: <Lock size={14} />,
             create_credential: <ShieldAlert size={14} />,
             chat_ai: <MessageSquare size={14} />,
+            quiz_round: <Brain size={14} />,
+            phishing_round: <Mail size={14} />,
+            quiz_streak: <Flame size={14} />,
+            phishing_streak: <Flame size={14} />,
         };
         return icons[type] || <Star size={14} />;
     };
@@ -521,6 +525,48 @@ const Dashboard = () => {
                                         </div>
                                     </motion.div>
                                 ))}
+                            </div>
+                        </div>
+
+                        {/* Game Zone */}
+                        <div className="mb-4">
+                            <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
+                                <Star size={12} /> Game Zone
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <motion.div
+                                    variants={itemVariants}
+                                    whileHover={{ y: -4, scale: 1.02 }}
+                                    className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                    onClick={() => navigate('/dashboard/quiz-arena')}
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white mb-3 shadow-md shadow-amber-500/30">
+                                        <Brain size={24} />
+                                    </div>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>Quiz Arena</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>Test your cyber smarts with trivia!</p>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-emerald-500">+15 XP</span>
+                                        <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    variants={itemVariants}
+                                    whileHover={{ y: -4, scale: 1.02 }}
+                                    className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                    onClick={() => navigate('/dashboard/phishing-dojo')}
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white mb-3 shadow-md shadow-red-500/30">
+                                        <Mail size={24} />
+                                    </div>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>Phishing Dojo</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>Spot the fake emails like a pro!</p>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-emerald-500">+15 XP</span>
+                                        <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                    </div>
+                                </motion.div>
                             </div>
                         </div>
 

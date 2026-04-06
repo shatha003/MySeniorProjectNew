@@ -23,6 +23,8 @@ import {
     X,
     Flame,
     Zap,
+    Brain,
+    Mail,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -165,6 +167,8 @@ export default function DashboardLayout() {
         { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: "Secret Codes" },
         { to: "/dashboard/vault", icon: <Vault size={18} />, label: "Treasure Box" },
         { to: "/dashboard/ai-agent", icon: <BotMessageSquare size={18} />, label: "Chat Buddy" },
+        { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: "Quiz Arena" },
+        { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: "Phishing Dojo" },
     ];
 
     const sidebarBg = isDark ? 'bg-[#0A1128]' : 'bg-card';

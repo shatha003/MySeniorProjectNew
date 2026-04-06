@@ -23,6 +23,8 @@ import CredentialVault from './pages/CredentialVault';
 import Settings from './pages/Settings';
 import AIAgent from './pages/AIAgent';
 import Calculator from './pages/Calculator';
+import QuizArena from './pages/QuizArena';
+import PhishingDojo from './pages/PhishingDojo';
 
 import TitleBar from './components/ui/TitleBar';
 
@@ -94,6 +96,8 @@ function App() {
             <Route path="vault" element={<CredentialVault />} />
             <Route path="ai-agent" element={<AIAgent />} />
             <Route path="calculator" element={<Calculator />} />
+            <Route path="quiz-arena" element={<QuizArena />} />
+            <Route path="phishing-dojo" element={<PhishingDojo />} />
             <Route path="settings" element={<Settings />} />
             <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
           </Route>
