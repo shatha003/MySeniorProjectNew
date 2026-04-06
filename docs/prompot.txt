@@ -13,7 +13,7 @@ Start sections with a clear point, not generic phrases.
 
 **Good:**
 - “Cybersecurity tools are often either too complex or too limited.”
-- “The idea behind HyperTool came from a simple problem…”
+- “The idea behind CHEA came from a simple problem…”
 
 **Avoid:**
 - “This report will discuss…”
@@ -103,7 +103,7 @@ But don’t overuse technical buzzwords.
 
 ## What Your Writing Should Feel Like
 
-> “At the start, the goal was to create a simple tool that combines basic cybersecurity features in one place. A lot of existing tools are either too advanced or require separate installations, which can be confusing for beginners. Because of that, HyperTool was designed as a desktop application that brings multiple functions together in a more straightforward way.”
+> “At the start, the goal was to create a simple tool that combines basic cybersecurity features in one place. A lot of existing tools are either too advanced or require separate installations, which can be confusing for beginners. Because of that, CHEA was designed as a desktop application that brings multiple functions together in a more straightforward way.”
 
 ---
 
