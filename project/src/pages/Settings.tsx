@@ -40,20 +40,10 @@ const itemVariants = {
     },
 };
 
-const avatarOptions = [
-    { emoji: '🦊', label: 'Fox', color: 'from-orange-400 to-amber-500' },
-    { emoji: '🐱', label: 'Cat', color: 'from-yellow-400 to-orange-500' },
-    { emoji: '🐶', label: 'Dog', color: 'from-amber-400 to-yellow-600' },
-    { emoji: '🦁', label: 'Lion', color: 'from-amber-500 to-orange-600' },
-    { emoji: '🐼', label: 'Panda', color: 'from-gray-400 to-gray-600' },
-    { emoji: '🐸', label: 'Frog', color: 'from-green-400 to-emerald-600' },
-    { emoji: '🦄', label: 'Unicorn', color: 'from-pink-400 to-purple-500' },
-    { emoji: '🐧', label: 'Penguin', color: 'from-blue-400 to-indigo-500' },
-    { emoji: '🦅', label: 'Eagle', color: 'from-amber-600 to-red-700' },
-    { emoji: '🐺', label: 'Wolf', color: 'from-gray-500 to-slate-700' },
-    { emoji: '🦋', label: 'Butterfly', color: 'from-cyan-400 to-blue-500' },
-    { emoji: '🐙', label: 'Octopus', color: 'from-purple-400 to-pink-600' },
-];
+const avatarOptions = Array.from({ length: 17 }, (_, i) => ({
+    src: `/avatars/avatar${i + 1}.png`,
+    label: `Avatar ${i + 1}`,
+}));
 
 type TabType = 'account' | 'security' | 'notifications';
 
@@ -188,36 +178,32 @@ export default function Settings() {
         e.target.value = '';
     };
 
-    const handleEmojiAvatarSelect = async (emoji: string) => {
+    const handlePresetAvatarSelect = async (avatarSrc: string) => {
         if (!user) return;
 
         setIsSavingAvatar(true);
         setMasterMsg('');
 
         try {
-            const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-
-            ctx.fillStyle = isDark ? '#1a1a2e' : '#f8f9fa';
-            ctx.fillRect(0, 0, 200, 200);
-
-            ctx.font = '120px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(emoji, 100, 105);
-
-            const dataUrl = canvas.toDataURL('image/png');
-            saveAvatar('emoji', dataUrl);
-            setCustomAvatar({ type: 'emoji', data: dataUrl });
-            setMasterMsg('Avatar updated! 🎉');
-            setShowAvatarPicker(false);
+            const response = await fetch(avatarSrc);
+            const blob = await response.blob();
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                saveAvatar('photo', base64String);
+                setCustomAvatar({ type: 'photo', data: base64String });
+                setMasterMsg('Avatar updated! 🎉');
+                setShowAvatarPicker(false);
+                setIsSavingAvatar(false);
+            };
+            reader.onerror = () => {
+                setMasterMsg('Failed to process avatar');
+                setIsSavingAvatar(false);
+            };
+            reader.readAsDataURL(blob);
         } catch (err: any) {
-            console.error('Failed to update emoji avatar:', err);
+            console.error('Failed to update avatar:', err);
             setMasterMsg('Failed to update avatar');
-        } finally {
             setIsSavingAvatar(false);
         }
     };
@@ -351,7 +337,7 @@ export default function Settings() {
                                     </div>
 
                                     {/* Avatar Section */}
-                                    <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
+                                    <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pt-8">
                                         <div className="relative group">
                                             {customAvatar ? (
                                                 <img
@@ -425,19 +411,26 @@ export default function Settings() {
                                                 </motion.label>
 
                                                 {/* Emoji Avatars */}
-                                                <p className={`text-sm font-bold ${mutedText} mb-3`}>Or pick a fun emoji:</p>
+                                                <p className={`text-sm font-bold ${mutedText} mb-3`}>Or pick a preset avatar:</p>
                                                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
                                                     {avatarOptions.map((avatar) => (
                                                         <motion.button
-                                                            key={avatar.emoji}
-                                                            onClick={() => handleEmojiAvatarSelect(avatar.emoji)}
+                                                            key={avatar.src}
+                                                            onClick={() => handlePresetAvatarSelect(avatar.src)}
                                                             disabled={isSavingAvatar}
-                                                            className={`flex flex-col items-center gap-1 p-3 rounded-2xl bg-gradient-to-br ${avatar.color} text-white shadow-lg disabled:opacity-50`}
+                                                            className={`p-2 rounded-2xl border-2 transition-all overflow-hidden ${
+                                                                isDark
+                                                                    ? 'border-white/10 hover:border-primary/30 bg-white/5'
+                                                                    : 'border-gray-200 hover:border-primary/30 bg-gray-50'
+                                                            } disabled:opacity-50`}
                                                             whileHover={{ scale: 1.1, y: -4 }}
                                                             whileTap={{ scale: 0.9 }}
                                                         >
-                                                            <span className="text-2xl">{avatar.emoji}</span>
-                                                            <span className="text-[10px] font-bold">{avatar.label}</span>
+                                                            <img
+                                                                src={avatar.src}
+                                                                alt={avatar.label}
+                                                                className="w-full aspect-square rounded-xl object-cover"
+                                                            />
                                                         </motion.button>
                                                     ))}
                                                 </div>

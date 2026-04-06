@@ -280,19 +280,19 @@ const Dashboard = () => {
                                         }`}
                                         animate={{ rotate: 360 }}
                                         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                        style={{ padding: '2px' }}
+                                        style={{ padding: '4px' }}
                                     >
-                                        <div className={`w-full h-full rounded-full ${isDark ? 'bg-cyber-dark' : 'bg-card'}`} style={{ margin: '2px' }} />
+                                        <div className={`w-full h-full rounded-full ${isDark ? 'bg-cyber-dark' : 'bg-card'}`} style={{ margin: '4px' }} />
                                     </motion.div>
 
                                     {customAvatar ? (
                                         <img
                                             src={customAvatar}
                                             alt={displayName}
-                                            className="relative w-16 h-16 rounded-full object-cover border-2 border-transparent shadow-lg"
+                                            className="relative w-32 h-32 rounded-full object-cover border-2 border-transparent shadow-lg"
                                         />
                                     ) : (
-                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center font-black text-xl shadow-lg bg-gradient-to-br ${tierStyle?.gradient || 'from-amber-500 to-orange-500'} text-white`}>
+                                        <div className={`relative w-32 h-32 rounded-full flex items-center justify-center font-black text-4xl shadow-lg bg-gradient-to-br ${tierStyle?.gradient || 'from-amber-500 to-orange-500'} text-white`}>
                                             {displayName.charAt(0).toUpperCase()}
                                         </div>
                                     )}

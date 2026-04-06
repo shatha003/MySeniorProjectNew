@@ -249,7 +249,7 @@ export default function DashboardLayout() {
                 <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label="Chat Buddy" isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
 
                 {/* Sections */}
-                {navSections.map((section, sectionIdx) => (
+                {navSections.map((section) => (
                     <div key={section.label} className="mb-2">
                         <div className={`flex items-center gap-2 mb-1.5 px-4 text-[0.6rem] font-display font-bold uppercase tracking-[0.15em] ${sectionLabelColor}`}>
                             {section.icon}
