@@ -25,6 +25,10 @@ import {
     Zap,
     Brain,
     Mail,
+    FolderOpen,
+    KeyRound,
+    Lock,
+    Gamepad2,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -157,18 +161,40 @@ export default function DashboardLayout() {
         }
     };
 
-    const navItems = [
-        { to: "/dashboard", icon: <Home size={18} />, label: "Home", end: true },
-        { to: "/dashboard/link-scanner", icon: <ScanSearch size={18} />, label: "Link Checker" },
-        { to: "/dashboard/file-scanner", icon: <FileCheck size={18} />, label: "File Checker" },
-        { to: "/dashboard/metadata", icon: <Camera size={18} />, label: "Photo Secrets" },
-        { to: "/dashboard/password-gen", icon: <Wand2 size={18} />, label: "Make Password" },
-        { to: "/dashboard/password-check", icon: <Shield size={18} />, label: "Test Password" },
-        { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: "Secret Codes" },
-        { to: "/dashboard/vault", icon: <Vault size={18} />, label: "Treasure Box" },
-        { to: "/dashboard/ai-agent", icon: <BotMessageSquare size={18} />, label: "Chat Buddy" },
-        { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: "Quiz Arena" },
-        { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: "Phishing Dojo" },
+    const navSections = [
+        {
+            label: "Scanning Tools",
+            icon: <FolderOpen size={14} />,
+            items: [
+                { to: "/dashboard/link-scanner", icon: <ScanSearch size={18} />, label: "Link Checker" },
+                { to: "/dashboard/file-scanner", icon: <FileCheck size={18} />, label: "File Checker" },
+                { to: "/dashboard/metadata", icon: <Camera size={18} />, label: "Photo Secrets" },
+            ]
+        },
+        {
+            label: "Password Tools",
+            icon: <KeyRound size={14} />,
+            items: [
+                { to: "/dashboard/password-gen", icon: <Wand2 size={18} />, label: "Make Password" },
+                { to: "/dashboard/password-check", icon: <Shield size={18} />, label: "Test Password" },
+            ]
+        },
+        {
+            label: "Encryption & Vault",
+            icon: <Lock size={14} />,
+            items: [
+                { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: "Secret Codes" },
+                { to: "/dashboard/vault", icon: <Vault size={18} />, label: "Treasure Box" },
+            ]
+        },
+        {
+            label: "Game Zone",
+            icon: <Gamepad2 size={14} />,
+            items: [
+                { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: "Quiz Arena" },
+                { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: "Phishing Dojo" },
+            ]
+        },
     ];
 
     const sidebarBg = isDark ? 'bg-[#0A1128]' : 'bg-card';
@@ -217,12 +243,24 @@ export default function DashboardLayout() {
             </motion.div>
 
             {/* Navigation */}
-            <div className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
-                <div className={`mb-3 px-4 text-[0.6rem] font-display font-bold uppercase tracking-[0.2em] ${sectionLabelColor}`}>
-                    My Tools
-                </div>
-                {navItems.map((item) => (
-                    <NavItem key={item.to} {...item} isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+            <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
+                {/* Standalone items */}
+                <NavItem to="/dashboard" icon={<Home size={18} />} label="Home" end isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label="Chat Buddy" isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+
+                {/* Sections */}
+                {navSections.map((section, sectionIdx) => (
+                    <div key={section.label} className="mb-2">
+                        <div className={`flex items-center gap-2 mb-1.5 px-4 text-[0.6rem] font-display font-bold uppercase tracking-[0.15em] ${sectionLabelColor}`}>
+                            {section.icon}
+                            <span>{section.label}</span>
+                        </div>
+                        <div className="space-y-0.5">
+                            {section.items.map((item) => (
+                                <NavItem key={item.to} {...item} isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                            ))}
+                        </div>
+                    </div>
                 ))}
             </div>
 
