@@ -1,156 +1,110 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0f;
-  --surface: #f8f9fc;
-  --surface-border: #e2e6f0;
-  --card: #ffffff;
-  --card-border: #e2e6f0;
-  --neon-crimson: #ff0a54;
-  --neon-pink: #fa003f;
-  --neon-violet: #4d00ff;
-  --neon-cyan: #00e5ff;
-  --cyber-blue: #0a1128;
-  --muted: #6b7fa3;
-  --muted-cyan: #8ab4f8;
-  --heading-font: var(--font-fredoka);
-  --body-font: var(--font-nunito);
-}
-
-.dark {
-  --background: #05050a;
-  --foreground: #f4f6ff;
-  --surface: #0a1128;
-  --surface-border: #1a2744;
-  --card: #0d1530;
-  --card-border: #1e3a5f;
-  --muted: #8ab4f8;
-  --muted-cyan: #8ab4f8;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-border: var(--surface-border);
-  --color-card: var(--card);
-  --color-card-border: var(--card-border);
-  --color-neon-crimson: var(--neon-crimson);
-  --color-neon-pink: var(--neon-pink);
-  --color-neon-violet: var(--neon-violet);
-  --color-neon-cyan: var(--neon-cyan);
-  --color-cyber-blue: var(--cyber-blue);
-  --color-muted: var(--muted);
-  --color-muted-cyan: var(--muted-cyan);
-  --font-heading: var(--heading-font);
-  --font-body: var(--body-font);
-  --animate-meteor: meteor 3s linear infinite;
-  --animate-shiny-text: shiny-text 3s infinite;
-  --animate-marquee: marquee var(--duration) linear infinite;
-  --animate-fade-in: fade-in 0.8s ease-out forwards;
-  --animate-slide-up: slide-up 0.6s ease-out forwards;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+  --color-background: #0d0d15;
+  --color-foreground: #f2effb;
+  
+  --color-on-primary: #005d63;
+  --color-secondary: #d674ff;
+  --color-error: #ff716c;
+  --color-primary-fixed-dim: #00deec;
+  --color-surface: #0d0d15;
+  --color-secondary-dim: #bb00fc;
+  --color-on-primary-container: #005359;
+  --color-primary-fixed: #00eefc;
+  --color-tertiary-fixed-dim: #beee00;
+  --color-tertiary-dim: #beee00;
+  --color-surface-container-lowest: #000000;
+  --color-on-surface-variant: #acaab5;
+  --color-inverse-on-surface: #55545e;
+  --color-surface-variant: #252531;
+  --color-secondary-fixed: #f1c1ff;
+  --color-on-tertiary-container: #4a5e00;
+  --color-on-primary-fixed-variant: #005e64;
+  --color-surface-tint: #8ff5ff;
+  --color-on-secondary-container: #fff5fc;
+  --color-on-secondary: #390050;
+  --color-error-container: #9f0519;
+  --color-primary-container: #00eefc;
+  --color-inverse-primary: #006a71;
+  --color-outline-variant: #484751;
+  --color-surface-container-high: #1f1f29;
+  --color-error-dim: #d7383b;
+  --color-tertiary: #f3ffca;
+  --color-surface-container-low: #13131c;
+  --color-surface-bright: #2b2b38;
+  --color-inverse-surface: #fcf8ff;
+  --color-surface-container-highest: #252531;
+  --color-on-primary-fixed: #003f43;
+  --color-surface-dim: #0d0d15;
+  --color-on-error: #490006;
+  --color-on-tertiary-fixed-variant: #526900;
+  --color-on-secondary-fixed-variant: #8400b3;
+  --color-tertiary-container: #cafd00;
+  --color-on-tertiary-fixed: #3a4a00;
+  --color-on-surface: #f2effb;
+  --color-on-error-container: #ffa8a3;
+  --color-outline: #76747f;
+  --color-on-background: #f2effb;
+  --color-primary: #8ff5ff;
+  --color-surface-container: #191923;
+  --color-secondary-fixed-dim: #eaaeff;
+  --color-primary-dim: #00deec;
+  --color-secondary-container: #9900cf;
+  --color-on-tertiary: #516700;
+  --color-tertiary-fixed: #cafd00;
+  --color-on-secondary-fixed: #580079;
+
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-label: "Space Grotesk", sans-serif;
 }
 
-@keyframes meteor {
-  0% {
-    transform: rotate(var(--angle)) translateX(0);
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(var(--angle)) translateX(500px);
-    opacity: 0;
-  }
-}
-
-@keyframes shiny-text {
-  0% {
-    background-position: calc(var(--shiny-width) * -1) 0;
-  }
-  100% {
-    background-position: calc(var(--shiny-width) * 1) 0;
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-  }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@layer base {
+  body {
+    background-color: #0d0d15;
+    color: #f2effb;
+    font-family: var(--font-body);
   }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 10, 84, 0.3);
+@layer utilities {
+  .headline {
+    font-family: var(--font-headline);
   }
-  50% {
-    box-shadow: 0 0 40px rgba(255, 10, 84, 0.6);
+  
+  .glass-hud {
+    backdrop-filter: blur(24px);
+    background-color: rgba(37, 37, 49, 0.4);
   }
-}
+  
+  .kinetic-button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .glow-primary {
+    box-shadow: 0 0 32px 0 rgba(143, 245, 255, 0.12);
+  }
+  
+  .glitch-accent {
+    text-shadow: -2px 0 #ff716c, 2px 0 #8ff5ff;
+  }
 
-@keyframes grid-fade {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body), sans-serif;
-  overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-::selection {
-  background: var(--neon-crimson);
-  color: white;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--neon-violet);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--neon-crimson);
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: var(--cyber-blue);
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
 }

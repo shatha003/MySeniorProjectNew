@@ -1,22 +1,20 @@
 import type { Metadata } from "next";
-import { Fredoka, Nunito } from "next/font/google";
+import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const fredoka = Fredoka({
-  variable: "--font-fredoka",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-headline",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "CHEA - Comprehensive Cybersecurity Suite",
-  description: "A powerful desktop cybersecurity application featuring encrypted password vaults, real-time threat scanning, and advanced security analysis tools.",
+  title: "CHEA - Your Cyber-Defender Toolkit",
+  description: "The ultimate digital shield built for the next generation. Master the internet, protect your data, and level up your security skills.",
 };
 
 export default function RootLayout({
@@ -25,15 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
-    >
+    <html lang="en" className="dark scroll-smooth">
       <head>
-        <meta name="theme-color" content="#05050a" />
+        <link 
+          rel="stylesheet" 
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" 
+        />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

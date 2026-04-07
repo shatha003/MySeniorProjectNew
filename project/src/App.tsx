@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './lib/firebase'
 import { useAuthStore } from './store/useAuthStore'
@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import PlaceholderPage from './pages/PlaceholderPage';
 
@@ -50,6 +51,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   const { loading, setUser, setLoading } = useAuthStore()
+  const location = useLocation()
+  const isLandingPage = location.pathname === '/'
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -76,7 +79,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <TitleBar />
+      {!isLandingPage && <TitleBar />}
       <div className="app-content">
         <Routes>
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -102,7 +105,7 @@ function App() {
             <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
           </Route>
 
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
       </div>
     </div>
