@@ -1,30 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0f;
-  --foreground: #e4e4e7;
-  --neon-crimson: #ff2a6d;
-  --neon-violet: #a855f7;
-  --neon-cyan: #05d9e8;
-  --cyber-void: #0d0221;
-  --cyber-dark: #1a1a2e;
+  --background: #ffffff;
+  --foreground: #0a0a0f;
+  --surface: #f8f9fc;
+  --surface-border: #e2e6f0;
+  --card: #ffffff;
+  --card-border: #e2e6f0;
+  --neon-crimson: #ff0a54;
+  --neon-pink: #fa003f;
+  --neon-violet: #4d00ff;
+  --neon-cyan: #00e5ff;
+  --cyber-blue: #0a1128;
+  --muted: #6b7fa3;
+  --muted-cyan: #8ab4f8;
+  --heading-font: var(--font-fredoka);
+  --body-font: var(--font-nunito);
+}
+
+.dark {
+  --background: #05050a;
+  --foreground: #f4f6ff;
+  --surface: #0a1128;
+  --surface-border: #1a2744;
+  --card: #0d1530;
+  --card-border: #1e3a5f;
+  --muted: #8ab4f8;
+  --muted-cyan: #8ab4f8;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
   --color-neon-crimson: var(--neon-crimson);
+  --color-neon-pink: var(--neon-pink);
   --color-neon-violet: var(--neon-violet);
   --color-neon-cyan: var(--neon-cyan);
-  --color-cyber-void: var(--cyber-void);
-  --color-cyber-dark: var(--cyber-dark);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cyber-blue: var(--cyber-blue);
+  --color-muted: var(--muted);
+  --color-muted-cyan: var(--muted-cyan);
+  --font-heading: var(--heading-font);
+  --font-body: var(--body-font);
   --animate-meteor: meteor 3s linear infinite;
   --animate-shiny-text: shiny-text 3s infinite;
   --animate-marquee: marquee var(--duration) linear infinite;
   --animate-fade-in: fade-in 0.8s ease-out forwards;
   --animate-slide-up: slide-up 0.6s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
 }
 
 @keyframes meteor {
@@ -60,12 +87,8 @@
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slide-up {
@@ -79,29 +102,31 @@
   }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 42, 109, 0.3);
+    box-shadow: 0 0 20px rgba(255, 10, 84, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(255, 42, 109, 0.6);
+    box-shadow: 0 0 40px rgba(255, 10, 84, 0.6);
   }
 }
 
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
+@keyframes grid-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-body), sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
@@ -114,7 +139,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--cyber-void);
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -124,4 +149,8 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--neon-crimson);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--cyber-blue);
 }
