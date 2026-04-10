@@ -28,6 +28,7 @@ import QuizArena from './pages/QuizArena';
 import PhishingDojo from './pages/PhishingDojo';
 
 import TitleBar from './components/ui/TitleBar';
+import { MusicPlayer } from './components/ui/MusicPlayer';
 
 /**
  * Route guard – only allows authenticated users through.
@@ -108,6 +109,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
         </Routes>
       </div>
+      <MusicPlayer />
     </div>
   )
 }

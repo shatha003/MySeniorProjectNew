@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { invoke, Channel } from "@tauri-apps/api/core";
 import {
     Send,
     Copy,
@@ -239,29 +238,83 @@ export default function AIAgent() {
 
             await addChatMessage(userId, currentSessionId, "user", userMessageContent);
 
+            const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+            if (!apiKey) throw new Error("OpenRouter API key not configured.");
+
             let fullResponse = "";
             let hasStartedStreaming = false;
-            const channel = new Channel<string>();
-            channel.onmessage = (chunk: string) => {
-                fullResponse += chunk;
-                if (!hasStartedStreaming) {
-                    hasStartedStreaming = true;
-                    setIsStreaming(true);
-                    setMessages((prev) => [...prev, { role: "assistant", content: chunk }]);
-                } else {
-                    setMessages((prev) => {
-                        const newMessages = [...prev];
-                        const lastIndex = newMessages.length - 1;
-                        const lastMsg = newMessages[lastIndex];
-                        if (lastMsg && lastMsg.role === "assistant") {
-                            newMessages[lastIndex] = { ...lastMsg, content: lastMsg.content + chunk };
-                        }
-                        return newMessages;
-                    });
-                }
+
+            const systemMessage: Message = {
+                role: "system",
+                content: "You are CHEA's AI cybersecurity assistant. You help users learn about online safety, password security, phishing, encryption, and general cybersecurity topics. Be friendly, educational, and use emojis occasionally. Keep responses clear and actionable. You are talking to a user of a cybersecurity education app called CHEA.",
             };
 
-            await invoke("chat_with_ai", { messages: historyToSend, onChunk: channel });
+            const apiMessages = [systemMessage, ...historyToSend];
+
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://chea.app",
+                    "X-Title": "CHEA Cybersecurity App",
+                },
+                body: JSON.stringify({
+                    model: "z-ai/glm-4.5-air:free",
+                    messages: apiMessages,
+                    stream: true,
+                }),
+            });
+
+            if (!response.ok) {
+                const errBody = await response.text();
+                throw new Error(`OpenRouter API error (${response.status}): ${errBody}`);
+            }
+
+            const reader = response.body?.getReader();
+            if (!reader) throw new Error("Failed to get response stream.");
+
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split("\n");
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed || !trimmed.startsWith("data: ")) continue;
+                    const data = trimmed.slice(6);
+                    if (data === "[DONE]") continue;
+
+                    try {
+                        const parsed = JSON.parse(data);
+                        const delta = parsed.choices?.[0]?.delta?.content;
+                        if (delta) {
+                            fullResponse += delta;
+                            if (!hasStartedStreaming) {
+                                hasStartedStreaming = true;
+                                setIsStreaming(true);
+                                setMessages((prev) => [...prev, { role: "assistant", content: delta }]);
+                            } else {
+                                setMessages((prev) => {
+                                    const newMessages = [...prev];
+                                    const lastIndex = newMessages.length - 1;
+                                    const lastMsg = newMessages[lastIndex];
+                                    if (lastMsg && lastMsg.role === "assistant") {
+                                        newMessages[lastIndex] = { ...lastMsg, content: lastMsg.content + delta };
+                                    }
+                                    return newMessages;
+                                });
+                            }
+                        }
+                    } catch {
+                        // skip malformed JSON lines
+                    }
+                }
+            }
 
             if (fullResponse.trim()) {
                 await addChatMessage(userId, currentSessionId, "assistant", fullResponse);

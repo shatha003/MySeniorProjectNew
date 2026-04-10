@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const SONGS = [
   'Avicii - The Nights.mp3',
-  'Daft Punk - Harder, Better, Faster, Stronger (Official Video).mp3',
+  'Daft Punk - Harder Better Faster Stronger.mp3',
   'Daft Punk - Technologic (Official Video).mp3',
   'Pharrell Williams - Happy (Official Video).mp3',
   'Sara Bareilles - Brave (Official Video).mp3',
   'Taylor Swift - Shake It Off.mp3',
-  'The Chainsmokers & Coldplay - Something Just Like This (Official Lyric Video).mp3',
+  'The Chainsmokers Coldplay - Something Just Like This.mp3',
 ]
 
 const VOLUME_KEY = 'chea-music-volume'
