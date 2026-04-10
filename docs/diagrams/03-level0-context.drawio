@@ -1,0 +1,122 @@
+<mxfile host="65bd71144e">
+    <diagram id="dfd-level0" name="Level 0 Context Diagram">
+        <mxGraphModel dx="639" dy="458" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="CHEA — Level 0 Context Diagram (Data Flow Diagram)" style="text;html=1;fontSize=22;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="20" width="1000" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="chea-process" value="P0&lt;br&gt;&lt;b&gt;CHEA&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;&quot;&gt;Cyber Hygiene Educator&lt;br&gt;&amp;amp; Assistant&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#e94560;fontColor=#ffffff;fontSize=18;shadow=1;strokeWidth=3;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="420" width="380" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="user" value="" style="shape=mxgraph.flowchart.terminator;whiteSpace=wrap;html=1;fillColor=#4A90D9;strokeColor=#2D6CB4;fontColor=#ffffff;fontSize=16;fontStyle=1;shadow=1;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="440" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-text" value="User (Student)" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="440" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="firebase" value="" style="shape=mxgraph.flowchart.terminator;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=#B45309;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=1;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="100" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="firebase-text" value="Firebase (Auth &amp;amp; Firestore)" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="100" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="vtapi" value="" style="shape=mxgraph.flowchart.terminator;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=#B45309;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=1;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="460" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="vtapi-text" value="VirusTotal v3 API" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="460" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="orapi" value="" style="shape=mxgraph.flowchart.terminator;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=#B45309;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=1;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="820" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="orapi-text" value="OpenRouter API" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="820" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" value="D1: Credentials" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2D6CB4;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=1;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;" parent="1" source="user" target="chea-process" edge="1">
+                    <mxGeometry x="0.1" y="10" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d2" value="D2: URL/File Scan Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2D6CB4;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;" parent="1" source="user" target="chea-process" edge="1">
+                    <mxGeometry x="-0.1" y="-10" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d3" value="D3: Encryption Data &amp; Passwords" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2D6CB4;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=1;exitY=0.6;exitDx=0;exitDy=0;entryX=0;entryY=0.55;entryDx=0;entryDy=0;" parent="1" source="user" target="chea-process" edge="1">
+                    <mxGeometry x="-0.3732" y="-52" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d4" value="D4: Chat Messages &amp; Quiz Answers" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2D6CB4;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="user" target="chea-process" edge="1">
+                    <mxGeometry x="-0.1" y="15" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d5" value="D5: Photo Uploads" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2D6CB4;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.15;entryY=1;entryDx=0;entryDy=0;" parent="1" source="user" target="chea-process" edge="1">
+                    <mxGeometry x="0.3288" y="-10" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d6" value="D6: Dashboard Data, Scan Results,&lt;br&gt;AI Responses, Progress Info" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#e94560;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0;exitY=0.95;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" parent="1" source="chea-process" target="user" edge="1">
+                    <mxGeometry x="-0.2839" y="-21" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d7" value="D7: Auth Requests,&lt;br&gt;User Data (Read/Write)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0.8;exitY=0;exitDx=0;exitDy=0;entryX=0.3;entryY=1;entryDx=0;entryDy=0;" parent="1" source="chea-process" target="firebase" edge="1">
+                    <mxGeometry x="0.1" y="15" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d8" value="D8: Auth Tokens,&lt;br&gt;Stored Data" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0;exitY=1;entryX=0.6;entryDx=0;entryDy=0;entryY=0;dashed=1;" parent="1" source="firebase" target="chea-process" edge="1">
+                    <mxGeometry x="0.2" y="-15" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d9" value="D9: URL/File Scan Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="chea-process" target="vtapi" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d10" value="D10: Scan Reports &amp; Results" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.65;entryDx=0;entryDy=0;dashed=1;" parent="1" source="vtapi" target="chea-process" edge="1">
+                    <mxGeometry x="-0.2" y="-15" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d11" value="D11: Chat Messages / Prompts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" parent="1" source="chea-process" target="orapi" edge="1">
+                    <mxGeometry x="0.1" y="-10" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d12" value="D12: AI Responses" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B45309;strokeWidth=2;fontSize=11;fontStyle=1;labelBackgroundColor=#ffffff;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.9;entryY=1;entryDx=0;entryDy=0;dashed=1;" parent="1" source="orapi" target="chea-process" edge="1">
+                    <mxGeometry x="0.3" y="15" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="legend" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="820" width="580" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-title" value="Legend" style="text;html=1;fontSize=13;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#333;" parent="1" vertex="1">
+                    <mxGeometry x="75" y="825" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-blue" value="━━ Input from User" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#2D6CB4;" parent="1" vertex="1">
+                    <mxGeometry x="75" y="850" width="160" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-red" value="━━ Output to User" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#e94560;" parent="1" vertex="1">
+                    <mxGeometry x="75" y="875" width="160" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-orange" value="━━ API Request (to External)" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#B45309;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="850" width="200" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-orange-d" value="╌╌ API Response (from External)" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#B45309;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="875" width="200" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-ent" value="▭ External Entity" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#2D6CB4;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="850" width="140" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg-proc" value="▮ Process (P0)" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="875" width="140" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
