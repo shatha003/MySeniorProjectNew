@@ -19,7 +19,7 @@ export default function AvatarShowcase() {
   // Static version for SSR
   if (!mounted) {
     return (
-      <section className="py-24 relative overflow-hidden">
+      <section id="avatars" className="py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
@@ -81,7 +81,7 @@ export default function AvatarShowcase() {
   }
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section id="avatars" className="py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Section Header */}
         <motion.div

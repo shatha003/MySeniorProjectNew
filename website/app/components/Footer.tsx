@@ -31,8 +31,8 @@ export default function Footer() {
 
           {/* Links - More spacing */}
           <div className="flex items-center gap-10 text-sm font-body">
-            <a href="#" className="text-on-surface-variant/80 hover:text-primary transition-colors">Privacy Policy</a>
-            <a href="#" className="text-on-surface-variant/80 hover:text-primary transition-colors">Terms of Service</a>
+            <a href="/privacy-policy" className="text-on-surface-variant/80 hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="/terms-of-service" className="text-on-surface-variant/80 hover:text-primary transition-colors">Terms of Service</a>
             <a href="#" className="text-on-surface-variant/80 hover:text-primary transition-colors">Security</a>
           </div>
 
@@ -102,7 +102,7 @@ export default function Footer() {
           className="flex items-center gap-10 text-sm font-body"
         >
           <a
-            href="#"
+            href="/privacy-policy"
             className={`text-on-surface-variant/80 transition-colors duration-300 hover:${
               isDark ? "text-neon-crimson" : "text-neon-violet"
             }`}
@@ -110,7 +110,7 @@ export default function Footer() {
             Privacy Policy
           </a>
           <a
-            href="#"
+            href="/terms-of-service"
             className={`text-on-surface-variant/80 transition-colors duration-300 hover:${
               isDark ? "text-neon-crimson" : "text-neon-violet"
             }`}

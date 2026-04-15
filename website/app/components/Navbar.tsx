@@ -37,9 +37,9 @@ export default function Navbar() {
           </a>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-8">
-              <span className="text-sm font-body font-semibold text-on-surface-variant">Features</span>
-              <span className="text-sm font-body font-semibold text-on-surface-variant">Training</span>
-              <span className="text-sm font-body font-semibold text-on-surface-variant">Avatars</span>
+              <span className="text-sm font-headline font-semibold text-on-surface-variant">Features</span>
+              <span className="text-sm font-headline font-semibold text-on-surface-variant">Training</span>
+              <span className="text-sm font-headline font-semibold text-on-surface-variant">Avatars</span>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex items-center gap-4">
@@ -97,7 +97,7 @@ export default function Navbar() {
             <motion.a
               key={link.name}
               href={link.href}
-              className={`relative font-body font-semibold text-sm transition-all duration-300 py-2 ${
+              className={`relative font-headline font-semibold text-sm transition-all duration-300 py-2 ${
                 isDark
                   ? "text-[#8AB4F8]/80 hover:text-white"
                   : "text-gray-600 hover:text-gray-900"

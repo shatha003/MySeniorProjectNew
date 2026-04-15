@@ -1,136 +1,264 @@
 import { Link } from 'react-router-dom'
 import { auth } from '../lib/firebase'
 import { motion } from 'framer-motion'
+import { useTheme } from '../components/theme-provider'
 
 export default function PrivacyPolicy() {
     const isLoggedIn = !!auth.currentUser
+    const { theme } = useTheme()
+    const isDark = theme === 'dark'
+
+    const sections = [
+        {
+            title: "1. Information We Collect",
+            content: "When you use CHEA, we may collect the following types of information:",
+            items: [
+                { bold: "Account Information:", text: " Your email address, display name, and profile picture when you register or sign in with Google." },
+                { bold: "Usage Data:", text: " Information about how you interact with the App, including features used and actions performed." },
+                { bold: "Device Information:", text: " Basic information about the device running the App, such as operating system and version." },
+            ]
+        },
+        {
+            title: "2. How We Use Your Information",
+            content: "We use the collected information to:",
+            items: [
+                { text: "Provide, maintain, and improve the App's services" },
+                { text: "Authenticate your identity and manage your account" },
+                { text: "Monitor and analyze usage patterns to enhance the user experience" },
+                { text: "Communicate important updates and security alerts" },
+                { text: "Ensure the safety and security of our platform" },
+            ]
+        },
+        {
+            title: "3. Data Storage & Security",
+            content: "Your data is stored securely using Firebase services with AES-256 encryption. We implement industry-standard security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of electronic storage is 100% secure.",
+        },
+        {
+            title: "4. Data Sharing",
+            content: "We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:",
+            items: [
+                { text: "With your explicit consent" },
+                { text: "To comply with legal obligations or respond to lawful requests" },
+                { text: "To protect the rights, property, or safety of CHEA, its users, or the public" },
+                { text: "With service providers who assist in operating the App (e.g., Firebase, Google Cloud)" },
+            ]
+        },
+        {
+            title: "5. Children's Privacy",
+            content: "CHEA is designed for users of all ages, including minors. We are committed to protecting children's privacy. If you are under the age of 13, a parent or guardian must consent to and supervise your use of the App. We do not knowingly collect personal information from children under 13 without parental consent.",
+        },
+        {
+            title: "6. Your Rights",
+            content: "You have the right to:",
+            items: [
+                { text: "Access and review your personal data stored in the App" },
+                { text: "Update or correct your account information at any time" },
+                { text: "Request deletion of your account and associated data" },
+                { text: "Opt out of non-essential data collection" },
+            ]
+        },
+        {
+            title: "7. Cookies & Local Storage",
+            content: "CHEA may use local storage and browser-based persistence mechanisms to maintain your session and preferences. These are essential for the App to function correctly and cannot be disabled without affecting the App's operation.",
+        },
+        {
+            title: "8. Changes to This Policy",
+            content: "We may update this Privacy Policy from time to time. Any changes will be posted within the App, and the 'Last updated' date will be revised accordingly. Your continued use of the App after any changes constitutes your acceptance of the updated policy.",
+        },
+        {
+            title: "9. Contact Us",
+            content: "If you have any questions or concerns about this Privacy Policy or how your data is handled, please contact us through the App's support channel or at our official email address.",
+        },
+    ]
+
+    // Style helper functions
+    const getBgGradient = () => isDark ? 'bg-neon-crimson' : 'bg-neon-violet'
+    const getTextColor = () => isDark ? 'text-neon-crimson' : 'text-neon-violet'
+    const getBorderLight = () => isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20'
+    const getBorderMedium = () => isDark ? 'border-neon-crimson/30' : 'border-neon-violet/30'
+    const getBgLight = () => isDark ? 'bg-neon-crimson/10' : 'bg-neon-violet/10'
 
     return (
-        <div className="min-h-full bg-background">
-            {/* Top bar with back button */}
-            <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border/50">
-                <div className="max-w-3xl mx-auto px-6 py-3 flex items-center gap-3">
+        <div className="min-h-screen bg-surface font-body">
+            {/* Top Navigation Bar */}
+            <div className={`sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b ${
+                isDark ? 'border-white/10' : 'border-black/10'
+            }`}>
+                <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+                    {/* Logo */}
+                    <Link 
+                        to={isLoggedIn ? '/dashboard' : '/'}
+                        className="flex items-center gap-3 group"
+                    >
+                        <div className="relative">
+                            <img 
+                                src="/icon.png" 
+                                alt="CHEA" 
+                                className="w-10 h-10 object-contain relative z-10"
+                            />
+                            <div 
+                                className={`absolute inset-0 rounded-full blur-lg transition-all duration-500 opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-125 ${
+                                    isDark ? 'bg-neon-crimson/40' : 'bg-neon-violet/40'
+                                }`}
+                            />
+                        </div>
+                        <span className="text-xl font-headline font-bold text-on-surface tracking-tight">
+                            CHEA
+                        </span>
+                    </Link>
+
+                    {/* Back Button */}
                     <Link
                         to={isLoggedIn ? '/dashboard' : '/register'}
-                        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground font-medium transition-colors rounded-lg px-3 py-1.5 hover:bg-muted"
+                        className={`inline-flex items-center gap-2 text-sm font-headline font-semibold transition-all duration-300 rounded-xl px-4 py-2 ${
+                            isDark 
+                                ? 'text-on-surface-variant hover:text-neon-crimson hover:bg-neon-crimson/10' 
+                                : 'text-on-surface-variant hover:text-neon-violet hover:bg-neon-violet/10'
+                        }`}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12" />
                             <polyline points="12 19 5 12 12 5" />
                         </svg>
-                        {isLoggedIn ? 'Back to Dashboard' : 'Back to Registration'}
+                        {isLoggedIn ? 'Back to Dashboard' : 'Back to App'}
                     </Link>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="max-w-3xl mx-auto px-6 py-10">
+            <div className="max-w-4xl mx-auto px-6 py-12">
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.6 }}
                     className="space-y-8"
                 >
-                    <div>
-                        <h1 className="font-display text-2xl font-bold mb-2">Privacy Policy</h1>
-                        <p className="text-sm text-muted-foreground">Last updated: March 6, 2026</p>
+                    {/* Header Card */}
+                    <div className={`relative rounded-2xl border backdrop-blur-xl p-8 sm:p-12 ${getBgLight()} ${getBorderLight()} shadow-[0_0_60px_rgba(0,0,0,0.1)]`}>
+                        {/* Decorative corner accent */}
+                        <div className={`absolute top-0 right-0 w-24 h-24 opacity-30 bg-gradient-to-bl ${
+                            isDark ? 'from-neon-crimson' : 'from-neon-violet'
+                        } to-transparent`} style={{ borderTopRightRadius: '1rem' }} />
+                        
+                        <div className="text-center relative z-10">
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-headline font-bold tracking-wider mb-6 border ${getBgLight()} ${getTextColor()} ${getBorderMedium()}`}
+                            >
+                                <span className={`w-2 h-2 rounded-full animate-pulse ${getBgGradient()}`} />
+                                LEGAL DOCUMENT
+                            </motion.div>
+                            
+                            <h1 className={`font-headline text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${getTextColor()}`}>
+                                Privacy Policy
+                            </h1>
+                            <p className="text-on-surface-variant font-body text-sm sm:text-base">
+                                Last updated: March 6, 2026
+                            </p>
+                        </div>
                     </div>
 
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">1. Information We Collect</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            When you use CHEA, we may collect the following types of information:
+                    {/* Introduction */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className={`rounded-xl border backdrop-blur-md p-6 ${
+                            isDark ? 'bg-surface-container-low/60 border-white/5' : 'bg-white/60 border-black/5'
+                        }`}
+                    >
+                        <p className="text-on-surface-variant leading-relaxed text-center">
+                            At CHEA Protocol, we take your privacy seriously. This Privacy Policy explains how we collect, 
+                            use, disclose, and safeguard your information when you use our cybersecurity application.
                         </p>
-                        <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
-                            <li><strong className="text-foreground">Account Information:</strong> Your email address, display name, and profile picture when you register or sign in with Google.</li>
-                            <li><strong className="text-foreground">Usage Data:</strong> Information about how you interact with the App, including features used and actions performed.</li>
-                            <li><strong className="text-foreground">Device Information:</strong> Basic information about the device running the App, such as operating system and version.</li>
-                        </ul>
-                    </section>
+                    </motion.div>
 
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">2. How We Use Your Information</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            We use the collected information to:
-                        </p>
-                        <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
-                            <li>Provide, maintain, and improve the App's services</li>
-                            <li>Authenticate your identity and manage your account</li>
-                            <li>Monitor and analyze usage patterns to enhance the user experience</li>
-                            <li>Communicate important updates and security alerts</li>
-                            <li>Ensure the safety and security of our platform</li>
-                        </ul>
-                    </section>
+                    {/* Policy Sections */}
+                    <div className="space-y-6">
+                        {sections.map((section, index) => (
+                            <motion.section
+                                key={section.title}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 + index * 0.1, duration: 0.5 }}
+                                className={`group rounded-xl border backdrop-blur-md p-6 sm:p-8 transition-all duration-300 hover:scale-[1.01] ${
+                                    isDark ? 'bg-surface-container/60 border-white/5' : 'bg-white/60 border-black/5'
+                                } hover:${getBorderLight()} hover:shadow-[0_0_30px_rgba(0,0,0,0.1)]`}
+                            >
+                                <div className="flex items-start gap-4">
+                                    <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-headline font-bold text-lg ${getBgLight()} ${getTextColor()} ${getBorderLight()}`}>
+                                        {index + 1}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h2 className={`font-headline text-xl font-bold mb-3 text-on-surface`}>
+                                            {section.title}
+                                        </h2>
+                                        <p className="text-on-surface-variant leading-relaxed text-sm sm:text-base mb-4">
+                                            {section.content}
+                                        </p>
+                                        {section.items && (
+                                            <ul className="space-y-3">
+                                                {section.items.map((item, i) => (
+                                                    <li key={i} className="flex items-start gap-3 text-on-surface-variant text-sm sm:text-base">
+                                                        <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 ${getBgGradient()}`} />
+                                                        <span>
+                                                            {item.bold && (
+                                                                <strong className="text-on-surface">
+                                                                    {item.bold}
+                                                                </strong>
+                                                            )}
+                                                            {item.text}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.section>
+                        ))}
+                    </div>
 
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">3. Data Storage & Security</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            Your data is stored securely using Firebase services with AES-256 encryption. We implement industry-standard security
-                            measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However,
-                            no method of electronic storage is 100% secure.
+                    {/* Contact CTA */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.4, duration: 0.5 }}
+                        className={`rounded-2xl border backdrop-blur-xl p-8 text-center ${isDark ? 'bg-gradient-to-br from-neon-crimson/10 to-neon-violet/10' : 'bg-gradient-to-br from-neon-violet/10 to-neon-crimson/10'} ${getBorderLight()}`}
+                    >
+                        <h3 className={`font-headline text-2xl font-bold mb-3 text-on-surface`}>
+                            Have Questions?
+                        </h3>
+                        <p className="text-on-surface-variant mb-6">
+                            If you have any concerns about your privacy, we&apos;re here to help.
                         </p>
-                    </section>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a
+                                href="mailto:support@chea-protocol.com"
+                                className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-headline font-semibold text-sm transition-all duration-300 ${getBgGradient()} text-white hover:opacity-90 shadow-[0_0_20px_rgba(0,0,0,0.2)]`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                </svg>
+                                Contact Support
+                            </a>
+                        </div>
+                    </motion.div>
 
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">4. Data Sharing</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            We do not sell, trade, or rent your personal information to third parties. We may share your information only in
-                            the following circumstances:
+                    {/* Footer */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.5, duration: 0.5 }}
+                        className="pt-8 border-t border-white/10 text-center"
+                    >
+                        <p className="text-sm text-on-surface-variant/60">
+                            © 2026 CHEA Protocol. All rights reserved.
                         </p>
-                        <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
-                            <li>With your explicit consent</li>
-                            <li>To comply with legal obligations or respond to lawful requests</li>
-                            <li>To protect the rights, property, or safety of CHEA, its users, or the public</li>
-                            <li>With service providers who assist in operating the App (e.g., Firebase, Google Cloud)</li>
-                        </ul>
-                    </section>
-
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">5. Children's Privacy</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            CHEA is designed for users of all ages, including minors. We are committed to protecting children's privacy. If
-                            you are under the age of 13, a parent or guardian must consent to and supervise your use of the App. We do not knowingly
-                            collect personal information from children under 13 without parental consent.
-                        </p>
-                    </section>
-
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">6. Your Rights</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            You have the right to:
-                        </p>
-                        <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
-                            <li>Access and review your personal data stored in the App</li>
-                            <li>Update or correct your account information at any time</li>
-                            <li>Request deletion of your account and associated data</li>
-                            <li>Opt out of non-essential data collection</li>
-                        </ul>
-                    </section>
-
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">7. Cookies & Local Storage</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            CHEA may use local storage and browser-based persistence mechanisms to maintain your session and preferences.
-                            These are essential for the App to function correctly and cannot be disabled without affecting the App's operation.
-                        </p>
-                    </section>
-
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">8. Changes to This Policy</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            We may update this Privacy Policy from time to time. Any changes will be posted within the App, and the "Last updated"
-                            date will be revised accordingly. Your continued use of the App after any changes constitutes your acceptance of the
-                            updated policy.
-                        </p>
-                    </section>
-
-                    <section className="space-y-3">
-                        <h2 className="font-display text-lg font-semibold">9. Contact Us</h2>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            If you have any questions or concerns about this Privacy Policy or how your data is handled, please contact us through
-                            the App's support channel or at our official email address.
-                        </p>
-                    </section>
+                    </motion.div>
                 </motion.div>
             </div>
         </div>

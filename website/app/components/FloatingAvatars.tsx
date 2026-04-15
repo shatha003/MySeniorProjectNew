@@ -21,6 +21,20 @@ const floatingAvatars = [
   { id: 14, name: "Digital Tide" },
 ];
 
+// 10 avatars specifically for bottom area
+const bottomAvatars = [
+  { id: 3, name: "Phantom Byte" },
+  { id: 6, name: "Code Wave" },
+  { id: 9, name: "Binary Ghost" },
+  { id: 12, name: "Neon Flow" },
+  { id: 1, name: "Agent Neon" },
+  { id: 5, name: "Net Runner" },
+  { id: 8, name: "Tech Surfer" },
+  { id: 11, name: "Quantum Surf" },
+  { id: 14, name: "Digital Tide" },
+  { id: 4, name: "Data Stream" },
+];
+
 // Positions scattered around edges - avoiding center
 const avatarPositions = [
   { top: "3%", left: "2%" },
@@ -39,6 +53,20 @@ const avatarPositions = [
   { top: "82%", right: "2%" },
 ];
 
+// Positions specifically for bottom area
+const bottomPositions = [
+  { bottom: "15%", left: "5%" },
+  { bottom: "8%", left: "15%" },
+  { bottom: "20%", left: "25%" },
+  { bottom: "5%", left: "35%" },
+  { bottom: "12%", left: "45%" },
+  { bottom: "18%", right: "45%" },
+  { bottom: "6%", right: "35%" },
+  { bottom: "22%", right: "25%" },
+  { bottom: "10%", right: "15%" },
+  { bottom: "16%", right: "5%" },
+];
+
 // Modern smooth floating animation - no glitch, just elegant drift
 const createFloatAnimation = (index: number) => ({
   y: [0, -25, 0, 15, 0],
@@ -50,6 +78,20 @@ const createFloatAnimation = (index: number) => ({
     repeat: Infinity,
     ease: "easeInOut" as const,
     delay: index * 0.8,
+  },
+});
+
+// Bottom avatars animation - slower, more subtle
+const createBottomFloatAnimation = (index: number) => ({
+  y: [0, -15, 0, 10, 0],
+  x: [0, 8, -5, 3, 0],
+  rotate: [0, 1.5, -1, 2, 0],
+  scale: [1, 1.02, 0.99, 1.005, 1],
+  transition: {
+    duration: 15 + index * 1.5,
+    repeat: Infinity,
+    ease: "easeInOut" as const,
+    delay: index * 1.2,
   },
 });
 
@@ -65,10 +107,106 @@ const createGlowAnimation = (index: number) => ({
   },
 });
 
-export default function FloatingAvatars() {
+interface FloatingAvatarsProps {
+  variant?: "default" | "bottom";
+}
+
+export default function FloatingAvatars({ variant = "default" }: FloatingAvatarsProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  // If bottom variant, render bottom-focused avatars
+  if (variant === "bottom") {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+        {bottomAvatars.map((avatar, index) => {
+          const position = bottomPositions[index];
+          const isLeft = "left" in position;
+          
+          return (
+            <motion.div
+              key={`bottom-${avatar.id}`}
+              className="absolute"
+              style={{
+                bottom: position.bottom,
+                [isLeft ? "left" : "right"]: isLeft ? position.left : position.right,
+                width: "60px",
+                height: "60px",
+                zIndex: 0,
+              }}
+              animate={createBottomFloatAnimation(index)}
+            >
+              {/* Glow effect behind avatar */}
+              <motion.div
+                className={`absolute inset-0 rounded-2xl blur-xl ${
+                  isDark ? "bg-neon-crimson/20" : "bg-neon-violet/20"
+                }`}
+                animate={createGlowAnimation(index)}
+              />
+              
+              {/* Avatar container */}
+              <div className="relative w-full h-full">
+                {/* Avatar image - slightly more visible at bottom */}
+                <img
+                  src={`/avatars/avatar${avatar.id}.png`}
+                  alt={avatar.name}
+                  className={`w-full h-full object-cover rounded-2xl ${
+                    isDark ? "opacity-45" : "opacity-50"
+                  }`}
+                  style={{
+                    filter: isDark
+                      ? "drop-shadow(0 0 15px rgba(255,10,84,0.4)) saturate(1.2) contrast(1.05)"
+                      : "drop-shadow(0 0 15px rgba(77,0,255,0.4)) saturate(1.2) contrast(1.05)",
+                  }}
+                />
+                
+                {/* Subtle scanline overlay */}
+                <div
+                  className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none opacity-25"
+                  style={{
+                    background: "linear-gradient(to bottom, transparent 50%, rgba(143,245,255,0.1) 50%)",
+                    backgroundSize: "100% 4px",
+                  }}
+                />
+                
+                {/* Soft border glow */}
+                <div
+                  className={`absolute inset-0 rounded-2xl border pointer-events-none ${
+                    isDark
+                      ? "border-neon-crimson/25 shadow-[0_0_12px_rgba(255,10,84,0.15)]"
+                      : "border-neon-violet/25 shadow-[0_0_12px_rgba(77,0,255,0.15)]"
+                  }`}
+                />
+              </div>
+              
+              {/* Floating particles */}
+              <motion.div
+                className={`absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full ${
+                  isDark ? "bg-primary" : "bg-primary"
+                }`}
+                style={{
+                  boxShadow: "0 0 10px rgba(143,245,255,0.8)",
+                }}
+                animate={{
+                  y: [0, -6, 0],
+                  opacity: [0.5, 0.9, 0.5],
+                  scale: [0.9, 1.1, 0.9],
+                }}
+                transition={{
+                  duration: 3 + index * 0.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.4,
+                }}
+              />
+            </motion.div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Default variant - original scattered avatars
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
       {floatingAvatars.map((avatar, index) => {

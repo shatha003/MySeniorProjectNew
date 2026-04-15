@@ -24,13 +24,6 @@ export default function Hero() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-surface/80 via-surface/40 to-surface" />
         
         <div className="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col items-center text-center relative z-10">
-          <div className="mb-8">
-            <div className="status-badge">
-              <span className="status-dot" />
-              System Online: Guardian Protocol
-            </div>
-          </div>
-          
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-headline font-bold mb-6 leading-tight max-w-5xl">
             CHEA: Your <span className="glitch-accent text-neon-crimson drop-shadow-[0_0_15px_rgba(255,10,84,0.5)]">Cyber-Defender</span>
             <br />
@@ -47,27 +40,6 @@ export default function Hero() {
               <span className="material-symbols-outlined text-2xl">download</span>
               <span className="glitch-text" data-text="Initialize Protocol">Initialize Protocol</span>
             </button>
-            <button className="glitch-button flex items-center gap-3 border border-neon-crimson/30 text-neon-crimson px-8 py-4 rounded-xl font-headline font-bold text-lg kinetic-button hover:bg-neon-crimson/5 transition-colors">
-              <span className="material-symbols-outlined text-2xl">visibility</span>
-              <span className="glitch-text" data-text="View Intel">View Intel</span>
-            </button>
-          </div>
-          
-          <div className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16">
-            {[
-              { value: "10K+", label: "Active Agents" },
-              { value: "50K+", label: "Threats Blocked" },
-              { value: "99.9%", label: "Uptime" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl sm:text-4xl font-headline font-bold gradient-text">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-on-surface-variant font-body mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
         
@@ -132,19 +104,6 @@ export default function Hero() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col items-center text-center relative z-10">
-        {/* Status Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-8"
-        >
-          <div className="status-badge">
-            <span className="status-dot" />
-            System Online: Guardian Protocol
-          </div>
-        </motion.div>
-
         {/* Main Title */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -190,53 +149,14 @@ export default function Hero() {
             </span>
             <span className="glitch-text" data-text="Initialize Protocol">Initialize Protocol</span>
           </motion.button>
-
-          <motion.button
-            className={`glitch-button flex items-center gap-3 px-8 py-4 rounded-xl font-headline font-bold text-lg kinetic-button transition-colors ${
-              isDark 
-                ? "border border-neon-crimson/30 text-neon-crimson hover:bg-neon-crimson/10" 
-                : "border border-neon-violet/30 text-neon-violet hover:bg-neon-violet/10"
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="material-symbols-outlined text-2xl">visibility</span>
-            <span className="glitch-text" data-text="View Intel">View Intel</span>
-          </motion.button>
-        </motion.div>
-
-        {/* Stats Row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-          className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16"
-        >
-          {[
-            { value: "10K+", label: "Active Agents" },
-            { value: "50K+", label: "Threats Blocked" },
-            { value: "99.9%", label: "Uptime" },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 1 + index * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-3xl sm:text-4xl font-headline font-bold gradient-text">
-                {stat.value}
-              </div>
-              <div className="text-sm text-on-surface-variant font-body mt-1">
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
         </motion.div>
       </div>
 
       {/* Floating Avatars Background */}
       <FloatingAvatars />
+
+      {/* Bottom Floating Avatars */}
+      <FloatingAvatars variant="bottom" />
 
       {/* Bottom Gradient Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent pointer-events-none" />
