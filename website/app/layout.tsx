@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
+import { Fredoka, Nunito, Balsamiq_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 
-const spaceGrotesk = Space_Grotesk({
+const fredoka = Fredoka({
   variable: "--font-headline",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const nunito = Nunito({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const balsamiqSans = Balsamiq_Sans({
+  variable: "--font-comic",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +39,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" 
         />
       </head>
-      <body className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} antialiased`}>
+      <body className={`${fredoka.variable} ${nunito.variable} ${balsamiqSans.variable} antialiased`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>
