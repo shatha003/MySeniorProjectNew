@@ -442,64 +442,123 @@ html:not(.dark) {
     }
   }
   
-  /* Cyberpunk Button Glitch Effect - ALWAYS ACTIVE */
+  /* Cyberpunk Button Glitch Effect - DRAMATIC SLICE STYLE */
   @keyframes glitch-shake {
     0%, 100% { transform: translateX(0); }
-    10% { transform: translateX(-3px); }
-    20% { transform: translateX(3px); }
-    30% { transform: translateX(-3px); }
-    40% { transform: translateX(3px); }
+    10% { transform: translateX(-4px); }
+    20% { transform: translateX(4px); }
+    30% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
     50% { transform: translateX(-2px); }
     60% { transform: translateX(2px); }
-    70% { transform: translateX(-3px); }
-    80% { transform: translateX(3px); }
+    70% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
     90% { transform: translateX(-2px); }
   }
   
-  @keyframes glitch-skew {
-    0%, 100% { transform: skew(0deg); }
-    20% { transform: skew(-1deg); }
-    40% { transform: skew(1deg); }
-    60% { transform: skew(-0.5deg); }
-    80% { transform: skew(0.5deg); }
+  /* Aggressive horizontal slice animations */
+  @keyframes glitch-slice-top {
+    0%, 90%, 100% { 
+      clip-path: inset(0 0 70% 0);
+      transform: translateX(-8px);
+      opacity: 0.9;
+    }
+    10%, 80% { 
+      clip-path: inset(0 0 70% 0);
+      transform: translateX(8px);
+      opacity: 0.9;
+    }
+    20%, 70% {
+      clip-path: inset(0 0 0 0);
+      transform: translateX(0);
+      opacity: 0;
+    }
   }
   
-  @keyframes glitch-cyan {
-    0%, 100% { transform: translate(0); }
-    20% { transform: translate(-2px, 1px); }
-    40% { transform: translate(2px, -1px); }
-    60% { transform: translate(-1px, 0); }
-    80% { transform: translate(1px, 0); }
+  @keyframes glitch-slice-middle {
+    0%, 85%, 100% { 
+      clip-path: inset(30% 0 40% 0);
+      transform: translateX(6px);
+      opacity: 0.9;
+    }
+    15%, 75% { 
+      clip-path: inset(30% 0 40% 0);
+      transform: translateX(-6px);
+      opacity: 0.9;
+    }
+    30%, 60% {
+      clip-path: inset(0 0 0 0);
+      transform: translateX(0);
+      opacity: 0;
+    }
   }
   
-  @keyframes glitch-magenta {
-    0%, 100% { transform: translate(0); }
-    20% { transform: translate(2px, -1px); }
-    40% { transform: translate(-2px, 1px); }
-    60% { transform: translate(1px, 0); }
-    80% { transform: translate(-1px, 0); }
+  @keyframes glitch-slice-bottom {
+    0%, 88%, 100% { 
+      clip-path: inset(60% 0 0 0);
+      transform: translateX(-5px);
+      opacity: 0.9;
+    }
+    12%, 78% { 
+      clip-path: inset(60% 0 0 0);
+      transform: translateX(5px);
+      opacity: 0.9;
+    }
+    25%, 65% {
+      clip-path: inset(0 0 0 0);
+      transform: translateX(0);
+      opacity: 0;
+    }
+  }
+  
+  /* Moving scanline effect */
+  @keyframes scanline-move {
+    0% {
+      top: -5%;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      top: 105%;
+      opacity: 0;
+    }
+  }
+  
+  /* Flickering effect */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+    52% { opacity: 0.5; }
+    54% { opacity: 0.95; }
+    90% { opacity: 1; }
+    92% { opacity: 0.7; }
+    94% { opacity: 1; }
   }
   
   .glitch-button {
     position: relative;
     overflow: hidden;
-    animation: glitch-shake 2s ease-in-out infinite;
-    box-shadow: 
-      -2px 0 0 rgba(255, 0, 255, 0.5),
-      2px 0 0 rgba(0, 255, 255, 0.5),
-      0 0 15px rgba(255, 10, 84, 0.6);
+    animation: glitch-shake 2.5s ease-in-out infinite, flicker 3s infinite;
   }
   
   .glitch-button .glitch-text {
     position: relative;
     display: inline-block;
-    animation: glitch-skew 2s ease-in-out infinite;
-    text-shadow: 
-      -1px 0 #ff00ff,
-      1px 0 #00ffff;
   }
   
-  /* RGB Split layers - ALWAYS VISIBLE */
+  /* Main text with slight shadow */
+  .glitch-button .glitch-text {
+    text-shadow: 
+      -2px 0 #ff00ff,
+      2px 0 #00ffff;
+  }
+  
+  /* Create multiple glitch layers */
   .glitch-button .glitch-text::before,
   .glitch-button .glitch-text::after {
     content: attr(data-text);
@@ -508,36 +567,83 @@ html:not(.dark) {
     left: 0;
     width: 100%;
     height: 100%;
+    background: inherit;
   }
   
+  /* Top slice - Magenta */
   .glitch-button .glitch-text::before {
     color: #ff00ff;
-    opacity: 0.6;
-    z-index: -1;
-    animation: glitch-cyan 0.5s infinite;
+    z-index: 2;
+    animation: glitch-slice-top 1.5s infinite linear;
+    text-shadow: 3px 0 #ff00ff, -3px 0 #ff00ff;
   }
   
+  /* Bottom slice - Cyan */
   .glitch-button .glitch-text::after {
     color: #00ffff;
-    opacity: 0.6;
-    z-index: -2;
-    animation: glitch-magenta 0.5s infinite;
+    z-index: 1;
+    animation: glitch-slice-bottom 1.5s infinite linear;
+    text-shadow: -3px 0 #00ffff, 3px 0 #00ffff;
   }
   
-  /* Enhanced glitch on hover */
+  /* Third slice layer */
+  .glitch-button {
+    animation: glitch-shake 2.5s ease-in-out infinite;
+  }
+  
+  /* Scanline overlay */
+  .glitch-button::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 0, 255, 0.8),
+      rgba(0, 255, 255, 0.8),
+      transparent
+    );
+    animation: scanline-move 2s linear infinite;
+    pointer-events: none;
+    z-index: 20;
+  }
+  
+  /* Horizontal noise lines */
+  .glitch-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 0, 255, 0.15) 3px,
+      rgba(255, 0, 255, 0.15) 6px
+    );
+    pointer-events: none;
+    z-index: 15;
+    opacity: 0.4;
+    animation: flicker 0.5s infinite;
+  }
+  
+  /* Hover - intensify */
   .glitch-button:hover {
-    animation: glitch-shake 0.4s ease-in-out infinite;
-    box-shadow: 
-      -3px 0 0 rgba(255, 0, 255, 0.8),
-      3px 0 0 rgba(0, 255, 255, 0.8),
-      0 0 25px rgba(255, 10, 84, 1);
+    animation: glitch-shake 0.5s ease-in-out infinite;
   }
   
-  .glitch-button:hover .glitch-text {
-    animation: glitch-skew 0.4s ease-in-out infinite;
-    text-shadow: 
-      -2px 0 #ff00ff,
-      2px 0 #00ffff;
+  .glitch-button:hover .glitch-text::before {
+    animation: glitch-slice-top 0.8s infinite linear;
+  }
+  
+  .glitch-button:hover .glitch-text::after {
+    animation: glitch-slice-bottom 0.8s infinite linear;
   }
   
   @keyframes float {
