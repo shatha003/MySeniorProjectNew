@@ -29,6 +29,7 @@ import PhishingDojo from './pages/PhishingDojo';
 
 import TitleBar from './components/ui/TitleBar';
 import { MusicPlayer } from './components/ui/MusicPlayer';
+import { useWidgetPosition } from './hooks/useWidgetPosition';
 
 /**
  * Route guard – only allows authenticated users through.
@@ -54,6 +55,7 @@ function App() {
   const { loading, setUser, setLoading } = useAuthStore()
   const location = useLocation()
   const isLandingPage = location.pathname === '/'
+  const { position, setPosition } = useWidgetPosition({ x: 24, y: 24 })
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -109,7 +111,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
         </Routes>
       </div>
-      <MusicPlayer />
+      <MusicPlayer position={position} onPositionChange={setPosition} />
     </div>
   )
 }

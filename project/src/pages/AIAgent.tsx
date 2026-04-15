@@ -260,7 +260,7 @@ export default function AIAgent() {
                     "X-Title": "CHEA Cybersecurity App",
                 },
                 body: JSON.stringify({
-                    model: "z-ai/glm-4.5-air:free",
+                    model: "nvidia/nemotron-nano-9b-v2:free",
                     messages: apiMessages,
                     stream: true,
                 }),
