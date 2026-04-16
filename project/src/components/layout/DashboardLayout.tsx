@@ -246,7 +246,7 @@ export default function DashboardLayout() {
             <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
                 {/* Standalone items */}
                 <NavItem to="/dashboard" icon={<Home size={18} />} label="Home" end isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
-                <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label="Chat Buddy" isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label="Ask Nova" isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
 
                 {/* Sections */}
                 {navSections.map((section) => (

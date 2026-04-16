@@ -37,9 +37,9 @@ export default function Navbar() {
           </a>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-8">
-              <span className="text-sm font-headline font-semibold text-white/80">Features</span>
-              <span className="text-sm font-headline font-semibold text-white/80">Training</span>
-              <span className="text-sm font-headline font-semibold text-white/80">Avatars</span>
+              <span className="text-sm font-headline font-semibold text-on-surface/80">Features</span>
+              <span className="text-sm font-headline font-semibold text-on-surface/80">Training</span>
+              <span className="text-sm font-headline font-semibold text-on-surface/80">Avatars</span>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex items-center gap-4">
@@ -97,7 +97,7 @@ export default function Navbar() {
             <motion.a
               key={link.name}
               href={link.href}
-              className={`relative font-headline font-semibold text-sm transition-all duration-300 py-2 text-white/90 hover:text-white`}
+              className={`relative font-headline font-semibold text-sm transition-all duration-300 py-2 text-on-surface/90 hover:text-on-surface`}
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >

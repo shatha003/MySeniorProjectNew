@@ -5,6 +5,7 @@
   --color-background: #0d0d15;
   --color-foreground: #f2effb;
   --color-surface: #0d0d15;
+  --color-on-surface: #f2effb;
   --color-surface-container: #191923;
   --color-surface-container-low: #13131c;
   --color-surface-container-high: #1f1f29;
@@ -81,10 +82,11 @@
 }
 
 /* Light Mode Override */
-html:not(.dark) {
+html:not(.dark), html:not(.dark) body {
   --color-background: #f5f3ff;
   --color-foreground: #1a1a2e;
   --color-surface: #f5f3ff;
+  --color-on-surface: #1a1a2e;
   --color-surface-container: #e0dff0;
   --color-surface-container-low: #eeeaff;
   --color-surface-container-high: #e9e7f5;
@@ -427,6 +429,21 @@ html:not(.dark) {
     }
   }
   
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 5px rgba(255, 10, 84, 0.4));
+    }
+    50% {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 15px rgba(255, 10, 84, 0.8));
+    }
+  }
+  
+  .animate-pulse-scale {
+    animation: pulse-scale 2s ease-in-out infinite;
+  }
+  
   @keyframes glitch {
     0%, 100% {
       text-shadow: -2px 0 var(--color-error), 2px 0 var(--color-primary);
@@ -644,6 +661,17 @@ html:not(.dark) {
   
   .glitch-button:hover .glitch-text::after {
     animation: glitch-slice-bottom 0.8s infinite linear;
+  }
+  
+  /* Guardian Glow Effect */
+  .guardian-glow {
+    filter: drop-shadow(0 0 12px rgba(255, 10, 84, 0.7)) drop-shadow(0 0 25px rgba(255, 10, 84, 0.4));
+    transition: all 0.3s ease;
+  }
+  
+  .guardian-glow:hover {
+    filter: drop-shadow(0 0 20px rgba(255, 10, 84, 0.9)) drop-shadow(0 0 40px rgba(255, 10, 84, 0.6));
+    transform: scale(1.05);
   }
   
   @keyframes float {

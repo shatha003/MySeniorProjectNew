@@ -136,25 +136,162 @@ export default function Training() {
             </div>
           </div>
 
-          {/* Rank Progression Bar - Static */}
-          <div className="mt-12 glass-hud p-6 rounded-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-headline font-bold text-on-surface-variant tracking-wide">
-                RANK PROGRESSION
-              </span>
-              <span className={`text-sm font-headline font-bold ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>
-                Guardian → Elite
-              </span>
+          {/* Rank Progression - Static */}
+          <div className="mt-16">
+            {/* Title */}
+            <div className="text-center mb-10">
+              <h3 className="text-3xl sm:text-4xl font-headline font-extrabold text-on-surface mb-2">
+                <span className="inline-flex items-center gap-3">
+                  <span
+                    className="material-symbols-outlined text-4xl"
+                    style={{ 
+                      fontVariationSettings: "'FILL' 1",
+                      color: isDark ? "#FF0A54" : "#4D00FF"
+                    }}
+                  >
+                    stars
+                  </span>
+                  Rank Progression
+                  <span
+                    className="material-symbols-outlined text-4xl"
+                    style={{ 
+                      fontVariationSettings: "'FILL' 1",
+                      color: isDark ? "#FF0A54" : "#4D00FF"
+                    }}
+                  >
+                    stars
+                  </span>
+                </span>
+              </h3>
+              <p className="text-on-surface-variant font-body text-lg">
+                Climb the ranks and become a Cyber Legend!
+              </p>
             </div>
-            <div className="relative">
-              <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                <div className={`h-full w-[72%] rounded-full ${isDark ? "bg-neon-crimson" : "bg-neon-violet"}`} />
+
+            {/* Rank Path Container */}
+            <div className="glass-hud p-8 sm:p-12 rounded-3xl relative overflow-hidden">
+              {/* Rank Nodes */}
+              <div className="relative">
+                {/* Rank Cards Row - Above the line */}
+                <div className="relative grid grid-cols-4 gap-4 sm:gap-8 z-20 mb-8">
+                  {[
+                    { 
+                      name: "Rookie", 
+                      color: isDark ? "#6B7280" : "#9CA3AF",
+                      unlocked: true,
+                    },
+                    { 
+                      name: "Guardian", 
+                      color: "#FF0A54",
+                      unlocked: true,
+                      current: true
+                    },
+                    { 
+                      name: "Elite", 
+                      color: "#FFD700",
+                      unlocked: false,
+                    },
+                    { 
+                      name: "Legend", 
+                      color: "#FF0A54",
+                      unlocked: false,
+                    },
+                  ].map((rank) => (
+                    <div
+                      key={rank.name}
+                      className="flex flex-col items-center"
+                    >
+                      {/* Rank Badge with Image */}
+                      <div
+                        className={`relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-3 overflow-hidden ${
+                          rank.unlocked 
+                            ? "" 
+                            : "grayscale opacity-80"
+                        }`}
+                      >
+                        <img 
+                          src={`/ranks/${rank.name === "Guardian" ? "Guardian" : rank.name}.png`}
+                          alt={rank.name}
+                          className={`w-full h-full object-cover`}
+                        />
+
+                        {/* XP Badge for current rank */}
+                        {rank.current && (
+                          <div
+                            className="absolute -bottom-2 px-2 py-0.5 rounded-full text-xs font-headline font-bold bg-primary-container text-on-primary-container"
+                          >
+                            850 / 1000 XP
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Rank Name */}
+                      <span 
+                        className={`font-headline font-bold text-sm sm:text-base ${
+                          rank.unlocked 
+                            ? "text-on-surface" 
+                            : "text-on-surface-variant/50"
+                        }`}
+                      >
+                      {rank.name}
+                      </span>
+
+                      {/* Lock icon for locked ranks */}
+                      {!rank.unlocked && (
+                        <span className="material-symbols-outlined text-sm mt-1 text-on-surface-variant/30">
+                          lock
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Connection Path - Below the badges */}
+                <div className="h-3 bg-surface-container-highest rounded-full overflow-hidden z-0 mt-2">
+                  <div
+                    className="h-full w-[72%] rounded-full"
+                    style={{ 
+                      background: isDark 
+                        ? "linear-gradient(90deg, #FF0A54 0%, #FF6B35 50%, #FFD700 100%)" 
+                        : "linear-gradient(90deg, #4D00FF 0%, #9C27B0 50%, #FFD700 100%)"
+                    }}
+                  />
+                </div>
               </div>
-              <div className="flex justify-between mt-3 text-xs font-body text-on-surface-variant">
-                <span>Rookie</span>
-                <span>Guardian</span>
-                <span>Elite</span>
-                <span>Legend</span>
+
+              {/* Progress Stats */}
+              <div className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-10">
+                {[
+                  { label: "Current Rank", value: "Guardian", icon: "shield" },
+                  { label: "XP to Next", value: "150 XP", icon: "trending_up" },
+                  { label: "Total XP", value: "3,450 XP", icon: "stars" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="flex items-center gap-3 px-5 py-3 rounded-xl bg-surface-container-high/50 border border-surface-variant/20"
+                  >
+                    <span 
+                      className="material-symbols-outlined text-xl"
+                      style={{ 
+                        fontVariationSettings: "'FILL' 1",
+                        color: isDark ? "#FF0A54" : "#4D00FF"
+                      }}
+                    >
+                      {stat.icon}
+                    </span>
+                    <div>
+                      <p className="text-xs text-on-surface-variant font-body">{stat.label}</p>
+                      <p className="font-headline font-bold text-on-surface">{stat.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Motivational Message */}
+              <div className="mt-8 text-center">
+                <p className="font-comic text-lg text-on-surface-variant/60 italic">
+                  "Keep training! Elite rank is within reach!"
+                </p>
               </div>
             </div>
           </div>
@@ -331,40 +468,250 @@ export default function Training() {
           </motion.div>
         </div>
 
-        {/* Rank Progression Bar */}
+        {/* Rank Progression - Exciting & Playful Redesign */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 glass-hud p-6 rounded-2xl"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16"
         >
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-headline font-bold text-on-surface-variant tracking-wide">
-              RANK PROGRESSION
-            </span>
-            <span className={`text-sm font-headline font-bold ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>
-              Guardian → Elite
-            </span>
-          </div>
-          <div className="relative">
-            <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                whileInView={{ width: "72%" }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5, delay: 0.5 }}
-                className="h-full rounded-full"
-                style={{ background: isDark ? "#FF0A54" : "#4D00FF" }}
-              />
+          {/* Title with sparkle effect */}
+          <motion.div 
+            className="text-center mb-10"
+            initial={{ scale: 0.9 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <h3 className="text-3xl sm:text-4xl font-headline font-extrabold text-on-surface mb-2">
+              <span className="inline-flex items-center gap-3">
+                <motion.span
+                  animate={{ rotate: [0, 15, -15, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="material-symbols-outlined text-4xl"
+                  style={{ 
+                    fontVariationSettings: "'FILL' 1",
+                    color: isDark ? "#FF0A54" : "#4D00FF"
+                  }}
+                >
+                  stars
+                </motion.span>
+                Rank Progression
+                <motion.span
+                  animate={{ rotate: [0, -15, 15, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  className="material-symbols-outlined text-4xl"
+                  style={{ 
+                    fontVariationSettings: "'FILL' 1",
+                    color: isDark ? "#FF0A54" : "#4D00FF"
+                  }}
+                >
+                  stars
+                </motion.span>
+              </span>
+            </h3>
+            <p className="text-on-surface-variant font-body text-lg">
+              Climb the ranks and become a Cyber Legend!
+            </p>
+          </motion.div>
+
+          {/* Rank Path Container */}
+          <div className="glass-hud p-8 sm:p-12 rounded-3xl relative overflow-hidden">
+            {/* Background animated particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`absolute w-2 h-2 rounded-full ${isDark ? "bg-neon-crimson/30" : "bg-neon-violet/30"}`}
+                  animate={{
+                    y: [0, -100, 0],
+                    x: [0, Math.sin(i) * 30, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 0.5,
+                    ease: "easeInOut",
+                  }}
+                  style={{
+                    left: `${15 + i * 15}%`,
+                    bottom: "20%",
+                  }}
+                />
+              ))}
             </div>
-            {/* Rank Markers */}
-            <div className="flex justify-between mt-3 text-xs font-body text-on-surface-variant">
-              <span>Rookie</span>
-              <span>Guardian</span>
-              <span>Elite</span>
-              <span>Legend</span>
+
+            {/* Rank Nodes */}
+            <div className="relative">
+              {/* Rank Cards Row - Above the line */}
+              <div className="relative grid grid-cols-4 gap-4 sm:gap-8 z-20 mb-8">
+                {[
+                  { 
+                    name: "Rookie", 
+                    color: isDark ? "#6B7280" : "#9CA3AF",
+                    unlocked: true,
+                    position: 0
+                  },
+                  { 
+                    name: "Guardian", 
+                    color: "#FF0A54",
+                    unlocked: true,
+                    position: 72,
+                    current: true
+                  },
+                  { 
+                    name: "Elite", 
+                    color: "#FFD700",
+                    unlocked: false,
+                    position: 100
+                  },
+                  { 
+                    name: "Legend", 
+                    color: "#FF0A54",
+                    unlocked: false,
+                    position: 100
+                  },
+                  ].map((rank, index) => (
+                  <motion.div
+                    key={rank.name}
+                    initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.6 + index * 0.15 }}
+                    className="flex flex-col items-center"
+                  >
+                    {/* Rank Badge with Image */}
+                    <motion.div
+                      whileHover={rank.unlocked ? { scale: 1.1, y: -5 } : {}}
+                      className={`relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-3 overflow-hidden transition-all duration-300 ${
+                        rank.unlocked 
+                          ? "" 
+                          : "grayscale opacity-80"
+                      }`}
+                    >
+                      <img 
+                        src={`/ranks/${rank.name === "Guardian" ? "Guardian" : rank.name}.png`}
+                        alt={rank.name}
+                        className={`w-full h-full object-cover`}
+                      />
+                    </motion.div>
+
+                    {/* Rank Name */}
+                    <span 
+                      className={`font-headline font-bold text-sm sm:text-base ${
+                        rank.unlocked 
+                          ? "text-on-surface" 
+                          : "text-on-surface-variant/50"
+                      }`}
+                    >
+                      {rank.name}
+                    </span>
+
+                    {/* XP Badge for current rank */}
+                    {rank.current && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
+                        className="mt-2 px-3 py-1 rounded-full text-xs font-headline font-bold bg-primary-container text-on-primary-container"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        850 / 1000 XP
+                      </motion.div>
+                    )}
+
+                    {/* Lock icon for locked ranks */}
+                    {!rank.unlocked && (
+                      <motion.span 
+                        className="material-symbols-outlined text-sm mt-1 text-on-surface-variant/30"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        lock
+                      </motion.span>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Connection Path - Below the badges */}
+              <div className="h-3 bg-surface-container-highest rounded-full overflow-hidden z-0 mt-2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "72%" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 2, delay: 0.8, ease: "easeOut" }}
+                  className="h-full rounded-full relative"
+                  style={{ 
+                    background: isDark 
+                      ? "linear-gradient(90deg, #FF0A54 0%, #FF6B35 50%, #FFD700 100%)" 
+                      : "linear-gradient(90deg, #4D00FF 0%, #9C27B0 50%, #FFD700 100%)"
+                  }}
+                >
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                </motion.div>
+              </div>
             </div>
+
+            {/* Progress Stats */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 1.5 }}
+              className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-10"
+            >
+              {[
+                { label: "Current Rank", value: "Guardian", icon: "shield" },
+                { label: "XP to Next", value: "150 XP", icon: "trending_up" },
+                { label: "Total XP", value: "3,450 XP", icon: "stars" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 1.6 + index * 0.1, type: "spring" }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-3 px-5 py-3 rounded-xl bg-surface-container-high/50 border border-surface-variant/20"
+                >
+                  <span 
+                    className="material-symbols-outlined text-xl"
+                    style={{ 
+                      fontVariationSettings: "'FILL' 1",
+                      color: isDark ? "#FF0A54" : "#4D00FF"
+                    }}
+                  >
+                    {stat.icon}
+                  </span>
+                  <div>
+                    <p className="text-xs text-on-surface-variant font-body">{stat.label}</p>
+                    <p className="font-headline font-bold text-on-surface">{stat.value}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Motivational Message */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 0.8, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 2 }}
+              className="mt-8 text-center"
+            >
+              <p className="font-comic text-lg text-on-surface-variant/60 italic">
+                "Keep training! Elite rank is within reach!"
+              </p>
+            </motion.div>
           </div>
         </motion.div>
       </div>

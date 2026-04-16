@@ -23,6 +23,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { cn } from "../lib/utils";
 import { useAuthStore } from "../store/useAuthStore";
+import { useUserProgressStore } from "../store/useUserProgressStore";
 import { useTheme } from "@/components/theme-provider";
 import { useTrackActivity } from "../hooks/useTrackActivity";
 import {
@@ -57,9 +58,192 @@ interface Message {
     content: string;
 }
 
+// Comprehensive system prompt with full app knowledge
+const SYSTEM_PROMPT = `You are CHEA's AI cybersecurity assistant - a comprehensive knowledge base for the CHEA desktop cybersecurity application.
+
+## ABOUT CHEA
+CHEA is a desktop cybersecurity education application built with Tauri (Rust backend + React frontend). It features a cyberpunk/neon aesthetic with gamification elements including XP, levels, streaks, and daily quests.
+
+## ALL CHEA TOOLS & FEATURES
+
+### 1. Dashboard (/dashboard)
+The main hub showing:
+- Security Score card (calculated from XP, streak, vault items, activity)
+- Stats Overview: XP, Level, Streak, Total Activities
+- Progress bar showing XP to next level
+- Tool grid with all 14 available tools
+- Recent Activity feed
+- Daily Quests (3 tasks that reset daily)
+
+### 2. Link Scanner (/dashboard/link-scanner)
+- Scans URLs against 70+ security engines via VirusTotal API
+- Shows detection ratio (e.g., "3/72 engines detected threats")
+- Provides scan date and permalink to full VirusTotal report
+- History saved locally
+- XP Reward: 10 XP per scan
+- Backend: Rust Tauri command \\\`scan_url\\\`
+
+### 3. File Scanner (/dashboard/file-scanner)
+- Scans files up to 650MB for malware using VirusTotal
+- Shows SHA256 hash, detection stats, file type
+- Provides scan date and report link
+- History saved locally
+- XP Reward: 15 XP per scan
+- Backend: Rust Tauri command \\\`scan_file\\\`
+
+### 4. Image Privacy (/dashboard/metadata)
+- Views EXIF metadata from images (GPS coordinates, camera info, timestamps, etc.)
+- Removes all metadata to protect privacy
+- Supports JPG, PNG, TIFF formats
+- Shows before/after metadata comparison
+- XP Reward: 10 XP per scan
+
+### 5. Password Generator (/dashboard/password-gen)
+- Generates secure passwords with configurable options:
+  - Length: 6-64 characters
+  - Character sets: Uppercase, Lowercase, Numbers, Symbols
+- Shows password entropy (bits of randomness)
+- Entropy levels: <28 (weak), 28-50 (fair), >50 (strong)
+- One-click copy to clipboard
+- XP Reward: 5 XP per generation
+
+### 6. Password Checker (/dashboard/password-check)
+- Analyzes password strength in real-time
+- Checks against common patterns, dictionary words, sequences
+- Provides improvement suggestions
+- Visual strength meter (Weak → Fair → Good → Strong)
+- XP Reward: 3 XP per check
+
+### 7. Encryption Tool (/dashboard/encryption) - "Secret Codes"
+- Encrypts text using AES-256-GCM (military-grade encryption)
+- Generates random 256-bit keys
+- One-click copy for encrypted text and key
+- Decrypt function requires both encrypted text and key
+- Backend: Rust Tauri commands \\\`encrypt_text\\\` and \\\`decrypt_text\\\`
+- XP Reward: 5 XP per encryption
+
+### 8. Credential Vault (/dashboard/vault) - "Treasure Box"
+- Securely stores login credentials and credit cards
+- All data encrypted with AES-256-GCM
+- Master password protection using Argon2 hashing
+- Categories: Login Credentials, Credit Cards (Visa, Mastercard, Amex, Discover)
+- Features: Copy username/password, reveal/hide passwords, copy card numbers
+- NEVER stores master password - only Argon2 hash for verification
+- XP Reward: 20 XP per credential created
+
+### 9. AI Agent (/dashboard/ai-agent) - "You are here!"
+- Cybersecurity AI chatbot (that's me!)
+- Powered by OpenRouter API (nvidia/nemotron-nano-9b-v2:free)
+- Persistent chat history in Firestore
+- Supports Markdown, code blocks, Mermaid diagrams
+- Arabic language support (RTL)
+- XP Reward: 5 XP per message
+
+### 10. Quiz Arena (/dashboard/quiz-arena)
+- 5-question cybersecurity quizzes
+- 3 difficulty tiers based on user level:
+  - Bronze (Levels 1-3): Basic concepts, definitions
+  - Silver (Levels 4-6): Intermediate scenarios
+  - Gold (Levels 7+): Advanced attack analysis
+- Categories: Phishing, Passwords, Malware, Network Security, Social Engineering
+- XP Reward: 15 XP per completed quiz
+
+### 11. Phishing Dojo (/dashboard/phishing-dojo)
+- Interactive phishing email detection game
+- 30+ real-world phishing examples across 3 tiers
+- Must identify red flags (urgency, suspicious links, requests for info, etc.)
+- Shows detailed explanations for each red flag
+- XP Reward: 15 XP per completed round
+
+### 12. Calculator (/dashboard/calculator)
+- Standard calculator for quick math
+
+### 13. Terminal (/dashboard/terminal)
+- Embedded PowerShell terminal via PTY
+- Full command-line access within the app
+
+### 14. Settings (/dashboard/settings)
+- Master password setup/management
+- Theme toggle (Light/Dark mode)
+- User preferences
+
+## GAMIFICATION SYSTEM
+
+### XP System
+Users earn XP for all activities:
+| Activity | XP |
+|----------|-----|
+| Scan Link | 10 |
+| Scan File | 15 |
+| Scan Image | 10 |
+| Generate Password | 5 |
+| Check Password | 3 |
+| Create Encryption | 5 |
+| Create Credential | 20 |
+| Chat AI (per message) | 5 |
+| Complete Quiz | 15 |
+| Complete Phishing Round | 15 |
+| Daily Streak Bonus | 10 |
+
+### Level System
+- Levels increase every 100 XP
+- Level = floor(XP / 100) + 1
+- Bronze Tier: Levels 1-3
+- Silver Tier: Levels 4-6
+- Gold Tier: Levels 7+
+
+### Streak System
+- Tracks consecutive daily logins
+- Resets if user misses a day
+- 10 XP bonus for maintaining streaks
+
+### Daily Quests
+Three tasks that reset every 24 hours:
+1. Scan something (link/file/image) - 20 XP
+2. Generate/check a password - 15 XP
+3. Chat with AI - 10 XP
+
+### Security Score
+Calculated from: XP + (Streak × 10) + (Vault Items × 5) + (Activities × 2)
+Displayed as percentage (0-100%)
+
+## THEME SYSTEM
+- Dark Mode: Cyberpunk aesthetic with neon crimson (#FF0A54), cyan (#00E5FF), violet (#4D00FF)
+- Light Mode: Clean white with violet accents
+- CSS Variables: \\\`hsl(var(--primary))\\\`, \\\`hsl(var(--background))\\\`, etc.
+
+## TECHNICAL DETAILS
+- Frontend: React 18, TypeScript, Vite, Tailwind CSS, Framer Motion
+- State: Zustand
+- Backend: Tauri (Rust) with commands for encryption, scanning, terminal
+- Database: Firebase Firestore
+- Icons: Lucide React
+- AI: OpenRouter API with streaming support
+
+## HOW TO NAVIGATE
+When users ask about tools, guide them:
+- "Go to Dashboard > [Tool Name]" 
+- All tools accessible from the main dashboard grid
+- Sidebar navigation in DashboardLayout
+
+## RESPONSE GUIDELINES
+1. Be friendly, educational, and encouraging
+2. Use emojis occasionally ✨
+3. Keep responses clear and actionable
+4. When explaining tools, mention their XP rewards
+5. If user asks about a tool they haven't unlocked by level, mention the level requirement
+6. Help users maximize their security score and XP earnings
+7. Answer in the same language the user asks (especially Arabic support)
+8. You can generate Mermaid diagrams to visualize security concepts
+
+## IMPORTANT LIMITATIONS
+- You cannot perform actions on behalf of users (no scanning, no password generation)
+- You don't have access to user's personal vault data, scan history, or credentials
+- You can see user's level/tier for personalized guidance but not specific data`;
+
 const WELCOME_MESSAGE: Message = {
     role: "assistant",
-    content: "Hey there! 👋 I'm your AI cybersecurity buddy. Ask me anything about staying safe online! 🛡️",
+    content: "Hey there! 👋 I'm your AI cybersecurity buddy. I know everything about CHEA - from our Link Scanner to the Password Vault, XP system, and all 14 tools! Ask me anything about staying safe online or how to use any feature! 🛡️✨",
 };
 
 const isArabic = (text: string) => {
@@ -112,6 +296,11 @@ export default function AIAgent() {
     const user = useAuthStore((s) => s.user);
     const userId = user?.uid;
     const trackActivity = useTrackActivity();
+    
+    // Get user progress for context (level, tier) - NO personal data
+    const userProgress = useUserProgressStore((s) => s.progress);
+    const userLevelInfo = useUserProgressStore((s) => s.levelInfo);
+    const fetchUserProgress = useUserProgressStore((s) => s.fetchProgress);
 
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -133,6 +322,38 @@ export default function AIAgent() {
     useEffect(() => {
         scrollToBottom();
     }, [messages, isLoading]);
+
+    // Fetch user progress for AI context
+    useEffect(() => {
+        if (userId) {
+            fetchUserProgress(userId);
+        }
+    }, [userId, fetchUserProgress]);
+
+    // Build enhanced system message with user context
+    const buildSystemMessage = (): Message => {
+        let userContext = "";
+        
+        if (userProgress && userLevelInfo) {
+            const level = userLevelInfo.level;
+            const title = userLevelInfo.title;
+            const xp = userProgress.xp;
+            const xpForNext = userLevelInfo.xpForNext;
+            const xpNeeded = xpForNext - xp;
+            
+            // Determine tier based on level
+            let tier = 'bronze';
+            if (level >= 7) tier = 'gold';
+            else if (level >= 4) tier = 'silver';
+            
+            userContext = `\n\n## CURRENT USER CONTEXT (Non-personal)\n- Current Level: ${level} (${title})\n- Current Tier: ${tier.toUpperCase()} (${tier === 'bronze' ? 'Levels 1-3 - Basic features' : tier === 'silver' ? 'Levels 4-6 - Intermediate features' : 'Levels 7+ - Advanced features'})\n- Current XP: ${xp}\n- XP needed for next level: ${xpNeeded} (need ${xpForNext} total)\n\nWhen responding:\n- Tailor examples to their tier level (${tier})\n- If they ask about locked features, mention the level requirement\n- Encourage them to earn more XP to reach the next tier`;
+        }
+        
+        return {
+            role: "system",
+            content: SYSTEM_PROMPT + userContext,
+        };
+    };
 
     const loadSessions = useCallback(async () => {
         if (!userId) return;
@@ -244,11 +465,9 @@ export default function AIAgent() {
             let fullResponse = "";
             let hasStartedStreaming = false;
 
-            const systemMessage: Message = {
-                role: "system",
-                content: "You are CHEA's AI cybersecurity assistant. You help users learn about online safety, password security, phishing, encryption, and general cybersecurity topics. Be friendly, educational, and use emojis occasionally. Keep responses clear and actionable. You are talking to a user of a cybersecurity education app called CHEA.",
-            };
-
+            // Build enhanced system message with user context
+            const systemMessage = buildSystemMessage();
+            
             const apiMessages = [systemMessage, ...historyToSend];
 
             const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -395,11 +614,13 @@ export default function AIAgent() {
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
-                                        <Bot size={24} />
-                                    </div>
+                                    <img 
+                                        src="/aibox.png" 
+                                        alt="AI Bot" 
+                                        className="w-32 h-32 rounded-2xl object-cover"
+                                    />
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        AI Assistant
+                                        Nova
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
@@ -430,12 +651,14 @@ export default function AIAgent() {
                             >
                                 {sidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
                             </button>
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-lg">
-                                <Sparkles size={20} />
-                            </div>
+                            <img 
+                                src="/aibox.png" 
+                                alt="AI Bot" 
+                                className="w-16 h-16 rounded-xl object-cover shrink-0"
+                            />
                             <div className="min-w-0 flex-1">
                                 <h2 className={`font-black flex items-center gap-2 ${headingColor}`}>
-                                    CHEA Support Agent
+                                    Nova
                                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
                                 </h2>
                                 <p className={`text-xs font-medium truncate ${mutedText}`} dir="auto">
@@ -557,9 +780,11 @@ export default function AIAgent() {
                                                     )}
                                                 >
                                                     {msg.role === "assistant" && (
-                                                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-lg shrink-0 mt-1">
-                                                            <Sparkles size={16} />
-                                                        </div>
+                                                        <img 
+                                                            src="/aibox.png" 
+                                                            alt="AI Bot" 
+                                                            className="w-12 h-12 rounded-xl object-cover shrink-0 mt-1"
+                                                        />
                                                     )}
                                                     <div
                                                         dir={isArabic(msg.content) ? "rtl" : "ltr"}
@@ -673,9 +898,11 @@ export default function AIAgent() {
                                                     animate={{ opacity: 1, y: 0 }}
                                                     className="flex items-start gap-3 justify-start max-w-[80%]"
                                                 >
-                                                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-lg shrink-0">
-                                                        <Sparkles size={16} />
-                                                    </div>
+                                                    <img 
+                                                        src="/aibox.png" 
+                                                        alt="AI Bot" 
+                                                        className="w-12 h-12 rounded-xl object-cover shrink-0"
+                                                    />
                                                     <div className="px-5 py-3.5 bg-muted rounded-2xl rounded-bl-sm flex items-center gap-1.5 h-10">
                                                         <span className="w-1.5 h-1.5 bg-foreground/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
                                                         <span className="w-1.5 h-1.5 bg-foreground/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
