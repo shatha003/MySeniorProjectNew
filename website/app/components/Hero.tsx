@@ -38,7 +38,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 items-center">
             <button className="glitch-button group flex items-center gap-3 bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-8 py-4 rounded-xl font-headline font-bold text-lg kinetic-button shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)]">
               <span className="material-symbols-outlined text-2xl">download</span>
-              <span className="glitch-text" data-text="Initialize Protocol">Initialize Protocol</span>
+              <span className="glitch-text" data-text="Get Started">Get Started</span>
             </button>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function Hero() {
             <span className="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">
               download
             </span>
-            <span className="glitch-text" data-text="Initialize Protocol">Initialize Protocol</span>
+            <span className="glitch-text" data-text="Get Started">Get Started</span>
           </motion.button>
         </motion.div>
       </div>

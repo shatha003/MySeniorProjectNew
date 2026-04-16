@@ -25,19 +25,18 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <img src="/icon.png" alt="CHEA" className="w-9 h-9 object-contain opacity-90" />
             <span className="text-lg font-headline font-bold text-on-surface/90 tracking-tight">
-              CHEA Protocol
+              CHEA
             </span>
           </div>
 
           {/* Links - More spacing */}
-          <div className="flex items-center gap-10 text-sm font-body">
+          <div className="flex items-center gap-10 text-sm font-headline">
             <a href="/privacy-policy" className="text-on-surface-variant/80 hover:text-primary transition-colors">Privacy Policy</a>
             <a href="/terms-of-service" className="text-on-surface-variant/80 hover:text-primary transition-colors">Terms of Service</a>
-            <a href="#" className="text-on-surface-variant/80 hover:text-primary transition-colors">Security</a>
           </div>
 
           {/* Status */}
-          <div className="flex items-center gap-4 text-sm text-on-surface-variant/60 font-body">
+          <div className="flex items-center gap-4 text-sm text-on-surface-variant/60 font-headline">
             <div className="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -65,8 +64,8 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-5 pt-5 border-t border-white/10 text-center text-sm text-on-surface-variant/40 font-body">
-          © 2024 CHEA Protocol. All rights reserved.
+        <div className="mt-5 pt-5 border-t border-white/10 text-center text-sm text-on-surface-variant/40 font-headline">
+          © 2024 CHEA. All rights reserved.
         </div>
       </footer>
     );
@@ -89,17 +88,17 @@ export default function Footer() {
             className="w-9 h-9 object-contain opacity-90"
           />
           <span className="text-lg font-headline font-bold text-on-surface/90 tracking-tight">
-            CHEA Protocol
+            CHEA
           </span>
         </motion.div>
 
-        {/* Links - Increased spacing */}
+          {/* Links - Increased spacing */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex items-center gap-10 text-sm font-body"
+          className="flex items-center gap-10 text-sm font-headline"
         >
           <a
             href="/privacy-policy"
@@ -117,23 +116,15 @@ export default function Footer() {
           >
             Terms of Service
           </a>
-          <a
-            href="#"
-            className={`text-on-surface-variant/80 transition-colors duration-300 hover:${
-              isDark ? "text-neon-crimson" : "text-neon-violet"
-            }`}
-          >
-            Security
-          </a>
         </motion.div>
 
-        {/* Status - Better organized */}
+          {/* Status - Better organized */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-4 text-sm text-on-surface-variant/60 font-body"
+          className="flex items-center gap-4 text-sm text-on-surface-variant/60 font-headline"
         >
           <div className="flex items-center gap-2">
             <svg
@@ -165,16 +156,16 @@ export default function Footer() {
         </motion.div>
       </div>
 
-      {/* Copyright - With border */}
+        {/* Copyright - With border */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-5 pt-5 border-t border-white/10 text-center text-sm text-on-surface-variant/40 font-body"
+        className="mt-5 pt-5 border-t border-white/10 text-center text-sm text-on-surface-variant/40 font-headline"
         suppressHydrationWarning
       >
-        © {currentYear} CHEA Protocol. All rights reserved.
+        © {currentYear} CHEA. All rights reserved.
       </motion.div>
     </footer>
   );
