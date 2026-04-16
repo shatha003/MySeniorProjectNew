@@ -7,6 +7,17 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CyberEffects from "../components/CyberEffects";
 
+interface BoldItem {
+  bold: string;
+  text: string;
+}
+
+interface TextItem {
+  text: string;
+}
+
+type ListItem = BoldItem | TextItem;
+
 export default function PrivacyPolicyPage() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -19,7 +30,7 @@ export default function PrivacyPolicyPage() {
         { bold: "Account Information:", text: " Your email address, display name, and profile picture when you register or sign in with Google." },
         { bold: "Usage Data:", text: " Information about how you interact with the App, including features used and actions performed." },
         { bold: "Device Information:", text: " Basic information about the device running the App, such as operating system and version." },
-      ]
+      ] as BoldItem[]
     },
     {
       title: "2. How We Use Your Information",
@@ -30,7 +41,7 @@ export default function PrivacyPolicyPage() {
         { text: "Monitor and analyze usage patterns to enhance the user experience" },
         { text: "Communicate important updates and security alerts" },
         { text: "Ensure the safety and security of our platform" },
-      ]
+      ] as TextItem[]
     },
     {
       title: "3. Data Storage & Security",
@@ -44,7 +55,7 @@ export default function PrivacyPolicyPage() {
         { text: "To comply with legal obligations or respond to lawful requests" },
         { text: "To protect the rights, property, or safety of CHEA, its users, or the public" },
         { text: "With service providers who assist in operating the App (e.g., Firebase, Google Cloud)" },
-      ]
+      ] as TextItem[]
     },
     {
       title: "5. Children's Privacy",
@@ -58,7 +69,7 @@ export default function PrivacyPolicyPage() {
         { text: "Update or correct your account information at any time" },
         { text: "Request deletion of your account and associated data" },
         { text: "Opt out of non-essential data collection" },
-      ]
+      ] as TextItem[]
     },
     {
       title: "7. Cookies & Local Storage",
@@ -172,9 +183,9 @@ export default function PrivacyPolicyPage() {
                             <li key={i} className={`flex items-start gap-3 ${getBodyTextColor()} text-sm sm:text-base`}>
                               <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 ${getBgGradient()}`} />
                               <span>
-                                {item.bold && (
+                                {'bold' in item && (item as BoldItem).bold && (
                                   <strong className={getHeadingColor()}>
-                                    {item.bold}
+                                    {(item as BoldItem).bold}
                                   </strong>
                                 )}
                                 {item.text}
