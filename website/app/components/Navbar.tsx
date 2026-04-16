@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useTheme } from "./theme-provider";
 import ThemeToggle from "./theme-toggle";
 
@@ -9,14 +9,33 @@ export default function Navbar() {
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
   const [scrolled, setScrolled] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Track scroll direction and visibility
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    const scrollThreshold = 50;
+    
+    // Always show header at the top of the page
+    if (latest < scrollThreshold) {
+      setIsHeaderVisible(true);
+      setScrolled(false);
+      return;
+    }
+
+    // Update scrolled state for style changes
+    setScrolled(latest > scrollThreshold);
+
+    // Determine scroll direction and visibility
+    if (latest > previous && latest > scrollThreshold) {
+      // Scrolling down - hide header
+      setIsHeaderVisible(false);
+    } else if (latest < previous) {
+      // Scrolling up - show header
+      setIsHeaderVisible(true);
+    }
+  });
 
   const navLinks = [
     { name: "Features", href: "#features" },
@@ -57,8 +76,16 @@ export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      animate={{ 
+        y: isHeaderVisible ? 0 : -120, 
+        opacity: isHeaderVisible ? 1 : 0 
+      }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 30,
+        duration: 0.3
+      }}
       className={`fixed top-4 left-0 right-0 w-[90%] max-w-5xl mx-auto z-50 rounded-2xl transition-all duration-500 border ${
         scrolled
           ? "bg-surface/85 backdrop-blur-2xl border-white/15 shadow-xl shadow-black/25 py-4"
