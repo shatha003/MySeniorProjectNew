@@ -82,12 +82,12 @@ export default function QuizArena() {
         operator: { label: t('quiz:operatorMode').replace(' Mode', ''), color: 'text-purple-500', emoji: '⚡' },
     };
 
-    const encouragements = [
+    const encouragements = (t('quiz:encouragements', { returnObjects: true }) as string[]) || [
         'Cyber Ninja! 🔥', 'Brilliant! 🧠', 'Awesome! ⭐', 'Keep it up! 🚀',
         'Sharp mind! 💡', 'Well done! 🎯', 'You rock! 🎸', 'Genius! 🌟',
     ];
 
-    const wrongMessages = [
+    const wrongMessages = (t('quiz:wrongMessages', { returnObjects: true }) as string[]) || [
         'Not quite — but now you know! 💪',
         'Good try! Learn from this one! 📚',
         'Almost! Here\'s the right answer: 🎯',

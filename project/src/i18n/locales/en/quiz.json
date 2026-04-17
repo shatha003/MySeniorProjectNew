@@ -21,5 +21,20 @@
   "excellent": "Excellent!",
   "goodJob": "Good Job!",
   "keepPracticing": "Keep Practicing!",
-  "keepLearning": "Keep Learning!"
+  "keepLearning": "Keep Learning!",
+  "encouragements": [
+    "Cyber Ninja! 🔥",
+    "Brilliant! 🧠",
+    "Awesome! ⭐",
+    "Keep it up! 🚀",
+    "Sharp mind! 💡",
+    "Well done! 🎯",
+    "You rock! 🎸",
+    "Genius! 🌟"
+  ],
+  "wrongMessages": [
+    "Not quite — but now you know! 💪",
+    "Good try! Learn from this one! 📚",
+    "Almost! Here's the right answer: 🎯"
+  ]
 }

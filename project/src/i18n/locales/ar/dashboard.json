@@ -29,5 +29,28 @@
   "tierBronze": "برونزي",
   "tierSilver": "فضي",
   "tierGold": "ذهبي",
-  "rankLabel": "رتبة {{tier}}"
+  "rankLabel": "رتبة {{tier}}",
+  "tasks": {
+    "scan": "إكمال فحص",
+    "generate_password": "إنشاء كلمات مرور",
+    "check_password": "فحص قوة كلمة المرور",
+    "create_credential": "إنشاء بيانات اعتماد",
+    "generate_encryption": "استخدام التشفير",
+    "quiz_round": "العب في ساحة الاختبار",
+    "phishing_round": "اكتشف الاحتيال"
+  },
+  "activities": {
+    "scan_link": "فحص رابط",
+    "scan_file": "فحص ملف",
+    "scan_image": "فحص صورة",
+    "generate_password": "إنشاء كلمة مرور",
+    "check_password": "فحص كلمة المرور",
+    "generate_encryption": "تشفير النص",
+    "create_credential": "إنشاء بيانات اعتماد",
+    "chat_ai": "محادثة مع الذكاء الاصطناعي",
+    "quiz_round": "إكمال جولة اختبار",
+    "phishing_round": "إكمال جولة اكتشاف احتيال",
+    "quiz_streak": "مكافأة سلسلة الاختبارات",
+    "phishing_streak": "مكافأة سلسلة اكتشاف الاحتيال"
+  }
 }

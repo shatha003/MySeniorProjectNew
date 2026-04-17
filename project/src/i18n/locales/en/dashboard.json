@@ -29,5 +29,28 @@
   "tierBronze": "Bronze",
   "tierSilver": "Silver",
   "tierGold": "Gold",
-  "rankLabel": "{{tier}} Rank"
+  "rankLabel": "{{tier}} Rank",
+  "tasks": {
+    "scan": "Complete a scan",
+    "generate_password": "Generate passwords",
+    "check_password": "Check password strength",
+    "create_credential": "Create a credential",
+    "generate_encryption": "Use encryption",
+    "quiz_round": "Play Quiz Arena",
+    "phishing_round": "Spot a Phish"
+  },
+  "activities": {
+    "scan_link": "Scanned Link",
+    "scan_file": "Scanned File",
+    "scan_image": "Scanned Image",
+    "generate_password": "Generated Password",
+    "check_password": "Checked Password",
+    "generate_encryption": "Generated Encryption",
+    "create_credential": "Created Credential",
+    "chat_ai": "AI Chat Message",
+    "quiz_round": "Completed Quiz Round",
+    "phishing_round": "Completed Phishing Round",
+    "quiz_streak": "Quiz Streak Bonus",
+    "phishing_streak": "Phishing Streak Bonus"
+  }
 }

@@ -1,3 +1,5 @@
+import i18n from 'i18next';
+
 export type DifficultyTier = 'cadet' | 'analyst' | 'operator';
 
 export interface RedFlag {
@@ -15,6 +17,29 @@ export interface PhishingEmail {
     redFlags: RedFlag[];
     explanation: string;
     difficulty: DifficultyTier;
+}
+
+interface TranslatedEmail {
+    subject?: string;
+    body?: string;
+    explanation?: string;
+    redFlags?: RedFlag[];
+}
+
+function getTranslatedEmail(email: PhishingEmail): PhishingEmail {
+    const lang = i18n.language || 'en';
+    if (lang === 'en') return email;
+
+    const translation = i18n.t(`phishing:emails.${email.id}`, { returnObjects: true }) as TranslatedEmail;
+    if (!translation || !translation.subject) return email;
+
+    return {
+        ...email,
+        subject: translation.subject || email.subject,
+        body: translation.body || email.body,
+        explanation: translation.explanation || email.explanation,
+        redFlags: translation.redFlags || email.redFlags,
+    };
 }
 
 export const PHISHING_EMAILS: PhishingEmail[] = [
@@ -411,7 +436,7 @@ export const PHISHING_EMAILS: PhishingEmail[] = [
 export function getEmailsForTier(tier: DifficultyTier, count: number = 5): PhishingEmail[] {
     const tierEmails = PHISHING_EMAILS.filter(e => e.difficulty === tier);
     const shuffled = [...tierEmails].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, Math.min(count, shuffled.length));
+    return shuffled.slice(0, Math.min(count, shuffled.length)).map(getTranslatedEmail);
 }
 
 export function getTierForLevel(level: number): DifficultyTier {

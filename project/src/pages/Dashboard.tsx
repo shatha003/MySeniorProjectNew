@@ -442,7 +442,7 @@ const Dashboard = () => {
                                                 {task.completed && <CheckCircle2 size={14} />}
                                             </div>
                                             <span className={`text-sm font-bold ${task.completed ? 'line-through' : headingColor}`}>
-                                                {task.description}
+                                                {t(`dashboard:tasks.${task.type}`)}
                                             </span>
                                             <span className="ml-auto text-[10px] font-black text-primary">+{task.points}</span>
                                         </div>
@@ -602,7 +602,7 @@ const Dashboard = () => {
                                             {getActivityIcon(activity.type)}
                                         </div>
                                         <div className="flex-1">
-                                            <p className={`text-sm font-bold ${headingColor}`}>{activity.description}</p>
+                                            <p className={`text-sm font-bold ${headingColor}`}>{t(`dashboard:activities.${activity.type}`)}</p>
                                             <p className={`text-[10px] ${mutedText} uppercase font-black tracking-widest`}>{formatTimeAgo(activity.createdAt)}</p>
                                         </div>
                                         <span className="text-xs font-black text-emerald-500">+{activity.points} {t('common:xp')}</span>

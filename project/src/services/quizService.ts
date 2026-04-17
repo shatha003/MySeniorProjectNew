@@ -1,3 +1,5 @@
+import i18n from 'i18next';
+
 export type DifficultyTier = 'cadet' | 'analyst' | 'operator';
 
 export interface QuizQuestion {
@@ -602,9 +604,25 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     },
 ];
 
+function getTranslatedQuestion(question: QuizQuestion): QuizQuestion {
+    const lang = i18n.language || 'en';
+    if (lang === 'en') return question;
+
+    const translation = i18n.t(`questions.${question.id}`, { returnObjects: true, ns: 'quiz' }) as any;
+    if (!translation || !translation.question) return question;
+
+    return {
+        ...question,
+        question: translation.question || question.question,
+        options: translation.options || question.options,
+        explanation: translation.explanation || question.explanation,
+    };
+}
+
 export function getQuestionsForTier(tier: DifficultyTier, count: number = 5): QuizQuestion[] {
     const tierQuestions = QUIZ_QUESTIONS.filter(q => q.difficulty === tier);
-    const shuffled = [...tierQuestions].sort(() => Math.random() - 0.5);
+    const translatedQuestions = tierQuestions.map(getTranslatedQuestion);
+    const shuffled = [...translatedQuestions].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 

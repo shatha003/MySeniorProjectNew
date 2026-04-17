@@ -415,10 +415,10 @@ export default function Encryption() {
                         <div className="p-6 md:p-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {[
-                                    { emoji: '🔐', title: t('encryption:tip1Title'), text: t('encryption:tip1Text') },
-                                    { emoji: '🎲', title: t('encryption:tip2Title'), text: t('encryption:tip2Text') },
-                                    { emoji: '🏠', title: t('encryption:tip3Title'), text: t('encryption:tip3Text') },
-                                    { emoji: '⚠️', title: t('encryption:tip4Title'), text: t('encryption:tip4Text') },
+                                    { emoji: '🔐', title: t('encryption:tipStrongLockTitle'), text: t('encryption:tipStrongLockText') },
+                                    { emoji: '🎲', title: t('encryption:tipAlwaysDifferentTitle'), text: t('encryption:tipAlwaysDifferentText') },
+                                    { emoji: '🏠', title: t('encryption:tipOnYourComputerTitle'), text: t('encryption:tipOnYourComputerText') },
+                                    { emoji: '⚠️', title: t('encryption:tipPasswordKeyTitle'), text: t('encryption:tipPasswordKeyText') },
                                 ].map((tip, i) => (
                                     <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-muted/30">
                                         <span className="text-2xl shrink-0">{tip.emoji}</span>
