@@ -788,19 +788,19 @@ export default function AISidekick() {
                     <p className="text-sm sm:text-base font-body text-on-surface mb-4">
                       You&apos;ve used all <strong>{MAX_FREE_MESSAGES}</strong> free messages!
                     </p>
-                    <motion.a
-                      href="#download"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-headline font-bold text-sm sm:text-base shadow-lg ${
+                    <a
+                      href="https://files.catbox.moe/9tkuow.rar"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`glitch-button-light inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-headline font-bold text-sm sm:text-base shadow-lg ${
                         isDark
                           ? "bg-gradient-to-r from-neon-crimson to-neon-violet"
                           : "bg-gradient-to-r from-neon-violet to-secondary"
                       }`}
                     >
                       <Download size={18} />
-                      Download CHEA for More
-                    </motion.a>
+                      <span className="glitch-text" data-text="Download CHEA for More">Download CHEA for More</span>
+                    </a>
                   </motion.div>
                 ) : (
                   <div className="relative">

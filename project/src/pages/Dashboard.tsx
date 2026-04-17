@@ -14,6 +14,9 @@ import { ActivityType } from '../services/activityService';
 import { getUserCredentials } from '../services/credentialService';
 import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
+import { MusicPlayer } from '@/components/ui/MusicPlayer';
+import { NovaChat } from '@/components/ui/NovaChat';
+import { useWidgetPosition } from '@/hooks/useWidgetPosition';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -44,6 +47,12 @@ const Dashboard = () => {
     const [credentialCount, setCredentialCount] = useState(0);
     const [animatedScore, setAnimatedScore] = useState(0);
     const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+    const [musicPlayerEnabled] = useState(() => {
+        if (typeof window === 'undefined') return true;
+        const saved = localStorage.getItem('chea-music-player-enabled');
+        return saved ? saved === 'true' : true;
+    });
+    const { position, setPosition } = useWidgetPosition({ x: 24, y: 24 });
 
     useEffect(() => {
         if (user?.uid) {
@@ -244,6 +253,7 @@ const Dashboard = () => {
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
     return (
+        <>
         <motion.div
             className="relative min-h-full pb-10"
             variants={containerVariants}
@@ -310,6 +320,11 @@ const Dashboard = () => {
 
                             {progress && tierStyle && (
                                 <div className="flex flex-wrap items-center gap-4">
+                                    {/* Music Player - Beside Day Streak */}
+                                    {musicPlayerEnabled && (
+                                        <MusicPlayer position={position} onPositionChange={setPosition} variant="inline" />
+                                    )}
+
                                     {/* Streak Badge */}
                                     <div className={`flex items-center gap-3 px-5 py-3 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-500`}>
                                         <div className="relative">
@@ -599,6 +614,8 @@ const Dashboard = () => {
                 </div>
             </div>
         </motion.div>
+        <NovaChat defaultPosition={{ x: 24, y: 100 }} />
+        </>
     );
 };
 

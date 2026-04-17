@@ -11,8 +11,6 @@ import {
     PanelLeftOpen,
     Loader2,
     Star,
-    Sparkles,
-    Bot,
     Clock,
     Search,
     ChevronRight,

@@ -36,10 +36,15 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <button className="glitch-button group flex items-center gap-3 bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-8 py-4 rounded-xl font-headline font-bold text-lg kinetic-button shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)]">
+            <a 
+              href="https://files.catbox.moe/9tkuow.rar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glitch-button-light flex items-center gap-3 bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-8 py-4 rounded-xl font-headline font-bold text-lg shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)] transition-shadow"
+            >
               <span className="material-symbols-outlined text-2xl">download</span>
               <span className="glitch-text" data-text="Get Started">Get Started</span>
-            </button>
+            </a>
           </div>
         </div>
         
@@ -135,20 +140,21 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 items-center"
         >
-          <motion.button
-            className={`glitch-button group flex items-center gap-3 px-8 py-4 rounded-xl font-headline font-bold text-lg kinetic-button text-white ${
+          <a
+            href="https://files.catbox.moe/9tkuow.rar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`glitch-button-light flex items-center gap-3 px-8 py-4 rounded-xl font-headline font-bold text-lg text-white transition-shadow ${
               isDark 
                 ? "bg-gradient-to-br from-neon-crimson to-neon-crimson/80 shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)]" 
                 : "bg-gradient-to-br from-neon-violet to-neon-violet/80 shadow-[0_0_25px_rgba(77,0,255,0.4)] hover:shadow-[0_0_35px_rgba(77,0,255,0.6)]"
             }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <span className="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">
+            <span className="material-symbols-outlined text-2xl">
               download
             </span>
             <span className="glitch-text" data-text="Get Started">Get Started</span>
-          </motion.button>
+          </a>
         </motion.div>
       </div>
 

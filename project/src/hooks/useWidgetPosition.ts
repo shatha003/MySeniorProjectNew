@@ -7,16 +7,6 @@ interface Position {
     y: number
 }
 
-function getDefaultPosition(): Position {
-    if (typeof window === 'undefined') {
-        return { x: 24, y: 24 }
-    }
-    return {
-        x: window.innerWidth - 224,
-        y: window.innerHeight - 100
-    }
-}
-
 interface UseWidgetPositionReturn {
     position: Position
     setPosition: (pos: Position) => void

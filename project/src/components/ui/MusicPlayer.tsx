@@ -12,14 +12,17 @@ interface Position {
 interface MusicPlayerProps {
     position?: Position
     onPositionChange?: (pos: Position) => void
+    variant?: 'floating' | 'inline'
 }
 
-export function MusicPlayer({ position, onPositionChange }: MusicPlayerProps) {
+export function MusicPlayer({ position, onPositionChange, variant = 'floating' }: MusicPlayerProps) {
     const { isPlaying, currentIndex, volume, song, toggle, next, prev, setVolume } = useBackgroundMusic()
     const { resolvedTheme } = useTheme()
     const isDark = resolvedTheme === 'dark'
     const [expanded, setExpanded] = useState(false)
     const [isDragging, setIsDragging] = useState(false)
+    
+    const isInline = variant === 'inline'
 
     const cardBg = isDark ? 'bg-[#1A1A2E]/90' : 'bg-white/90'
     const borderColor = isDark ? 'border-neon-violet/30' : 'border-neon-violet/20'
@@ -27,64 +30,48 @@ export function MusicPlayer({ position, onPositionChange }: MusicPlayerProps) {
     const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500'
     const neonAccent = isDark ? 'text-neon-violet' : 'text-violet-600'
 
-    const handleDragEnd = (_: any, info: { offset: { x: number; y: number } }) => {
-        if (onPositionChange && position) {
-            const newX = position.x + info.offset.x
-            const newY = position.y + info.offset.y
-            onPositionChange({ x: newX, y: newY })
-        }
-        setIsDragging(false)
-    }
-
     return (
-        <motion.div
-            className="fixed z-50"
-            style={{
-                bottom: position ? undefined : 24,
-                right: position ? undefined : 24,
+        <div
+            className={`${isInline ? 'relative' : 'fixed'} z-50`}
+            style={isInline ? {} : {
                 left: position ? position.x : undefined,
                 top: position ? position.y : undefined,
+                right: position ? undefined : 24,
+                bottom: position ? undefined : 24,
             }}
-            initial={{ y: 80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1, type: 'spring', stiffness: 200, damping: 20 }}
-            drag={!position}
-            dragMomentum={false}
-            dragListener={false}
-            onDragStart={() => setIsDragging(true)}
-            onDragEnd={handleDragEnd}
-            whileDrag={{ scale: 1.05, zIndex: 100 }}
         >
             <div
                 className={`rounded-2xl border-2 ${borderColor} ${cardBg} backdrop-blur-xl shadow-2xl overflow-hidden min-w-[200px] ${isDragging ? 'cursor-grabbing' : ''}`}
             >
                 {/* Collapsed Header - Drag Handle */}
                 <div className="flex items-center gap-2 p-3 select-none" onClick={() => setExpanded(!expanded)}>
-                    <div
-                        className={`cursor-grab active:cursor-grabbing p-1 rounded hover:${isDark ? 'bg-white/10' : 'bg-gray-100'}`}
-                        onPointerDown={(e) => {
-                            if (position) {
-                                e.preventDefault()
-                                const startX = e.clientX - position.x
-                                const startY = e.clientY - position.y
-                                const handleMove = (moveEvent: PointerEvent) => {
-                                    const newX = moveEvent.clientX - startX
-                                    const newY = moveEvent.clientY - startY
-                                    onPositionChange?.({ x: newX, y: newY })
+                    {!isInline && (
+                        <div
+                            className={`cursor-grab active:cursor-grabbing p-1 rounded hover:${isDark ? 'bg-white/10' : 'bg-gray-100'}`}
+                            onPointerDown={(e) => {
+                                if (position) {
+                                    e.preventDefault()
+                                    const startX = e.clientX - position.x
+                                    const startY = e.clientY - position.y
+                                    const handleMove = (moveEvent: PointerEvent) => {
+                                        const newX = moveEvent.clientX - startX
+                                        const newY = moveEvent.clientY - startY
+                                        onPositionChange?.({ x: newX, y: newY })
+                                    }
+                                    const handleUp = () => {
+                                        document.removeEventListener('pointermove', handleMove)
+                                        document.removeEventListener('pointerup', handleUp)
+                                        setIsDragging(false)
+                                    }
+                                    setIsDragging(true)
+                                    document.addEventListener('pointermove', handleMove)
+                                    document.addEventListener('pointerup', handleUp)
                                 }
-                                const handleUp = () => {
-                                    document.removeEventListener('pointermove', handleMove)
-                                    document.removeEventListener('pointerup', handleUp)
-                                    setIsDragging(false)
-                                }
-                                setIsDragging(true)
-                                document.addEventListener('pointermove', handleMove)
-                                document.addEventListener('pointerup', handleUp)
-                            }
-                        }}
-                    >
-                        <GripHorizontal size={14} className={mutedText} />
-                    </div>
+                            }}
+                        >
+                            <GripHorizontal size={14} className={mutedText} />
+                        </div>
+                    )}
                     <div className={`w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md ${isPlaying ? 'animate-pulse' : ''}`}>
                         <Music size={14} />
                     </div>
@@ -190,6 +177,6 @@ export function MusicPlayer({ position, onPositionChange }: MusicPlayerProps) {
                     )}
                 </AnimatePresence>
             </div>
-        </motion.div>
+        </div>
     )
 }

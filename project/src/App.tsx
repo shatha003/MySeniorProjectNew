@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './lib/firebase'
 import { useAuthStore } from './store/useAuthStore'
@@ -9,7 +9,6 @@ import ForgotPassword from './pages/ForgotPassword';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Dashboard from './pages/Dashboard';
-import LandingPage from './pages/LandingPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import PlaceholderPage from './pages/PlaceholderPage';
 
@@ -28,8 +27,6 @@ import QuizArena from './pages/QuizArena';
 import PhishingDojo from './pages/PhishingDojo';
 
 import TitleBar from './components/ui/TitleBar';
-import { MusicPlayer } from './components/ui/MusicPlayer';
-import { useWidgetPosition } from './hooks/useWidgetPosition';
 
 /**
  * Route guard – only allows authenticated users through.
@@ -53,9 +50,6 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   const { loading, setUser, setLoading } = useAuthStore()
-  const location = useLocation()
-  const isLandingPage = location.pathname === '/'
-  const { position, setPosition } = useWidgetPosition({ x: 24, y: 24 })
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -82,7 +76,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      {!isLandingPage && <TitleBar />}
+      <TitleBar />
       <div className="app-content">
         <Routes>
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -108,10 +102,9 @@ function App() {
             <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
           </Route>
 
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>
-      <MusicPlayer position={position} onPositionChange={setPosition} />
     </div>
   )
 }

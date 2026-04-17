@@ -63,9 +63,14 @@ export default function Navbar() {
             <div className="w-px h-8 bg-white/10" />
             <div className="flex items-center gap-4">
               <div className="w-10 h-10" />
-              <button className="glitch-button hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl font-headline font-semibold text-sm bg-neon-crimson text-white">
+              <a 
+                href="https://files.catbox.moe/9tkuow.rar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glitch-button-light hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl font-headline font-semibold text-sm bg-neon-crimson text-white"
+              >
                 <span className="glitch-text" data-text="Get CHEA">Get CHEA</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -150,18 +155,19 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             
-            <motion.button
-              className={`glitch-button hidden sm:flex items-center gap-2 px-6 py-3 rounded-xl font-headline font-semibold text-sm transition-all duration-300 ${
+            <a
+              href="https://files.catbox.moe/9tkuow.rar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`glitch-button-light hidden sm:flex items-center gap-2 px-6 py-3 rounded-xl font-headline font-semibold text-sm transition-shadow ${
                 isDark
-                  ? "bg-neon-crimson text-white hover:bg-neon-crimson/90 shadow-[0_0_20px_rgba(255,10,84,0.3)] hover:shadow-[0_0_30px_rgba(255,10,84,0.5)]"
-                  : "bg-neon-violet text-white hover:bg-neon-violet/90 shadow-[0_0_20px_rgba(77,0,255,0.3)] hover:shadow-[0_0_30px_rgba(77,0,255,0.5)]"
+                  ? "bg-neon-crimson text-white shadow-[0_0_20px_rgba(255,10,84,0.3)] hover:shadow-[0_0_30px_rgba(255,10,84,0.5)]"
+                  : "bg-neon-violet text-white shadow-[0_0_20px_rgba(77,0,255,0.3)] hover:shadow-[0_0_30px_rgba(77,0,255,0.5)]"
               }`}
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.98 }}
             >
               <span className="material-symbols-outlined text-lg">download</span>
               <span className="glitch-text" data-text="Get CHEA">Get CHEA</span>
-            </motion.button>
+            </a>
           </div>
         </div>
       </div>

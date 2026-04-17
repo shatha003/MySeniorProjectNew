@@ -15,6 +15,7 @@ import {
     Image as ImageIcon,
     X,
     AlertCircle,
+    Music,
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuthStore } from '../store/useAuthStore';
@@ -63,6 +64,11 @@ export default function Settings() {
     const [displayName, setDisplayName] = useState('');
     const [emailAlerts, setEmailAlerts] = useState(true);
     const [pushNotifications, setPushNotifications] = useState(true);
+    const [musicPlayerEnabled, setMusicPlayerEnabled] = useState(() => {
+        if (typeof window === 'undefined') return true;
+        const saved = localStorage.getItem('chea-music-player-enabled');
+        return saved ? saved === 'true' : true;
+    });
     const [saveSuccess, setSaveSuccess] = useState(false);
 
     // Avatar picker
@@ -208,6 +214,11 @@ export default function Settings() {
         }
     };
 
+    const handleMusicPlayerToggle = (enabled: boolean) => {
+        setMusicPlayerEnabled(enabled);
+        localStorage.setItem('chea-music-player-enabled', String(enabled));
+    };
+
     const handleSaveChanges = async () => {
         if (!user) return;
 
@@ -227,7 +238,7 @@ export default function Settings() {
     const tabs = [
         { id: 'account' as TabType, label: 'My Profile', emoji: '👤' },
         { id: 'security' as TabType, label: 'Security', emoji: '🔒' },
-        { id: 'notifications' as TabType, label: 'Alerts', emoji: '🔔' },
+        { id: 'notifications' as TabType, label: 'Preferences', emoji: '🔔' },
     ];
 
     return (
@@ -647,13 +658,57 @@ export default function Settings() {
                         </motion.div>
                     )}
 
-                    {/* NOTIFICATIONS TAB */}
+                    {/* NOTIFICATIONS/PREFERENCES TAB */}
                     {activeTab === 'notifications' && (
                         <motion.div
                             key="notifications"
                             variants={itemVariants}
                             className="space-y-8"
                         >
+                            {/* Music Player Section */}
+                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-lg relative overflow-hidden`}>
+                                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-violet-400 to-purple-500" />
+
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-3 rounded-2xl bg-violet-500/10 text-violet-500">
+                                        <Music size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>Music Player</h2>
+                                        <p className={`text-sm font-medium ${mutedText}`}>Background music while you browse</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {/* Music Player Toggle */}
+                                    <div className={`flex items-center justify-between p-5 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 rounded-xl bg-violet-500/10 text-violet-500">
+                                                <Music size={20} />
+                                            </div>
+                                            <div>
+                                                <h4 className={`text-base font-black ${headingColor}`}>Show Music Player</h4>
+                                                <p className={`text-sm font-medium ${mutedText}`}>Display music player on the dashboard</p>
+                                            </div>
+                                        </div>
+                                        <motion.button
+                                            onClick={() => handleMusicPlayerToggle(!musicPlayerEnabled)}
+                                            className={`relative w-16 h-8 rounded-full transition-colors ${
+                                                musicPlayerEnabled ? 'bg-gradient-to-r from-violet-400 to-purple-500' : isDark ? 'bg-white/10' : 'bg-gray-200'
+                                            }`}
+                                            whileTap={{ scale: 0.9 }}
+                                        >
+                                            <motion.div
+                                                className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-md"
+                                                animate={{ left: musicPlayerEnabled ? '36px' : '4px' }}
+                                                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                                            />
+                                        </motion.button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Notifications Section */}
                             <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-lg relative overflow-hidden`}>
                                 <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-400 to-orange-500" />
 

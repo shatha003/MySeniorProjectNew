@@ -246,12 +246,14 @@ const LandingPage: React.FC = () => {
         <div className="max-w-3xl mx-auto px-8">
           <h2 className="text-5xl md:text-6xl headline font-extrabold mb-8">Start Your Training Today</h2>
           <p className="text-xl text-on-surface-variant mb-12">Join thousands of young defenders securing the digital frontier. Free to download, easy to master.</p>
-          <button 
-            onClick={() => navigate('/register')}
-            className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-12 py-5 rounded-full font-bold text-xl kinetic-button glow-primary mb-8"
+          <a 
+            href="https://files.catbox.moe/9tkuow.rar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glitch-button-light bg-gradient-to-br from-primary to-primary-container text-on-primary px-12 py-5 rounded-full font-bold text-xl mb-8 inline-block"
           >
-            Get CHEA for Windows
-          </button>
+            <span className="glitch-text" data-text="Get CHEA for Windows">Get CHEA for Windows</span>
+          </a>
           <div className="flex justify-center gap-4 text-on-surface-variant font-label text-sm tracking-widest uppercase">
             <span>Latest Release: v1.04</span>
             <span className="text-primary">•</span>

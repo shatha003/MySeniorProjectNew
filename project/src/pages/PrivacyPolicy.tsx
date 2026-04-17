@@ -200,11 +200,11 @@ export default function PrivacyPolicy() {
                                         </p>
                                         {section.items && (
                                             <ul className="space-y-3">
-                                                {section.items.map((item, i) => (
+                                                        {section.items.map((item, i) => (
                                                     <li key={i} className="flex items-start gap-3 text-on-surface-variant text-sm sm:text-base">
                                                         <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 ${getBgGradient()}`} />
                                                         <span>
-                                                            {item.bold && (
+                                                            {'bold' in item && item.bold && (
                                                                 <strong className="text-on-surface">
                                                                     {item.bold}
                                                                 </strong>
