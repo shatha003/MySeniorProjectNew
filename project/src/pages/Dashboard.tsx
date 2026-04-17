@@ -16,6 +16,7 @@ import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
 import { MusicPlayer } from '@/components/ui/MusicPlayer';
 import { useWidgetPosition } from '@/hooks/useWidgetPosition';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -35,6 +36,7 @@ const itemVariants = {
 };
 
 const Dashboard = () => {
+    const { t } = useTranslation(['dashboard', 'nav', 'common']);
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
@@ -110,7 +112,7 @@ const Dashboard = () => {
                 gradient: 'from-amber-500 to-orange-600',
                 glow: isDark ? 'shadow-orange-500/40' : 'shadow-amber-500/30',
                 badge: 'bg-gradient-to-br from-amber-500 to-orange-600',
-                label: 'Bronze',
+                label: t('dashboard:tierBronze'),
                 border: isDark ? 'border-amber-500/30' : 'border-amber-400/40',
                 text: isDark ? 'text-amber-400' : 'text-amber-600',
                 accent: isDark ? '#F59E0B' : '#D97706',
@@ -120,7 +122,7 @@ const Dashboard = () => {
                 gradient: 'from-slate-400 to-blue-600',
                 glow: isDark ? 'shadow-blue-400/50' : 'shadow-blue-500/30',
                 badge: 'bg-gradient-to-br from-slate-400 to-blue-600',
-                label: 'Silver',
+                label: t('dashboard:tierSilver'),
                 border: isDark ? 'border-blue-400/30' : 'border-blue-500/40',
                 text: isDark ? 'text-blue-400' : 'text-blue-600',
                 accent: isDark ? '#60A5FA' : '#2563EB',
@@ -130,7 +132,7 @@ const Dashboard = () => {
                 gradient: 'from-amber-400 via-orange-500 to-purple-600',
                 glow: isDark ? 'shadow-purple-500/50' : 'shadow-purple-500/30',
                 badge: 'bg-gradient-to-r from-amber-400 via-orange-500 to-purple-500',
-                label: 'Gold',
+                label: t('dashboard:tierGold'),
                 border: isDark ? 'border-purple-400/30' : 'border-purple-500/40',
                 text: isDark ? 'text-purple-400' : 'text-purple-600',
                 accent: isDark ? '#A78BFA' : '#7C3AED',
@@ -142,8 +144,8 @@ const Dashboard = () => {
 
     const tools = [
         { 
-            name: "Link Checker", 
-            description: "Check if any link is safe to click!",
+            name: t('nav:linkChecker'), 
+            description: t('dashboard:linkCheckerDesc'),
             icon: <LinkIcon size={24} />, 
             to: "/dashboard/link-scanner", 
             xp: 10, 
@@ -151,8 +153,8 @@ const Dashboard = () => {
             glow: "shadow-cyan-500/30"
         },
         { 
-            name: "File Checker", 
-            description: "Scan your files for hidden dangers.",
+            name: t('nav:fileChecker'), 
+            description: t('dashboard:fileCheckerDesc'),
             icon: <FileSearch size={24} />, 
             to: "/dashboard/file-scanner", 
             xp: 15, 
@@ -160,8 +162,8 @@ const Dashboard = () => {
             glow: "shadow-purple-500/30"
         },
         { 
-            name: "Photo Secrets", 
-            description: "Find and hide secret messages inside your pictures!",
+            name: t('nav:photoSecrets'), 
+            description: t('dashboard:photoSecretsDesc'),
             icon: <Eye size={24} />, 
             to: "/dashboard/image-privacy", 
             xp: 10, 
@@ -169,8 +171,8 @@ const Dashboard = () => {
             glow: "shadow-rose-500/30"
         },
         { 
-            name: "Make Password", 
-            description: "Create super-strong passwords easily.",
+            name: t('nav:makePassword'), 
+            description: t('dashboard:makePasswordDesc'),
             icon: <KeyRound size={24} />, 
             to: "/dashboard/password-gen", 
             xp: 5, 
@@ -178,8 +180,8 @@ const Dashboard = () => {
             glow: "shadow-amber-500/30"
         },
         { 
-            name: "Test Password", 
-            description: "Test how strong your password really is.",
+            name: t('nav:testPassword'), 
+            description: t('dashboard:testPasswordDesc'),
             icon: <Shield size={24} />, 
             to: "/dashboard/password-check", 
             xp: 3, 
@@ -187,8 +189,8 @@ const Dashboard = () => {
             glow: "shadow-teal-500/30"
         },
         { 
-            name: "Secret Codes", 
-            description: "Lock your text with a secret key.",
+            name: t('nav:secretCodes'), 
+            description: t('dashboard:secretCodesDesc'),
             icon: <Lock size={24} />, 
             to: "/dashboard/encryption", 
             xp: 5, 
@@ -196,8 +198,8 @@ const Dashboard = () => {
             glow: "shadow-violet-500/30"
         },
         { 
-            name: "Treasure Box", 
-            description: "Keep all your secret keys in one safe place.",
+            name: t('nav:treasureBox'), 
+            description: t('dashboard:treasureBoxDesc'),
             icon: <ShieldAlert size={24} />, 
             to: "/dashboard/vault", 
             xp: 20, 
@@ -225,24 +227,24 @@ const Dashboard = () => {
     };
 
     const formatTimeAgo = (date: any) => {
-        if (!date) return 'Just now';
+        if (!date) return t('common:justNow');
         let time;
         if (typeof date === 'object' && 'seconds' in date) {
             time = date.seconds * 1000;
         } else {
             time = new Date(date).getTime();
         }
-        if (isNaN(time)) return 'Just now';
+        if (isNaN(time)) return t('common:justNow');
 
         const now = new Date();
         const diff = now.getTime() - time;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
-        if (minutes < 1) return 'Just now';
-        if (minutes < 60) return `${minutes}m ago`;
-        if (hours < 24) return `${hours}h ago`;
-        if (days < 7) return `${days}d ago`;
+        if (minutes < 1) return t('common:justNow');
+        if (minutes < 60) return t('common:minutesAgo', { count: minutes });
+        if (hours < 24) return t('common:hoursAgo', { count: hours });
+        if (days < 7) return t('common:daysAgo', { count: days });
         return new Date(time).toLocaleDateString();
     };
 
@@ -308,10 +310,10 @@ const Dashboard = () => {
 
                                 <div className="space-y-2">
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Welcome back, {displayName}! 👋
+                                        {t('dashboard:welcomeBack', { name: displayName })} 👋
                                     </h1>
                                     <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                        Ready to keep the internet safe today?
+                                        {t('dashboard:readySafe')}
                                     </p>
                                 </div>
                             </div>
@@ -331,7 +333,7 @@ const Dashboard = () => {
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xl font-black leading-none">{progress.streakDays}</span>
-                                            <span className="text-[10px] uppercase font-bold tracking-wider">Day Streak</span>
+                                            <span className="text-[10px] uppercase font-bold tracking-wider">{t('nav:dayStreak')}</span>
                                         </div>
                                     </div>
 
@@ -341,7 +343,7 @@ const Dashboard = () => {
                                             {levelInfo.level}
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className={`text-xs font-bold uppercase tracking-widest ${tierStyle.text}`}>{tierStyle.label} Rank</span>
+                                            <span className={`text-xs font-bold uppercase tracking-widest ${tierStyle.text}`}>{t('dashboard:rankLabel', { tier: tierStyle.label })}</span>
                                             <span className={`text-xl font-black ${headingColor}`}>{levelInfo.title}</span>
                                         </div>
                                     </div>
@@ -354,10 +356,10 @@ const Dashboard = () => {
                             <div className="flex justify-between items-end">
                                 <div className="flex items-center gap-2">
                                     <Trophy size={18} className="text-amber-500" />
-                                    <span className={`text-sm font-bold ${mutedText}`}>Level Progress</span>
+                                    <span className={`text-sm font-bold ${mutedText}`}>{t('dashboard:levelProgress')}</span>
                                 </div>
                                 <span className={`text-sm font-black font-display ${headingColor}`}>
-                                    {progress?.xp || 0} / {levelInfo.xpForNext} XP
+                                    {progress?.xp || 0} / {levelInfo.xpForNext} {t('common:xp')}
                                 </span>
                             </div>
                             <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -382,7 +384,7 @@ const Dashboard = () => {
                         {/* Power Meter (Security Score) */}
                         <motion.div variants={itemVariants}>
                             <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 text-center shadow-lg`}>
-                                <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-4`}>Security Power</h3>
+                                <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-4`}>{t('dashboard:securityPower')}</h3>
                                 <div className="relative w-32 h-32 mx-auto">
                                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                         <circle
@@ -413,7 +415,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="mt-4">
                                     <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${isDark ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-100 text-emerald-600'}`}>
-                                        Strong Shield
+                                        {t('dashboard:strongShield')}
                                     </span>
                                 </div>
                             </div>
@@ -423,7 +425,7 @@ const Dashboard = () => {
                         <motion.div variants={itemVariants}>
                             <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 shadow-lg`}>
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText}`}>Today's Quests</h3>
+                                    <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText}`}>{t('dashboard:todayQuests')}</h3>
                                     <span className={`text-xs font-black text-emerald-500`}>{summary.completed}/{summary.total}</span>
                                 </div>
                                 <div className="space-y-3">
@@ -453,14 +455,14 @@ const Dashboard = () => {
                     {/* RIGHT: Tools Grid (3 columns) */}
                     <div className="lg:col-span-3 space-y-5">
                         <div className="flex items-center justify-between mb-3">
-                            <h2 className={`font-display text-xl font-black ${headingColor}`}>My Security Tools</h2>
-                            <span className={`text-xs font-bold ${mutedText}`}>{tools.length} Awesome Tools</span>
+                            <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('dashboard:mySecurityTools')}</h2>
+                            <span className={`text-xs font-bold ${mutedText}`}>{t('dashboard:awesomeTools', { count: tools.length })}</span>
                         </div>
 
                         {/* Scanning Tools */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <Eye size={12} /> Scanning Tools
+                                <Eye size={12} /> {t('dashboard:scanningTools')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {[tools[0], tools[1], tools[2]].map((tool, i) => (
@@ -477,7 +479,7 @@ const Dashboard = () => {
                                         <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
                                         <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
                                         <div className="mt-3 flex items-center justify-between">
-                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} {t('common:xp')}</span>
                                             <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                         </div>
                                     </motion.div>
@@ -488,7 +490,7 @@ const Dashboard = () => {
                         {/* Password Tools */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <KeyRound size={12} /> Password Tools
+                                <KeyRound size={12} /> {t('dashboard:passwordTools')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {[tools[3], tools[4]].map((tool, i) => (
@@ -505,7 +507,7 @@ const Dashboard = () => {
                                         <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
                                         <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
                                         <div className="mt-3 flex items-center justify-between">
-                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} {t('common:xp')}</span>
                                             <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                         </div>
                                     </motion.div>
@@ -516,7 +518,7 @@ const Dashboard = () => {
                         {/* Encryption & Vault */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <Lock size={12} /> Encryption & Vault
+                                <Lock size={12} /> {t('dashboard:encryptionAndVault')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {[tools[5], tools[6]].map((tool, i) => (
@@ -533,7 +535,7 @@ const Dashboard = () => {
                                         <h3 className={`text-base font-bold ${headingColor}`}>{tool.name}</h3>
                                         <p className={`text-xs ${mutedText} line-clamp-1`}>{tool.description}</p>
                                         <div className="mt-3 flex items-center justify-between">
-                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} XP</span>
+                                            <span className="text-[10px] font-black text-emerald-500">+{tool.xp} {t('common:xp')}</span>
                                             <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                         </div>
                                     </motion.div>
@@ -544,7 +546,7 @@ const Dashboard = () => {
                         {/* Game Zone */}
                         <div className="mb-4">
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
-                                <Star size={12} /> Game Zone
+                                <Star size={12} /> {t('dashboard:gameZone')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <motion.div
@@ -556,10 +558,10 @@ const Dashboard = () => {
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white mb-3 shadow-md shadow-amber-500/30">
                                         <Brain size={24} />
                                     </div>
-                                    <h3 className={`text-base font-bold ${headingColor}`}>Quiz Arena</h3>
-                                    <p className={`text-xs ${mutedText} line-clamp-1`}>Test your cyber smarts with trivia!</p>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>{t('nav:quizArena')}</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>{t('dashboard:quizArenaDesc')}</p>
                                     <div className="mt-3 flex items-center justify-between">
-                                        <span className="text-[10px] font-black text-emerald-500">+15 XP</span>
+                                        <span className="text-[10px] font-black text-emerald-500">+15 {t('common:xp')}</span>
                                         <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                     </div>
                                 </motion.div>
@@ -573,10 +575,10 @@ const Dashboard = () => {
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white mb-3 shadow-md shadow-red-500/30">
                                         <Mail size={24} />
                                     </div>
-                                    <h3 className={`text-base font-bold ${headingColor}`}>Phishing Dojo</h3>
-                                    <p className={`text-xs ${mutedText} line-clamp-1`}>Spot the fake emails like a pro!</p>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>{t('nav:phishingDojo')}</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>{t('dashboard:phishingDojoDesc')}</p>
                                     <div className="mt-3 flex items-center justify-between">
-                                        <span className="text-[10px] font-black text-emerald-500">+15 XP</span>
+                                        <span className="text-[10px] font-black text-emerald-500">+15 {t('common:xp')}</span>
                                         <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                     </div>
                                 </motion.div>
@@ -588,9 +590,9 @@ const Dashboard = () => {
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     <Activity className="text-primary" />
-                                    <h2 className={`font-display text-xl font-black ${headingColor}`}>Recent Wins</h2>
+                                    <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('dashboard:recentWins')}</h2>
                                 </div>
-                                <span className={`text-xs font-bold ${mutedText}`}>Your last {activities.length > 5 ? 5 : activities.length} actions</span>
+                                <span className={`text-xs font-bold ${mutedText}`}>{t('dashboard:recentActions', { count: activities.length > 5 ? 5 : activities.length })}</span>
                             </div>
 
                             <div className="space-y-4">
@@ -603,7 +605,7 @@ const Dashboard = () => {
                                             <p className={`text-sm font-bold ${headingColor}`}>{activity.description}</p>
                                             <p className={`text-[10px] ${mutedText} uppercase font-black tracking-widest`}>{formatTimeAgo(activity.createdAt)}</p>
                                         </div>
-                                        <span className="text-xs font-black text-emerald-500">+{activity.points} XP</span>
+                                        <span className="text-xs font-black text-emerald-500">+{activity.points} {t('common:xp')}</span>
                                     </div>
                                 ))}
                             </div>

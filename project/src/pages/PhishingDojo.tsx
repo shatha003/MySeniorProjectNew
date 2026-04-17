@@ -9,6 +9,7 @@ import {
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUserProgressStore } from '@/store/useUserProgressStore';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 import {
     PhishingEmail,
     getEmailsForTier,
@@ -56,6 +57,7 @@ export default function PhishingDojo() {
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['phishing', 'common']);
     const user = useAuthStore((s) => s.user);
     const { progress, earnXp, fetchProgress } = useUserProgressStore();
 
@@ -76,9 +78,9 @@ export default function PhishingDojo() {
 
     const tier = progress ? getTierForLevel(progress.level) : 'cadet';
     const tierLabels: Record<string, { label: string; color: string; emoji: string }> = {
-        cadet: { label: 'Cadet', color: 'text-amber-500', emoji: '🔍' },
-        analyst: { label: 'Analyst', color: 'text-blue-500', emoji: '🕵️' },
-        operator: { label: 'Operator', color: 'text-purple-500', emoji: '🎯' },
+        cadet: { label: t('phishing:cadetMode').replace(' Mode', ''), color: 'text-amber-500', emoji: '🔍' },
+        analyst: { label: t('phishing:analystMode').replace(' Mode', ''), color: 'text-blue-500', emoji: '🕵️' },
+        operator: { label: t('phishing:operatorMode').replace(' Mode', ''), color: 'text-purple-500', emoji: '🎯' },
     };
 
     useEffect(() => {
@@ -177,33 +179,33 @@ export default function PhishingDojo() {
                         </motion.div>
 
                         <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>
-                            Phishing Dojo
+                            {t('phishing:title')}
                         </h1>
                         <p className={`text-lg font-medium ${mutedText} mb-6`}>
-                            Become a Cyber Detective!
+                            {t('phishing:subtitle')}
                         </p>
 
                         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} mb-6`}>
                             <span className={`text-sm font-bold ${tierLabels[tier].color}`}>
-                                {tierLabels[tier].emoji} {tierLabels[tier].label} Mode
+                                {tierLabels[tier].emoji} {tierLabels[tier].label} {t('phishing:modeLabel', { defaultValue: 'Mode' })}
                             </span>
                             <span className={`text-xs ${mutedText}`}>
-                                (Level {progress?.level || 1})
+                                {t('phishing:level', { level: progress?.level || 1 })}
                             </span>
                         </div>
 
                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
                             <div className="flex items-center gap-2">
                                 <Mail size={16} className="text-blue-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>5 emails to inspect</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:emailsToInspect')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Flag size={16} className="text-red-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>Spot the red flags</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:spotRedFlags')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <ShieldCheck size={16} className="text-emerald-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>Learn from each reveal</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:learnFromReveal')}</span>
                             </div>
                         </div>
 
@@ -213,7 +215,7 @@ export default function PhishingDojo() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            Enter the Dojo <ChevronRight size={20} />
+                            {t('phishing:enterDojo')} <ChevronRight size={20} />
                         </motion.button>
 
                         <motion.button
@@ -222,7 +224,7 @@ export default function PhishingDojo() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            <Home size={16} /> Back to Dashboard
+                            <Home size={16} /> {t('phishing:backToDashboard')}
                         </motion.button>
                     </motion.div>
                 </div>
@@ -304,20 +306,20 @@ export default function PhishingDojo() {
                                         </span>
                                         <div className="flex items-center gap-2">
                                             <Mail size={14} className={mutedText} />
-                                            <span className={`text-xs ${mutedText}`}>Email {currentIndex + 1}</span>
+                                            <span className={`text-xs ${mutedText}`}>{t('phishing:email', { number: currentIndex + 1 })}</span>
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2">
-                                            <span className={`text-xs font-bold ${mutedText} w-16`}>From:</span>
+                                            <span className={`text-xs font-bold ${mutedText} w-16`}>{t('phishing:from')}</span>
                                             <div>
                                                 <span className={`text-sm font-bold ${headingColor}`}>{email.sender}</span>
                                                 <span className={`text-xs ${mutedText} ml-2`}>&lt;{email.senderEmail}&gt;</span>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className={`text-xs font-bold ${mutedText} w-16`}>Subject:</span>
+                                            <span className={`text-xs font-bold ${mutedText} w-16`}>{t('phishing:subject')}</span>
                                             <span className={`text-sm font-bold ${headingColor}`}>{email.subject}</span>
                                         </div>
                                     </div>
@@ -340,7 +342,7 @@ export default function PhishingDojo() {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                             >
-                                                <ShieldAlert size={18} /> Report as Fake
+                                                <ShieldAlert size={18} /> {t('phishing:reportFake')}
                                             </motion.button>
                                             <motion.button
                                                 onClick={() => handleDecision('safe')}
@@ -348,7 +350,7 @@ export default function PhishingDojo() {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                             >
-                                                <ShieldCheck size={18} /> Mark as Safe
+                                                <ShieldCheck size={18} /> {t('phishing:markSafe')}
                                             </motion.button>
                                         </div>
                                     )}
@@ -373,28 +375,28 @@ export default function PhishingDojo() {
                                                                 <CheckCircle2 size={20} className="text-white" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-sm font-black text-emerald-500">Great Detective Work! 🕵️</p>
-                                                                <p className={`text-xs ${mutedText}`}>
-                                                                    {email.isPhishing
-                                                                        ? 'You spotted the phishing attempt!'
-                                                                        : 'Correct — this email is legitimate!'
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
-                                                                <XCircle size={20} className="text-white" />
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-sm font-black text-red-500">Not Quite! 📚</p>
-                                                                <p className={`text-xs ${mutedText}`}>
-                                                                    {email.isPhishing
-                                                                        ? 'This was actually a phishing email!'
-                                                                        : 'This email was actually safe!'
-                                                                    }
-                                                                </p>
+                                                                 <p className="text-sm font-black text-emerald-500">{t('phishing:greatDetective')}</p>
+                                                                 <p className={`text-xs ${mutedText}`}>
+                                                                     {email.isPhishing
+                                                                         ? t('phishing:spottedPhishing')
+                                                                         : t('phishing:correctLegitimate')
+                                                                     }
+                                                                 </p>
+                                                             </div>
+                                                         </>
+                                                     ) : (
+                                                         <>
+                                                             <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
+                                                                 <XCircle size={20} className="text-white" />
+                                                             </div>
+                                                             <div>
+                                                                 <p className="text-sm font-black text-red-500">{t('phishing:notQuite')}</p>
+                                                                 <p className={`text-xs ${mutedText}`}>
+                                                                     {email.isPhishing
+                                                                         ? t('phishing:wasPhishing')
+                                                                         : t('phishing:wasSafe')
+                                                                     }
+                                                                 </p>
                                                             </div>
                                                         </>
                                                     )}
@@ -406,7 +408,7 @@ export default function PhishingDojo() {
                                                 <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                                     <div className="flex items-center gap-2 mb-3">
                                                         <Flag size={16} className="text-red-500" />
-                                                        <span className={`text-sm font-black ${headingColor}`}>Red Flags Detected</span>
+                                                        <span className={`text-sm font-black ${headingColor}`}>{t('phishing:redFlagsDetected')}</span>
                                                     </div>
                                                     <div className="space-y-2">
                                                         {email.redFlags.map((flag, idx) => (
@@ -423,7 +425,7 @@ export default function PhishingDojo() {
                                                 <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <ShieldCheck size={16} className="text-emerald-500" />
-                                                        <span className={`text-sm font-black ${headingColor}`}>Why This is Safe</span>
+                                                        <span className={`text-sm font-black ${headingColor}`}>{t('phishing:whySafe')}</span>
                                                     </div>
                                                     <p className={`text-xs ${mutedText} leading-relaxed`}>{email.explanation}</p>
                                                 </div>
@@ -433,7 +435,7 @@ export default function PhishingDojo() {
                                             <div className={`rounded-2xl ${isDark ? 'bg-blue-500/5 border border-blue-500/10' : 'bg-blue-50 border border-blue-100'} p-4`}>
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <Eye size={16} className="text-blue-500" />
-                                                    <span className={`text-sm font-black ${headingColor}`}>Detective Notes</span>
+                                                    <span className={`text-sm font-black ${headingColor}`}>{t('phishing:detectiveNotes')}</span>
                                                 </div>
                                                 <p className={`text-xs ${mutedText} leading-relaxed`}>{email.explanation}</p>
                                             </div>
@@ -447,9 +449,9 @@ export default function PhishingDojo() {
                                                 whileTap={{ scale: 0.98 }}
                                             >
                                                 {currentIndex < emails.length - 1 ? (
-                                                    <>Next Email <ChevronRight size={18} /></>
+                                                    <>{t('phishing:nextEmail')} <ChevronRight size={18} /></>
                                                 ) : (
-                                                    <>See Results <Trophy size={18} /></>
+                                                    <>{t('phishing:seeResults')} <Trophy size={18} /></>
                                                 )}
                                             </motion.button>
                                         </motion.div>
@@ -466,11 +468,11 @@ export default function PhishingDojo() {
     if (gameState === 'results') {
         const percentage = Math.round((correctCount / emails.length) * 100);
         const getGrade = () => {
-            if (percentage === 100) return { emoji: '🏆', label: 'Master Detective!', color: 'text-amber-500' };
-            if (percentage >= 80) return { emoji: '🌟', label: 'Sharp Eye!', color: 'text-emerald-500' };
-            if (percentage >= 60) return { emoji: '👍', label: 'Good Instincts!', color: 'text-blue-500' };
-            if (percentage >= 40) return { emoji: '💪', label: 'Keep Training!', color: 'text-orange-500' };
-            return { emoji: '📚', label: 'Practice Makes Perfect!', color: 'text-red-500' };
+            if (percentage === 100) return { emoji: '🏆', label: t('phishing:masterDetective'), color: 'text-amber-500' };
+            if (percentage >= 80) return { emoji: '🌟', label: t('phishing:sharpEye'), color: 'text-emerald-500' };
+            if (percentage >= 60) return { emoji: '👍', label: t('phishing:goodInstincts'), color: 'text-blue-500' };
+            if (percentage >= 40) return { emoji: '💪', label: t('phishing:keepTraining'), color: 'text-orange-500' };
+            return { emoji: '📚', label: t('phishing:practiceMakesPerfect'), color: 'text-red-500' };
         };
 
         const grade = getGrade();
@@ -502,21 +504,21 @@ export default function PhishingDojo() {
                             {grade.label}
                         </h1>
                         <p className={`text-sm ${mutedText} mb-6`}>
-                            {tierLabels[tier].emoji} {tierLabels[tier].label} Mode Complete
+                            {t('phishing:modeComplete', { emoji: tierLabels[tier].emoji, mode: tierLabels[tier].label })}
                         </p>
 
                         <div className="grid grid-cols-3 gap-4 mb-6">
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className={`text-2xl font-black ${grade.color}`}>{correctCount}/{emails.length}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Correct</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('phishing:correct')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-orange-500">{maxStreak}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Best Streak</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('phishing:bestStreak')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-emerald-500">+{totalXpEarned}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>XP Earned</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('phishing:xpEarned')}</div>
                             </div>
                         </div>
 
@@ -541,7 +543,7 @@ export default function PhishingDojo() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <RotateCcw size={18} /> Play Again
+                                <RotateCcw size={18} /> {t('phishing:playAgain')}
                             </motion.button>
 
                             <motion.button
@@ -550,7 +552,7 @@ export default function PhishingDojo() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Home size={16} /> Back to Dashboard
+                                <Home size={16} /> {t('phishing:backToDashboard')}
                             </motion.button>
                         </div>
                     </motion.div>

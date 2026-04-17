@@ -1,0 +1,30 @@
+{
+  "passwordStrength": {
+    "weak": "ضعيفة",
+    "fair": "مقبولة",
+    "good": "جيدة",
+    "strong": "قوية",
+    "veryStrong": "قوية جداً",
+    "requirements": "المتطلبات",
+    "minLength": "١٢ حرفاً على الأقل",
+    "uppercase": "حرف كبير",
+    "lowercase": "حرف صغير",
+    "number": "رقم",
+    "special": "رمز خاص (!@#$...)"
+  },
+  "passwordInput": {
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
+  },
+  "titleBar": {
+    "title": "تشيا"
+  },
+  "authLayout": {
+    "systemActive": "النظام نشط",
+    "securedWith": "محمي بتشفير AES-256"
+  },
+  "languageSwitcher": {
+    "en": "EN",
+    "ar": "AR"
+  }
+}

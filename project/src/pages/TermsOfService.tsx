@@ -2,48 +2,50 @@ import { Link } from 'react-router-dom'
 import { auth } from '../lib/firebase'
 import { motion } from 'framer-motion'
 import { useTheme } from '../components/theme-provider'
+import { useTranslation } from 'react-i18next'
 
 export default function TermsOfService() {
     const isLoggedIn = !!auth.currentUser
     const { theme } = useTheme()
     const isDark = theme === 'dark'
+    const { t } = useTranslation(['terms', 'common'])
 
     const sections = [
         {
-            title: "1. Acceptance of Terms",
-            content: "By accessing or using CHEA ('the App'), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App. These terms apply to all users of the App, including minors under the supervision of a parent or guardian.",
+            title: t('terms:section1Title'),
+            content: t('terms:section1Content'),
         },
         {
-            title: "2. Description of Service",
-            content: "CHEA is a desktop security companion application designed to help users manage permissions, monitor activity, and enforce digital safety policies. The App provides tools for security monitoring, parental controls, and activity management across your digital ecosystem.",
+            title: t('terms:section2Title'),
+            content: t('terms:section2Content'),
         },
         {
-            title: "3. User Accounts",
-            content: "To use CHEA, you must create an account by providing accurate information. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must notify us immediately of any unauthorized use of your account.",
+            title: t('terms:section3Title'),
+            content: t('terms:section3Content'),
         },
         {
-            title: "4. Acceptable Use",
-            content: "You agree not to use the App for any unlawful purpose or in violation of any applicable laws. You may not attempt to gain unauthorized access to the App's systems, interfere with other users' use of the App, or reverse-engineer any part of the application.",
+            title: t('terms:section4Title'),
+            content: t('terms:section4Content'),
         },
         {
-            title: "5. Intellectual Property",
-            content: "All content, features, and functionality of the App, including but not limited to text, graphics, logos, and software, are the exclusive property of CHEA and are protected by copyright, trademark, and other intellectual property laws.",
+            title: t('terms:section5Title'),
+            content: t('terms:section5Content'),
         },
         {
-            title: "6. Limitation of Liability",
-            content: "CHEA is provided 'as is' without any warranties, express or implied. We do not guarantee that the App will be uninterrupted, error-free, or completely secure. In no event shall CHEA be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use of the App.",
+            title: t('terms:section6Title'),
+            content: t('terms:section6Content'),
         },
         {
-            title: "7. Termination",
-            content: "We reserve the right to suspend or terminate your account at any time, without notice, for any reason including violation of these Terms. Upon termination, your right to use the App will immediately cease.",
+            title: t('terms:section7Title'),
+            content: t('terms:section7Content'),
         },
         {
-            title: "8. Changes to Terms",
-            content: "We may update these Terms from time to time. Changes will be effective upon posting. Your continued use of the App after any changes constitutes your acceptance of the new Terms.",
+            title: t('terms:section8Title'),
+            content: t('terms:section8Content'),
         },
         {
-            title: "9. Contact Us",
-            content: "If you have any questions about these Terms of Service, please contact us through the App's support channel or at our official email address.",
+            title: t('terms:section9Title'),
+            content: t('terms:section9Content'),
         },
     ]
 
@@ -96,7 +98,7 @@ export default function TermsOfService() {
                             <line x1="19" y1="12" x2="5" y2="12" />
                             <polyline points="12 19 5 12 12 5" />
                         </svg>
-                        {isLoggedIn ? 'Back to Dashboard' : 'Back to App'}
+                        {isLoggedIn ? t('terms:backToDashboard') : t('terms:backToApp')}
                     </Link>
                 </div>
             </div>
@@ -129,14 +131,14 @@ export default function TermsOfService() {
                                     <path d="M12 18v-6" />
                                     <path d="M9 15l3 3 3-3" />
                                 </svg>
-                                LEGAL AGREEMENT
+                                {t('terms:legalAgreement')}
                             </motion.div>
                             
                             <h1 className={`font-headline text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${getTextColor()}`}>
-                                Terms of Service
+                                {t('terms:title')}
                             </h1>
                             <p className="text-on-surface-variant font-body text-sm sm:text-base">
-                                Last updated: March 6, 2026
+                                {t('terms:lastUpdated')}
                             </p>
                         </div>
                     </div>
@@ -150,9 +152,8 @@ export default function TermsOfService() {
                             isDark ? 'bg-surface-container-low/60 border-white/5' : 'bg-white/60 border-black/5'
                         }`}
                     >
-                        <p className="text-on-surface-variant leading-relaxed text-center">
-                            Welcome to CHEA Protocol. These Terms of Service govern your use of our cybersecurity 
-                            application and constitute a legally binding agreement between you and CHEA Protocol.
+                            <p className="text-on-surface-variant leading-relaxed text-center">
+                                {t('terms:intro')}
                         </p>
                     </motion.div>
 
@@ -200,11 +201,10 @@ export default function TermsOfService() {
                             </svg>
                         </div>
                         <h3 className={`font-headline text-2xl font-bold mb-3 text-on-surface`}>
-                            By Using CHEA, You Agree
+                            {t('terms:byUsingAgree')}
                         </h3>
                         <p className="text-on-surface-variant mb-6">
-                            By accessing or using our application, you acknowledge that you have read, 
-                            understood, and agree to be bound by these Terms of Service.
+                            {t('terms:byUsingAgreeDesc')}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
@@ -215,7 +215,7 @@ export default function TermsOfService() {
                                     <rect width="20" height="16" x="2" y="4" rx="2" />
                                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                                 </svg>
-                                Contact Support
+                                {t('terms:contactSupport')}
                             </a>
                         </div>
                     </motion.div>
@@ -228,7 +228,7 @@ export default function TermsOfService() {
                         className="pt-8 border-t border-white/10 text-center"
                     >
                         <p className="text-sm text-on-surface-variant/60">
-                            © 2026 CHEA Protocol. All rights reserved.
+                            {t('terms:copyright')}
                         </p>
                     </motion.div>
                 </motion.div>

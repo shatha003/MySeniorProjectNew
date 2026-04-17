@@ -1,0 +1,23 @@
+{
+  "home": "الرئيسية",
+  "askNova": "اسأل نوفا",
+  "scanningTools": "أدوات الفحص",
+  "linkChecker": "فاحص الروابط",
+  "fileChecker": "فاحص الملفات",
+  "photoSecrets": "أسرار الصور",
+  "passwordTools": "أدوات كلمات المرور",
+  "makePassword": "صنع كلمة مرور",
+  "testPassword": "اختبار كلمة مرور",
+  "encryptionAndVault": "التشفير والخزنة",
+  "secretCodes": "رموز سرية",
+  "treasureBox": "صندوق الكنز",
+  "gameZone": "منطقة الألعاب",
+  "quizArena": "ساحة الاختبار",
+  "phishingDojo": "دوجو الاحتيال",
+  "settings": "الإعدادات",
+  "logOut": "تسجيل الخروج",
+  "aes256Encrypted": "مشفّر بـ AES-256",
+  "greeting": "مرحباً، {{name}}!",
+  "readyMission": "مستعد لمهمة اليوم؟ 🚀",
+  "dayStreak": "أيام متتالية"
+}

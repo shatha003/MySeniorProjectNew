@@ -23,6 +23,7 @@ import { cn } from "../lib/utils";
 import { useAuthStore } from "../store/useAuthStore";
 import { useUserProgressStore } from "../store/useUserProgressStore";
 import { useTheme } from "@/components/theme-provider";
+import { useTranslation } from 'react-i18next';
 import { useTrackActivity } from "../hooks/useTrackActivity";
 import {
     createChatSession,
@@ -291,6 +292,7 @@ function CopyButton({ text, getText, getHtml, className, showText = false }: { t
 export default function AIAgent() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['aiAgent', 'common']);
     const user = useAuthStore((s) => s.user);
     const userId = user?.uid;
     const trackActivity = useTrackActivity();
@@ -622,7 +624,7 @@ export default function AIAgent() {
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Ask me anything about cybersecurity! I'm here to help 🤖✨
+                                    {t('aiAgent:subtitle')}
                                 </p>
                             </div>
                             
@@ -630,7 +632,7 @@ export default function AIAgent() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+5 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Message</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perMessage')}</span>
                                 </div>
                             </div>
                         </div>
@@ -661,8 +663,8 @@ export default function AIAgent() {
                                 </h2>
                                 <p className={`text-xs font-medium truncate ${mutedText}`} dir="auto">
                                     {activeSessionId
-                                        ? sessions.find((s) => s.id === activeSessionId)?.title || "Cybersecurity & AI Expert"
-                                        : "Cybersecurity & AI Expert"}
+                                        ? sessions.find((s) => s.id === activeSessionId)?.title || t('aiAgent:cyberExpert')
+                                        : t('aiAgent:cyberExpert')}
                                 </p>
                             </div>
                         </div>
@@ -680,16 +682,16 @@ export default function AIAgent() {
                                     >
                                         {/* Sidebar Header */}
                                         <div className={`p-3 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between gap-2 shrink-0`}>
-                                            <h3 className={`text-sm font-black ${headingColor}`}>Chats</h3>
+                                            <h3 className={`text-sm font-black ${headingColor}`}>{t('aiAgent:chats')}</h3>
                                             <motion.button
                                                 onClick={handleNewChat}
                                                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-xl bg-gradient-to-r from-primary to-violet-600 text-white hover:scale-105 transition-all shadow-sm"
-                                                title="New Chat"
+                                                title={t('aiAgent:new')}
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
                                             >
                                                 <Plus size={14} />
-                                                <span>New</span>
+                                                <span>{t('aiAgent:new')}</span>
                                             </motion.button>
                                         </div>
 
@@ -702,8 +704,8 @@ export default function AIAgent() {
                                             ) : sessions.length === 0 ? (
                                                 <div className="text-center py-8 px-4">
                                                     <MessageSquare size={28} className="mx-auto text-primary/20 mb-2" />
-                                                    <p className={`text-xs font-bold ${mutedText}`}>No chats yet!</p>
-                                                    <p className={`text-xs font-medium ${mutedText} opacity-60 mt-1`}>Start a new chat below</p>
+                                                    <p className={`text-xs font-bold ${mutedText}`}>{t('aiAgent:noChatsYet')}</p>
+                                                    <p className={`text-xs font-medium ${mutedText} opacity-60 mt-1`}>{t('aiAgent:startNewChat')}</p>
                                                 </div>
                                             ) : (
                                                 sessions.map((session) => (
@@ -739,7 +741,7 @@ export default function AIAgent() {
                                                                     ? "opacity-100 text-red-500 bg-red-500/10"
                                                                     : "opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
                                                             )}
-                                                            title={deletingId === session.id ? "Click again to confirm" : "Delete chat"}
+                                                            title={deletingId === session.id ? t('aiAgent:clickAgainConfirm') : t('aiAgent:deleteChat')}
                                                             whileHover={{ scale: 1.1 }}
                                                             whileTap={{ scale: 0.9 }}
                                                         >
@@ -761,7 +763,7 @@ export default function AIAgent() {
                                         <div className="flex items-center justify-center h-full">
                                             <div className="flex flex-col items-center gap-3">
                                                 <Loader2 size={24} className="animate-spin text-primary" />
-                                                <p className={`text-sm font-bold ${mutedText}`}>Loading conversation...</p>
+                                                <p className={`text-sm font-bold ${mutedText}`}>{t('aiAgent:loadingConversation')}</p>
                                             </div>
                                         </div>
                                     ) : (
@@ -915,7 +917,7 @@ export default function AIAgent() {
                                                     className="flex items-center gap-1.5 pl-11 text-xs font-bold text-muted-foreground"
                                                 >
                                                     <Loader2 size={12} className="animate-spin" />
-                                                    <span>Thinking...</span>
+                                                    <span>{t('aiAgent:thinking')}</span>
                                                 </motion.div>
                                             )}
                                             <div ref={messagesEndRef} />
@@ -936,7 +938,7 @@ export default function AIAgent() {
                                             type="text"
                                             value={input}
                                             onChange={(e) => setInput(e.target.value)}
-                                            placeholder="Ask me anything about cybersecurity... 🤔"
+                                            placeholder={t('aiAgent:placeholder')}
                                             dir="auto"
                                             className={`w-full bg-background border-2 ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} rounded-2xl pl-5 pr-14 py-4 text-sm font-medium focus:outline-none transition-all ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                             disabled={isLoading}
@@ -964,9 +966,9 @@ export default function AIAgent() {
                             <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
                                 <div className="flex items-center gap-3">
                                     <Clock className="text-primary" />
-                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>Recent Conversations</h2>
+                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('aiAgent:recentConversations')}</h2>
                                 </div>
-                                <span className={`text-sm font-bold ${mutedText}`}>{sessions.length} Chats Saved</span>
+                                <span className={`text-sm font-bold ${mutedText}`}>{t('aiAgent:chatsSaved', { count: sessions.length })}</span>
                             </div>
 
                             <div className="p-6">
@@ -999,8 +1001,8 @@ export default function AIAgent() {
                                         <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <Search className={`text-primary/20`} size={40} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>No chats yet!</h3>
-                                        <p className={`text-lg ${mutedText} mt-2`}>Start your first conversation above.</p>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('aiAgent:noChatsYetFull')}</h3>
+                                        <p className={`text-lg ${mutedText} mt-2`}>{t('aiAgent:startFirstConversation')}</p>
                                     </div>
                                 )}
                             </div>

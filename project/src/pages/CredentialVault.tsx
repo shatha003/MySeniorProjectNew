@@ -24,6 +24,7 @@ import { hasVaultSetup, verifyMasterPassword } from '../services/vaultService';
 import { useNavigate } from 'react-router-dom';
 import { getServiceById, ServiceInfo, POPULAR_SERVICES } from '../data/serviceIcons';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import PasswordInput from '../components/ui/PasswordInput';
@@ -86,6 +87,7 @@ function formatExpiryDate(value: string) {
 export default function CredentialVault() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['vault', 'common']);
 
     const { user, masterPassword, setMasterPassword } = useAuthStore();
     const [search, setSearch] = useState('');
@@ -138,7 +140,7 @@ export default function CredentialVault() {
         e.preventDefault();
         if (!user) return;
         if (unlockPassword.length < 4) {
-            setUnlockError('Password is too short');
+            setUnlockError(t('vault:passwordTooShort'));
             return;
         }
         setIsVerifying(true);
@@ -149,13 +151,13 @@ export default function CredentialVault() {
                 setUnlockError('');
                 setUnlockPassword('');
             } else {
-                setUnlockError('Wrong password! Try again 🔑');
+                setUnlockError(t('vault:wrongPassword'));
             }
         } catch (error: any) {
             if (error.message === 'vault_not_initialized') {
                 setVaultSetup(false);
             } else {
-                setUnlockError('Something went wrong');
+                setUnlockError(t('vault:somethingWentWrong'));
             }
         } finally {
             setIsVerifying(false);
@@ -385,13 +387,13 @@ export default function CredentialVault() {
                                         <ShieldAlert className="text-white" size={52} />
                                     </motion.div>
                                     <div className="space-y-3 mt-8">
-                                        <h2 className={`text-3xl font-black ${headingColor}`}>Almost There! 🎉</h2>
+                                        <h2 className={`text-3xl font-black ${headingColor}`}>{t('vault:almostThere')}</h2>
                                         <p className={`text-lg font-medium ${mutedText}`}>
-                                            Set up a Master Password in Settings first to use the Vault.
+                                            {t('vault:setUpMaster')}
                                         </p>
                                     </div>
                                     <Button onClick={() => navigate('/dashboard/settings')} className="w-full py-5 rounded-2xl font-display text-lg font-black shadow-xl mt-6 bg-gradient-to-r from-amber-400 to-orange-500 hover:scale-105 transition-transform">
-                                        GO TO SETTINGS 🚀
+                                        {t('vault:goToSettings')}
                                     </Button>
                                 </div>
                             </div>
@@ -411,16 +413,16 @@ export default function CredentialVault() {
                                     </motion.div>
 
                                     <div className="space-y-3 mt-8">
-                                        <h2 className={`text-3xl font-black ${headingColor}`}>Vault Locked 🔒</h2>
+                                        <h2 className={`text-3xl font-black ${headingColor}`}>{t('vault:vaultLocked')}</h2>
                                         <p className={`text-lg font-medium ${mutedText}`}>
-                                            Type your Master Password to unlock your secrets! 🤫
+                                            {t('vault:unlockSecrets')}
                                         </p>
                                     </div>
 
                                     <form onSubmit={handleUnlock} className="space-y-5 mt-8">
                                         <PasswordInput
                                             label=""
-                                            placeholder="Your Master Password..."
+                                            placeholder={t('vault:masterPasswordPlaceholder')}
                                             value={unlockPassword}
                                             onChange={(e: any) => { setUnlockPassword(e.target.value); setUnlockError(''); }}
                                             required
@@ -452,12 +454,12 @@ export default function CredentialVault() {
                                             {isVerifying ? (
                                                 <>
                                                     <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white" />
-                                                    Checking...
+                                                    {t('vault:checking')}
                                                 </>
                                             ) : (
                                                 <>
                                                     <Lock size={22} />
-                                                    UNLOCK! 🔓
+                                                    {t('vault:unlocking')}
                                                 </>
                                             )}
                                         </motion.button>
@@ -465,7 +467,7 @@ export default function CredentialVault() {
 
                                     <div className={`mt-8 p-4 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
                                         <p className={`text-sm font-medium ${mutedText}`}>
-                                            <span className="text-lg">💡</span> <strong className={headingColor}>Tip:</strong> Your Master Password is the key to all your secrets. Keep it safe!
+                                            <span className="text-lg">💡</span> <strong className={headingColor}>{t('vault:masterTip')}</strong>
                                         </p>
                                     </div>
                                 </div>
@@ -502,11 +504,11 @@ export default function CredentialVault() {
                                         <KeyRound size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        My Vault
+                                        {t('vault:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    All your passwords and cards in one super safe place! 🔐
+                                    {t('vault:subtitle')}
                                 </p>
                             </div>
 
@@ -515,12 +517,12 @@ export default function CredentialVault() {
                                     <Star size={20} fill="currentColor" className="animate-bounce" />
                                     <div className="flex flex-col">
                                         <span className="text-xl font-black leading-none">+10 XP</span>
-                                        <span className="text-[10px] uppercase font-bold tracking-wider">Per Save</span>
+                                        <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perSave')}</span>
                                     </div>
                                 </div>
                                 <Button variant="outline" onClick={() => setMasterPassword(null)} className="rounded-2xl font-black">
                                     <Lock size={16} />
-                                    Lock
+                                    {t('vault:lock')}
                                 </Button>
                             </div>
                         </div>
@@ -536,7 +538,7 @@ export default function CredentialVault() {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder="Search your vault..."
+                                    placeholder={t('vault:searchVault')}
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     className={`block w-full pl-14 pr-6 py-4 rounded-2xl border-2 bg-transparent text-lg font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
@@ -552,7 +554,7 @@ export default function CredentialVault() {
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Plus size={22} />
-                                Add New!
+                                {t('vault:addNew')}
                             </motion.button>
                         </div>
                     </div>
@@ -564,8 +566,8 @@ export default function CredentialVault() {
                         <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
                             <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center gap-3 bg-primary/5`}>
                                 <span className="text-3xl">💳</span>
-                                <h2 className={`font-display text-2xl font-black ${headingColor}`}>My Cards</h2>
-                                <span className={`ml-auto px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${isDark ? 'bg-primary/10 text-primary' : 'bg-primary/10 text-primary'}`}>{cards.length} Saved</span>
+                                <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('vault:myCards')}</h2>
+                                <span className={`ml-auto px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${isDark ? 'bg-primary/10 text-primary' : 'bg-primary/10 text-primary'}`}>{t('vault:saved', { count: cards.length })}</span>
                             </div>
 
                             <div className="p-6 md:p-8">
@@ -603,7 +605,7 @@ export default function CredentialVault() {
                                                     </div>
 
                                                     <div className="space-y-1">
-                                                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Card Number</p>
+                                                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:cardNumber')}</p>
                                                         <p className="font-mono text-xl sm:text-2xl tracking-[0.15em] drop-shadow-md text-white/95">
                                                             {isRevealed && cardData ?
                                                                 cardData.cardNumber.replace(/(.{4})/g, '$1 ').trim() :
@@ -614,20 +616,20 @@ export default function CredentialVault() {
 
                                                     <div className="flex justify-between items-end">
                                                         <div className="space-y-1">
-                                                            <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Your Name</p>
+                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:yourName')}</p>
                                                             <p className="tracking-wider uppercase font-bold text-white/90 text-sm">
                                                                 {isRevealed && cardData ? cardData.cardholderName : '••••••••'}
                                                             </p>
                                                         </div>
                                                         <div className="flex gap-4 text-right">
                                                             <div className="space-y-1">
-                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Expires</p>
+                                                                 <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:expires')}</p>
                                                                 <p className="tracking-wider font-mono text-sm font-bold text-white/90">
                                                                     {isRevealed && cardData ? cardData.expiry : '••/••'}
                                                                 </p>
                                                             </div>
                                                             <div className="space-y-1">
-                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">Secret</p>
+                                                                 <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:secret')}</p>
                                                                 <p className="tracking-wider font-mono text-sm font-bold text-white/90">
                                                                     {isRevealed && cardData ? '•'.repeat(cardData.cvv.length) : '•••'}
                                                                 </p>
@@ -643,7 +645,7 @@ export default function CredentialVault() {
                                                             whileTap={{ scale: 0.95 }}
                                                         >
                                                             {isRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
-                                                            {isRevealed ? 'Hide' : 'Show'}
+                                                            {isRevealed ? t('vault:hide') : t('vault:show')}
                                                         </motion.button>
 
                                                         {isRevealed && cardData && (
@@ -654,7 +656,7 @@ export default function CredentialVault() {
                                                                 whileTap={{ scale: 0.95 }}
                                                             >
                                                                 {isCopied ? <Check size={14} /> : <Copy size={14} />}
-                                                                {isCopied ? 'Copied!' : 'Copy'}
+                                                                {isCopied ? t('common:copied') : t('common:copy')}
                                                             </motion.button>
                                                         )}
 
@@ -692,7 +694,7 @@ export default function CredentialVault() {
                                     <KeyRound size={32} className="animate-pulse" />
                                 </div>
                             </div>
-                            <h3 className={`text-2xl font-black ${headingColor}`}>Loading your vault...</h3>
+                            <h3 className={`text-2xl font-black ${headingColor}`}>{t('vault:loadingVault')}</h3>
                         </motion.div>
                     ) : filteredLogins.length === 0 && filteredCards.length === 0 ? (
                         <motion.div
@@ -705,10 +707,10 @@ export default function CredentialVault() {
                                     <Globe className="text-primary/20" size={48} />
                                 </div>
                                 <h3 className={`text-2xl font-black ${headingColor}`}>
-                                    {search ? 'No matches found!' : 'Your vault is empty!'}
+                                    {search ? t('vault:noMatches') : t('vault:emptyVault')}
                                 </h3>
                                 <p className={`text-lg ${mutedText} mt-2`}>
-                                    {search ? 'Try a different search.' : 'Tap "Add New" to save your first password or card.'}
+                                    {search ? t('vault:tryDifferent') : t('vault:tapAddNew')}
                                 </p>
                             </div>
                         </motion.div>
@@ -720,8 +722,8 @@ export default function CredentialVault() {
                         >
                             <div className={`p-4 flex items-center gap-3`}>
                                 <KeyRound className="text-primary" size={20} />
-                                <h2 className={`font-display text-xl font-black ${headingColor}`}>Saved Logins</h2>
-                                <span className={`ml-auto text-sm font-bold ${mutedText}`}>{filteredLogins.length} Total</span>
+                                <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('vault:savedLogins')}</h2>
+                                <span className={`ml-auto text-sm font-bold ${mutedText}`}>{t('vault:total', { count: filteredLogins.length })}</span>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {filteredLogins.map((item) => {
@@ -820,8 +822,8 @@ export default function CredentialVault() {
                                 <div className="p-8">
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className={`text-2xl font-black ${headingColor}`}>What to add?</h2>
-                                            <p className={`text-sm font-medium ${mutedText} mt-1`}>Pick what you want to save.</p>
+                                            <h2 className={`text-2xl font-black ${headingColor}`}>{t('vault:whatToAdd')}</h2>
+                                            <p className={`text-sm font-medium ${mutedText} mt-1`}>{t('vault:pickWhatToSave')}</p>
                                         </div>
                                         <button onClick={closeModal} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
                                             ✕
@@ -839,8 +841,8 @@ export default function CredentialVault() {
                                                 <KeyRound size={32} />
                                             </div>
                                             <div className="text-center">
-                                                <h3 className={`font-black text-lg ${headingColor}`}>Login Account</h3>
-                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>Websites, apps, games</p>
+                                                <h3 className={`font-black text-lg ${headingColor}`}>{t('vault:loginAccount')}</h3>
+                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>{t('vault:loginAccountDesc')}</p>
                                             </div>
                                         </motion.button>
 
@@ -854,8 +856,8 @@ export default function CredentialVault() {
                                                 <CreditCard size={32} />
                                             </div>
                                             <div className="text-center">
-                                                <h3 className={`font-black text-lg ${headingColor}`}>Bank Card</h3>
-                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>Credit & debit cards</p>
+                                                <h3 className={`font-black text-lg ${headingColor}`}>{t('vault:bankCard')}</h3>
+                                                <p className={`text-xs font-medium ${mutedText} mt-1`}>{t('vault:bankCardDesc')}</p>
                                             </div>
                                         </motion.button>
                                     </div>
@@ -873,8 +875,8 @@ export default function CredentialVault() {
                                             </button>
                                             <span className="text-3xl">🎯</span>
                                         </div>
-                                        <h2 className={`text-2xl font-black ${headingColor}`}>Which App?</h2>
-                                        <p className={`text-sm font-medium ${mutedText} mt-1`}>Pick your app or make your own!</p>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('vault:whichApp')}</h2>
+                                        <p className={`text-sm font-medium ${mutedText} mt-1`}>{t('vault:pickAppOrCustom')}</p>
                                     </div>
 
                                     {/* Search Bar */}
@@ -882,7 +884,7 @@ export default function CredentialVault() {
                                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">🔍</span>
                                         <input
                                             type="text"
-                                            placeholder="Search apps..."
+                                            placeholder={t('vault:searchApps')}
                                             value={serviceSearch}
                                             onChange={(e) => setServiceSearch(e.target.value)}
                                             className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
@@ -902,7 +904,7 @@ export default function CredentialVault() {
                                             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white shadow-lg">
                                                 <Plus size={24} />
                                             </div>
-                                            <span className={`text-[10px] font-black ${isDark ? 'text-primary' : 'text-primary'}`}>My Own</span>
+                                            <span className={`text-[10px] font-black ${isDark ? 'text-primary' : 'text-primary'}`}>{t('vault:myOwn')}</span>
                                         </motion.button>
 
                                         {/* Service Icons */}
@@ -927,13 +929,13 @@ export default function CredentialVault() {
                                         <div className="text-center py-8">
                                             <span className="text-4xl">🤷</span>
                                             <p className={`text-sm font-bold mt-3 ${mutedText}`}>
-                                                No apps match "{serviceSearch}"
+                                                {t('vault:noAppsMatch', { search: serviceSearch })}
                                             </p>
                                             <button
                                                 onClick={() => { setNewCred({ name: '', username: '', domain: '', password: '' }); setModalStep('form'); }}
                                                 className="text-sm font-black text-primary hover:underline mt-2"
                                             >
-                                                Add it anyway →
+                                                {t('vault:addAnyway')}
                                             </button>
                                         </div>
                                     )}
@@ -950,10 +952,10 @@ export default function CredentialVault() {
                                             </button>
                                             <div>
                                                 <h2 className={`text-xl font-black ${headingColor}`}>
-                                                    {newCred.name || 'Custom Login'}
+                                                    {newCred.name || t('vault:customLogin')}
                                                 </h2>
                                                 <p className={`text-xs font-medium ${mutedText}`}>
-                                                    {newCred.domain || 'Enter your details'}
+                                                    {newCred.domain || t('vault:enterDetails')}
                                                 </p>
                                             </div>
                                         </div>
@@ -964,25 +966,25 @@ export default function CredentialVault() {
 
                                     <form onSubmit={handleSaveCredential} className="space-y-5">
                                         <Input
-                                            label="Username or Email"
-                                            placeholder="you@example.com"
+                                            label={t('vault:usernameOrEmail')}
+                                            placeholder={t('vault:usernamePlaceholder')}
                                             value={newCred.username}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, username: e.target.value })}
                                             required
                                         />
                                         <PasswordInput
-                                            label="Password"
-                                            placeholder="Your secret password"
+                                            label={t('vault:passwordLabel')}
+                                            placeholder={t('vault:passwordPlaceholder')}
                                             value={newCred.password}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCred({ ...newCred, password: e.target.value })}
                                             required
                                         />
                                         <div className="flex gap-3 pt-4">
                                             <Button type="button" variant="outline" onClick={closeModal} className="flex-1 rounded-2xl font-black">
-                                                Cancel
+                                                {t('vault:cancel')}
                                             </Button>
                                             <Button type="submit" disabled={isSaving} className="flex-1 rounded-2xl font-black shadow-xl">
-                                                {isSaving ? 'Saving...' : 'Save It! 🔒'}
+                                                {isSaving ? t('vault:saving') : t('vault:saveIt')}
                                             </Button>
                                         </div>
                                     </form>
@@ -998,8 +1000,8 @@ export default function CredentialVault() {
                                                 <ArrowLeft size={18} />
                                             </button>
                                             <div>
-                                                <h2 className={`text-xl font-black ${headingColor}`}>Add Your Card 💳</h2>
-                                                <p className={`text-xs font-medium ${mutedText}`}>Your card info is super encrypted! 🔐</p>
+                                                <h2 className={`text-xl font-black ${headingColor}`}>{t('vault:addYourCard')}</h2>
+                                                <p className={`text-xs font-medium ${mutedText}`}>{t('vault:cardInfoEncrypted')}</p>
                                             </div>
                                         </div>
                                         <button onClick={closeModal} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
@@ -1037,13 +1039,13 @@ export default function CredentialVault() {
 
                                             <div className="flex justify-between items-end">
                                                 <div>
-                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">Your Name</p>
+                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:yourName')}</p>
                                                     <p className="tracking-wider uppercase font-bold text-white/90 text-xs">
                                                         {newCard.cardholderName || 'YOUR NAME'}
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">Expires</p>
+                                                    <p className="text-[8px] uppercase tracking-[0.2em] text-white/50 font-black">{t('vault:expires')}</p>
                                                     <p className="tracking-wider font-mono text-xs font-bold text-white/90">
                                                         {newCard.expiry || 'MM/YY'}
                                                     </p>
@@ -1056,11 +1058,11 @@ export default function CredentialVault() {
                                         <div className="space-y-2">
                                             <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
                                                 <span className="text-lg">🏷️</span>
-                                                Card Name
+                                                {t('vault:cardNameLabel')}
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder="e.g. My Piggy Bank Card"
+                                                placeholder={t('vault:cardNamePlaceholder')}
                                                 value={newCard.name}
                                                 onChange={(e) => setNewCard({ ...newCard, name: e.target.value })}
                                                 className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
@@ -1070,7 +1072,7 @@ export default function CredentialVault() {
                                         <div className="space-y-2">
                                             <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
                                                 <span className="text-lg">🔢</span>
-                                                Card Number
+                                                {t('vault:cardNumberLabelShort')}
                                             </label>
                                             <input
                                                 type="text"
@@ -1086,11 +1088,11 @@ export default function CredentialVault() {
                                         <div className="space-y-2">
                                             <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
                                                 <span className="text-lg">👤</span>
-                                                Your Name
+                                                {t('vault:yourNameLabel')}
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder="Name on the card"
+                                                placeholder={t('vault:nameOnCard')}
                                                 value={newCard.cardholderName}
                                                 onChange={(e) => setNewCard({ ...newCard, cardholderName: e.target.value })}
                                                 className={`w-full px-4 py-3.5 rounded-xl border-2 bg-transparent text-sm font-bold focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
@@ -1102,7 +1104,7 @@ export default function CredentialVault() {
                                             <div className="space-y-2">
                                                 <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
                                                     <span className="text-lg">📅</span>
-                                                    Expires
+                                                    {t('vault:expiresLabel')}
                                                 </label>
                                                 <input
                                                     type="text"
@@ -1117,7 +1119,7 @@ export default function CredentialVault() {
                                             <div className="space-y-2">
                                                 <label className={`flex items-center gap-2 text-sm font-black ${headingColor}`}>
                                                     <span className="text-lg">🔒</span>
-                                                    Secret Code
+                                                    {t('vault:secretCode')}
                                                 </label>
                                                 <input
                                                     type="password"
@@ -1139,7 +1141,7 @@ export default function CredentialVault() {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.95 }}
                                             >
-                                                Cancel
+                                                {t('vault:cancel')}
                                             </motion.button>
                                             <motion.button
                                                 type="submit"
@@ -1151,17 +1153,17 @@ export default function CredentialVault() {
                                                 {isSaving ? (
                                                     <>
                                                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white" />
-                                                        Saving...
+                                                        {t('vault:saving')}
                                                     </>
                                                 ) : (
-                                                    <>Save Card! 💳</>
+                                                    <>{t('vault:saveCard')}</>
                                                 )}
                                             </motion.button>
                                         </div>
 
                                         <div className={`mt-4 p-3 rounded-xl ${isDark ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-emerald-50 border border-emerald-200'} text-center`}>
                                             <p className={`text-xs font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
-                                                🔐 Your card info is encrypted and super safe!
+                                                {t('vault:cardSafe')}
                                             </p>
                                         </div>
                                     </form>

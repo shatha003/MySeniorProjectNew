@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 interface PasswordStrengthProps {
   password: string
@@ -6,14 +7,15 @@ interface PasswordStrengthProps {
 }
 
 const requirements = [
-  { key: 'length', label: 'At least 12 characters', test: (p: string) => p.length >= 12 },
-  { key: 'uppercase', label: 'One uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
-  { key: 'lowercase', label: 'One lowercase letter', test: (p: string) => /[a-z]/.test(p) },
-  { key: 'number', label: 'One number', test: (p: string) => /\d/.test(p) },
-  { key: 'symbol', label: 'One symbol (!@#$%^&*)', test: (p: string) => /[!@#$%^&*()_+\-=\[\]{}|;:',.<>?]/.test(p) },
+  { key: 'length', label: 'components:passwordStrength.minLength', test: (p: string) => p.length >= 12 },
+  { key: 'uppercase', label: 'components:passwordStrength.uppercase', test: (p: string) => /[A-Z]/.test(p) },
+  { key: 'lowercase', label: 'components:passwordStrength.lowercase', test: (p: string) => /[a-z]/.test(p) },
+  { key: 'number', label: 'components:passwordStrength.number', test: (p: string) => /\d/.test(p) },
+  { key: 'symbol', label: 'components:passwordStrength.special', test: (p: string) => /[!@#$%^&*()_+\-=\[\]{}|;:',.<>?]/.test(p) },
 ]
 
-export default function PasswordStrength({ password, showDetails = false }: PasswordStrengthProps) {
+const PasswordStrength = ({ password, showDetails = false }: PasswordStrengthProps) => {
+  const { t } = useTranslation('components')
   const results = requirements.map(req => ({
     ...req,
     met: req.test(password)
@@ -31,11 +33,11 @@ export default function PasswordStrength({ password, showDetails = false }: Pass
   }
 
   const getStrengthLabel = () => {
-    if (progress <= 20) return 'Weak'
-    if (progress <= 40) return 'Fair'
-    if (progress <= 60) return 'Good'
-    if (progress <= 80) return 'Strong'
-    return 'Very Strong'
+    if (progress <= 20) return t('components:passwordStrength.weak')
+    if (progress <= 40) return t('components:passwordStrength.fair')
+    if (progress <= 60) return t('components:passwordStrength.good')
+    if (progress <= 80) return t('components:passwordStrength.strong')
+    return t('components:passwordStrength.veryStrong')
   }
 
   return (
@@ -97,7 +99,7 @@ export default function PasswordStrength({ password, showDetails = false }: Pass
                 )}
               </motion.div>
               <span className={req.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                {req.label}
+                {t(req.label)}
               </span>
             </motion.div>
           ))}
@@ -106,3 +108,5 @@ export default function PasswordStrength({ password, showDetails = false }: Pass
     </div>
   )
 }
+
+export default PasswordStrength

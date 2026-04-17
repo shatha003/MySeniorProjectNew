@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { ThemeToggle } from './ThemeToggle'
+import LanguageSwitcher from './LanguageSwitcher'
+import { useRTL } from '@/hooks/useRTL'
 
 const appWindow = getCurrentWindow()
 
 export default function TitleBar() {
     const [isMaximized, setIsMaximized] = useState(false)
+    useRTL()
 
     useEffect(() => {
         const checkMaximized = async () => {
@@ -42,6 +45,7 @@ export default function TitleBar() {
 
             {/* Window Controls */}
             <div className="titlebar-controls flex items-center">
+                <LanguageSwitcher />
                 <ThemeToggle />
 
                 {/* Minimize */}

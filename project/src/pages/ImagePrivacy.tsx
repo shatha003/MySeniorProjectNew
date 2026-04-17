@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -131,6 +132,7 @@ function MetadataRow({ label, value, isLast = false, highlight = false, mutedTex
 export default function ImagePrivacy() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['imagePrivacy', 'common']);
 
     const [hasImage, setHasImage] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -298,7 +300,7 @@ export default function ImagePrivacy() {
             bg: isDark ? 'bg-amber-500/10' : 'bg-amber-50',
             border: 'border-amber-500/20',
             text: 'text-amber-500',
-            label: 'SECRETS FOUND!',
+            label: t('imagePrivacy:secretsFound'),
             icon: ShieldAlert,
         },
         clean: {
@@ -307,7 +309,7 @@ export default function ImagePrivacy() {
             bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
             border: 'border-emerald-500/20',
             text: 'text-emerald-500',
-            label: 'PHOTO IS CLEAN!',
+            label: t('imagePrivacy:photoClean'),
             icon: ShieldCheck,
         },
         cleaned: {
@@ -316,7 +318,7 @@ export default function ImagePrivacy() {
             bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
             border: 'border-emerald-500/20',
             text: 'text-emerald-500',
-            label: 'CLEANED & SAFE!',
+            label: t('imagePrivacy:cleanedSafe'),
             icon: CheckCircle,
         },
     };
@@ -361,11 +363,11 @@ export default function ImagePrivacy() {
                                         <ImageIcon size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Photo Secrets
+                                        {t('imagePrivacy:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Find and erase hidden secrets in your photos before sharing! 🕵️‍♂️
+                                    {t('imagePrivacy:subtitle')}
                                 </p>
                             </div>
                             
@@ -373,7 +375,7 @@ export default function ImagePrivacy() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+10 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Scan</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perScan')}</span>
                                 </div>
                             </div>
                         </div>
@@ -395,9 +397,9 @@ export default function ImagePrivacy() {
                                     </motion.div>
 
                                     <div className="space-y-3">
-                                        <h3 className={`text-3xl font-black ${headingColor}`}>Ready to scan?</h3>
+                                        <h3 className={`text-3xl font-black ${headingColor}`}>{t('imagePrivacy:readyToScan')}</h3>
                                         <p className={`text-lg font-medium ${mutedText} max-w-md mx-auto`}>
-                                            Select a photo and we'll search for hidden location data, camera info, and other secrets that could reveal your privacy!
+                                            {t('imagePrivacy:readyDesc')}
                                         </p>
                                     </div>
 
@@ -411,11 +413,11 @@ export default function ImagePrivacy() {
                                         whileHover={{ y: -5, scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        Pick a Photo!
+                                        {t('imagePrivacy:pickPhoto')}
                                     </motion.button>
                                     
                                     <p className={`text-xs font-bold uppercase tracking-widest ${mutedText} opacity-50`}>
-                                        Supports: PNG, JPG, JPEG
+                                        {t('imagePrivacy:supports')}
                                     </p>
                                 </div>
                             ) : (
@@ -429,10 +431,10 @@ export default function ImagePrivacy() {
                                     </div>
                                     
                                     <div className="space-y-4">
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>Analyzing your photo...</h3>
+                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('imagePrivacy:analyzingPhoto')}</h3>
                                         <div className="max-w-md mx-auto space-y-3">
                                             <div className="flex justify-between text-xs font-black uppercase tracking-widest">
-                                                <span className={mutedText}>Scanning Metadata</span>
+                                                <span className={mutedText}>{t('imagePrivacy:scanningMetadata')}</span>
                                                 <span className={headingColor}>{Math.round(scanProgress)}%</span>
                                             </div>
                                             <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -456,10 +458,10 @@ export default function ImagePrivacy() {
                                 >
                                     <ShieldAlert size={24} className="shrink-0" />
                                     <div className="space-y-2">
-                                        <h4 className="font-black text-lg">Oops! Something went wrong</h4>
+                                        <h4 className="font-black text-lg">{t('imagePrivacy:oopsWentWrong')}</h4>
                                         <p className="font-medium text-sm">{error}</p>
                                         <button onClick={() => setError(null)} className="mt-2 text-xs font-black uppercase tracking-widest bg-current/10 px-4 py-2 rounded-xl">
-                                            Try Again
+                                            {t('common:tryAgain')}
                                         </button>
                                     </div>
                                 </motion.div>
@@ -487,7 +489,7 @@ export default function ImagePrivacy() {
                                     </div>
                                     <div className="text-center md:text-left space-y-2">
                                         <div className={`text-xs font-black uppercase tracking-[0.2em] ${exifConfig.text}`}>
-                                            Privacy Report
+                                            {t('imagePrivacy:privacyReport')}
                                         </div>
                                         <h2 className={`text-4xl md:text-5xl font-black font-display ${headingColor}`}>
                                             {exifConfig.label}
@@ -502,9 +504,9 @@ export default function ImagePrivacy() {
                                 {/* Big Score Stats */}
                                 <div className="grid grid-cols-3 gap-6 w-full lg:w-auto">
                                     {[
-                                        { label: 'Secrets', value: exifItemCount, color: metadata?.hasExif && !isCleaned ? 'text-amber-500' : 'text-emerald-500' },
-                                        { label: 'Risks', value: privacyRiskCount, color: privacyRiskCount > 0 ? 'text-red-500' : 'text-emerald-500' },
-                                        { label: 'Status', value: isCleaned ? 'Clean' : (metadata?.hasExif ? 'Found' : 'Safe'), color: isCleaned ? 'text-emerald-500' : (metadata?.hasExif ? 'text-amber-500' : 'text-emerald-500') }
+                                        { label: t('imagePrivacy:secrets'), value: exifItemCount, color: metadata?.hasExif && !isCleaned ? 'text-amber-500' : 'text-emerald-500' },
+                                        { label: t('imagePrivacy:risks'), value: privacyRiskCount, color: privacyRiskCount > 0 ? 'text-red-500' : 'text-emerald-500' },
+                                        { label: t('imagePrivacy:clean'), value: isCleaned ? t('imagePrivacy:clean') : (metadata?.hasExif ? t('imagePrivacy:found') : t('imagePrivacy:safe')), color: isCleaned ? 'text-emerald-500' : (metadata?.hasExif ? 'text-amber-500' : 'text-emerald-500') }
                                     ].map((stat, i) => (
                                         <div key={i} className={`flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-current/5`}>
                                             <span className={`text-2xl md:text-4xl font-black font-display ${stat.color}`}>{stat.value}</span>
@@ -530,20 +532,20 @@ export default function ImagePrivacy() {
                                     >
                                         {isProcessing ? (
                                             <>
-                                                <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                                                Cleaning...
+                                                    <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
+                                                    {t('imagePrivacy:cleaning')}
                                             </>
                                         ) : (
                                             <>
                                                 <Eraser size={24} />
-                                                Clean Photo!
+                                                {t('imagePrivacy:cleanPhoto')}
                                             </>
                                         )}
                                     </motion.button>
                                 ) : (
                                     <div className="flex items-center gap-3 px-8 py-4 bg-emerald-500 text-white font-black rounded-2xl shadow-lg shadow-emerald-500/20">
                                         <CheckCircle size={24} />
-                                        Photo Cleaned!
+                                        {t('imagePrivacy:photoCleaned')}
                                     </div>
                                 )}
                                 <button
@@ -565,7 +567,7 @@ export default function ImagePrivacy() {
                                     <CheckCircle size={24} />
                                 </div>
                                 <div>
-                                    <h3 className={`text-xl font-black ${headingColor}`}>Success!</h3>
+                                    <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:success')}</h3>
                                     <p className={`text-sm font-medium ${mutedText}`}>{successMessage}</p>
                                 </div>
                             </motion.div>
@@ -582,13 +584,13 @@ export default function ImagePrivacy() {
                                     <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500">
                                         <FileText size={24} />
                                     </div>
-                                    <h3 className={`text-xl font-black ${headingColor}`}>File Info</h3>
+                                    <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:fileInfo')}</h3>
                                 </div>
                                 
                                 <div className="space-y-1">
-                                    <MetadataRow label="Type" value={metadata.fileProperties.fileType} mutedText={mutedText} headingColor={headingColor} />
-                                    <MetadataRow label="Format" value={metadata.fileProperties.fileTypeExtension} mutedText={mutedText} headingColor={headingColor} />
-                                    <MetadataRow label="Size" value={metadata.fileProperties.fileSizeDisplay} mutedText={mutedText} headingColor={headingColor} isLast highlight />
+                                    <MetadataRow label={t('imagePrivacy:type')} value={metadata.fileProperties.fileType} mutedText={mutedText} headingColor={headingColor} />
+                                    <MetadataRow label={t('imagePrivacy:format')} value={metadata.fileProperties.fileTypeExtension} mutedText={mutedText} headingColor={headingColor} />
+                                    <MetadataRow label={t('imagePrivacy:size')} value={metadata.fileProperties.fileSizeDisplay} mutedText={mutedText} headingColor={headingColor} isLast highlight />
                                 </div>
                             </motion.div>
 
@@ -601,13 +603,13 @@ export default function ImagePrivacy() {
                                     <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
                                         <Ruler size={24} />
                                     </div>
-                                    <h3 className={`text-xl font-black ${headingColor}`}>Photo Shape</h3>
+                                    <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:photoShape')}</h3>
                                 </div>
                                 
                                 <div className="space-y-1">
-                                    <MetadataRow label="Width" value={metadata.fileProperties.imageWidth} mutedText={mutedText} headingColor={headingColor} />
-                                    <MetadataRow label="Height" value={metadata.fileProperties.imageHeight} mutedText={mutedText} headingColor={headingColor} />
-                                    <MetadataRow label="Quality" value={`${metadata.fileProperties.megapixels} MP`} mutedText={mutedText} headingColor={headingColor} isLast highlight />
+                                    <MetadataRow label={t('imagePrivacy:width')} value={metadata.fileProperties.imageWidth} mutedText={mutedText} headingColor={headingColor} />
+                                    <MetadataRow label={t('imagePrivacy:height')} value={metadata.fileProperties.imageHeight} mutedText={mutedText} headingColor={headingColor} />
+                                    <MetadataRow label={t('imagePrivacy:quality')} value={`${metadata.fileProperties.megapixels} MP`} mutedText={mutedText} headingColor={headingColor} isLast highlight />
                                 </div>
                             </motion.div>
 
@@ -620,12 +622,12 @@ export default function ImagePrivacy() {
                                     <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500">
                                         <Clock size={24} />
                                     </div>
-                                    <h3 className={`text-xl font-black ${headingColor}`}>System Times</h3>
+                                    <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:systemTimes')}</h3>
                                 </div>
                                 
                                 <div className="space-y-1">
-                                    <MetadataRow label="Created" value={metadata.datetime.created} mutedText={mutedText} headingColor={headingColor} />
-                                    <MetadataRow label="Modified" value={metadata.datetime.modified} mutedText={mutedText} headingColor={headingColor} isLast highlight />
+                                    <MetadataRow label={t('imagePrivacy:created')} value={metadata.datetime.created} mutedText={mutedText} headingColor={headingColor} />
+                                    <MetadataRow label={t('imagePrivacy:modified')} value={metadata.datetime.modified} mutedText={mutedText} headingColor={headingColor} isLast highlight />
                                 </div>
                             </motion.div>
                         </div>
@@ -642,17 +644,17 @@ export default function ImagePrivacy() {
                                         <div className="p-3 rounded-2xl bg-red-500/10 text-red-500">
                                             <LocateFixed size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>GPS Location</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:gpsLocation')}</h3>
                                         <span className={`ml-auto px-3 py-1 rounded-full text-xs font-black uppercase ${isDark ? 'bg-red-500/10 text-red-500' : 'bg-red-100 text-red-600'}`}>
-                                            High Risk
+                                            {t('imagePrivacy:highRisk')}
                                         </span>
                                     </div>
                                     
                                     <div className={`p-4 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'} space-y-3`}>
-                                        <p className={`font-bold text-sm ${isDark ? 'text-red-400' : 'text-red-600'}`}>{metadata.gps.location || 'Location Found'}</p>
+                                        <p className={`font-bold text-sm ${isDark ? 'text-red-400' : 'text-red-600'}`}>{metadata.gps.location || t('imagePrivacy:locationFound')}</p>
                                         <div className={`text-xs font-mono space-y-1 p-3 rounded-xl ${isDark ? 'bg-black/20' : 'bg-gray-50'}`}>
-                                            <p className={mutedText}>Latitude: {metadata.gps.latitude || 'N/A'}</p>
-                                            <p className={mutedText}>Longitude: {metadata.gps.longitude || 'N/A'}</p>
+                                                <p className={mutedText}>{t('imagePrivacy:latitude')}: {metadata.gps.latitude || 'N/A'}</p>
+                                                <p className={mutedText}>{t('imagePrivacy:longitude')}: {metadata.gps.longitude || 'N/A'}</p>
                                         </div>
                                         {metadata.gps.googleMapsUrl && !isCleaned && (
                                             <button
@@ -660,7 +662,7 @@ export default function ImagePrivacy() {
                                                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white font-bold text-sm rounded-xl transition-all shadow-md hover:scale-[1.02]"
                                             >
                                                 <ExternalLink size={14} />
-                                                View on Map
+                                                {t('imagePrivacy:viewOnMap')}
                                             </button>
                                         )}
                                     </div>
@@ -669,8 +671,8 @@ export default function ImagePrivacy() {
                                         <div className="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-2xl flex gap-3 items-start">
                                             <Lightbulb size={16} className="text-primary shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Privacy Tip</p>
-                                                <p className="text-xs text-muted-foreground leading-relaxed">This shows exactly where you took the photo. If you're at home, others might find out where you live!</p>
+                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">{t('imagePrivacy:privacyTip')}</p>
+                                                <p className="text-xs text-muted-foreground leading-relaxed">{t('imagePrivacy:privacyTipDesc')}</p>
                                             </div>
                                         </div>
                                     )}
@@ -685,24 +687,24 @@ export default function ImagePrivacy() {
                                         <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500">
                                             <SmartphoneCharging size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Camera Identity</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:cameraIdentity')}</h3>
                                         <span className={`ml-auto px-3 py-1 rounded-full text-xs font-black uppercase ${isDark ? 'bg-amber-500/10 text-amber-500' : 'bg-amber-100 text-amber-600'}`}>
-                                            Medium Risk
+                                            {t('imagePrivacy:mediumRisk')}
                                         </span>
                                     </div>
                                     
                                     <div className={`p-4 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'} space-y-1`}>
-                                        <MetadataRow label="Brand" value={metadata.camera.make || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                        <MetadataRow label="Model" value={metadata.camera.model || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                        <MetadataRow label="Software" value={metadata.camera.software || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
+                                        <MetadataRow label={t('imagePrivacy:brand')} value={metadata.camera.make || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                        <MetadataRow label={t('imagePrivacy:model')} value={metadata.camera.model || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                        <MetadataRow label={t('imagePrivacy:software')} value={metadata.camera.software || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
                                     </div>
 
                                     {!isCleaned && (
                                         <div className="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-2xl flex gap-3 items-start">
                                             <Smartphone size={16} className="text-primary shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Did You Know?</p>
-                                                <p className="text-xs text-muted-foreground leading-relaxed">This info tells people what kind of phone or camera you use.</p>
+                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">{t('imagePrivacy:didYouKnow')}</p>
+                                                <p className="text-xs text-muted-foreground leading-relaxed">{t('imagePrivacy:didYouKnowDesc')}</p>
                                             </div>
                                         </div>
                                     )}
@@ -717,20 +719,20 @@ export default function ImagePrivacy() {
                                         <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500">
                                             <Calendar size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Time Record</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:timeRecord')}</h3>
                                     </div>
                                     
                                     <div className={`p-4 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'} space-y-1`}>
-                                        <MetadataRow label="Taken On" value={metadata.datetime.original || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                        <MetadataRow label="Digitized" value={metadata.datetime.digitized || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
+                                        <MetadataRow label={t('imagePrivacy:takenOn')} value={metadata.datetime.original || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                        <MetadataRow label={t('imagePrivacy:digitized')} value={metadata.datetime.digitized || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
                                     </div>
 
                                     {!isCleaned && (
                                         <div className="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-2xl flex gap-3 items-start">
                                             <Clock size={16} className="text-primary shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Time Travel</p>
-                                                <p className="text-xs text-muted-foreground leading-relaxed">This shows the exact second you clicked the photo!</p>
+                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">{t('imagePrivacy:timeTravel')}</p>
+                                                <p className="text-xs text-muted-foreground leading-relaxed">{t('imagePrivacy:timeTravelDesc')}</p>
                                             </div>
                                         </div>
                                     )}
@@ -745,21 +747,21 @@ export default function ImagePrivacy() {
                                         <div className="p-3 rounded-2xl bg-violet-500/10 text-violet-500">
                                             <Camera size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Camera Settings</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:cameraSettings')}</h3>
                                     </div>
                                     
                                     <div className={`p-4 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'} space-y-1`}>
-                                        <MetadataRow label="Aperture" value={metadata.settings.aperture || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                        <MetadataRow label="ISO" value={metadata.settings.iso || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                        <MetadataRow label="Focal Length" value={metadata.settings.focalLength || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
+                                        <MetadataRow label={t('imagePrivacy:aperture')} value={metadata.settings.aperture || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                        <MetadataRow label={t('imagePrivacy:iso')} value={metadata.settings.iso || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                        <MetadataRow label={t('imagePrivacy:focalLength')} value={metadata.settings.focalLength || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
                                     </div>
 
                                     {!isCleaned && (
                                         <div className="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-2xl flex gap-3 items-start">
                                             <Zap size={16} className="text-primary shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Tech Talk</p>
-                                                <p className="text-xs text-muted-foreground leading-relaxed">These are technical settings your camera used to make the photo look good.</p>
+                                                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">{t('imagePrivacy:techTalk')}</p>
+                                                <p className="text-xs text-muted-foreground leading-relaxed">{t('imagePrivacy:techTalkDesc')}</p>
                                             </div>
                                         </div>
                                     )}
@@ -772,7 +774,7 @@ export default function ImagePrivacy() {
                                         className={`flex items-center gap-2 text-xs font-black uppercase tracking-widest ${mutedText} hover:text-primary transition-colors mx-auto mb-4`}
                                     >
                                         {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                                        {showAdvanced ? 'Hide Advanced Info' : 'Show Advanced Info'}
+                                        {showAdvanced ? t('common:showLess') : t('common:showMore')}
                                     </button>
                                     
                                     <AnimatePresence>
@@ -790,19 +792,19 @@ export default function ImagePrivacy() {
                                                         <div className="p-3 rounded-2xl bg-gray-500/10 text-gray-500">
                                                             <Info size={24} />
                                                         </div>
-                                                        <h3 className={`text-xl font-black ${headingColor}`}>Extra Technical Bits</h3>
+                                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:extraTechnical')}</h3>
                                                     </div>
                                                     
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                                                         <div className="space-y-1">
-                                                            <MetadataRow label="Flash" value={metadata.settings.flash || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                                            <MetadataRow label="White Balance" value={metadata.settings.whiteBalance || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                                            <MetadataRow label="Orientation" value={metadata.settings.orientation || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
+                                                            <MetadataRow label={t('imagePrivacy:flash')} value={metadata.settings.flash || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                                            <MetadataRow label={t('imagePrivacy:whiteBalance')} value={metadata.settings.whiteBalance || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                                            <MetadataRow label={t('imagePrivacy:orientation')} value={metadata.settings.orientation || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
                                                         </div>
                                                         <div className="space-y-1">
-                                                            <MetadataRow label="X Resolution" value={metadata.settings.xResolution || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                                            <MetadataRow label="Y Resolution" value={metadata.settings.yResolution || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
-                                                            <MetadataRow label="Unit" value={metadata.settings.resolutionUnit || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
+                                                            <MetadataRow label={t('imagePrivacy:xResolution')} value={metadata.settings.xResolution || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                                            <MetadataRow label={t('imagePrivacy:yResolution')} value={metadata.settings.yResolution || 'N/A'} mutedText={mutedText} headingColor={headingColor} />
+                                                            <MetadataRow label={t('imagePrivacy:unit')} value={metadata.settings.resolutionUnit || 'N/A'} mutedText={mutedText} headingColor={headingColor} isLast />
                                                         </div>
                                                     </div>
                                                 </motion.div>
@@ -822,9 +824,9 @@ export default function ImagePrivacy() {
                             <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
                                 <div className="flex items-center gap-3">
                                     <History className="text-primary" />
-                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>Recent Scans</h2>
+                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('imagePrivacy:recentScans')}</h2>
                                 </div>
-                                <span className={`text-sm font-bold ${mutedText}`}>{history.length} Photos Tracked</span>
+                                <span className={`text-sm font-bold ${mutedText}`}>{t('imagePrivacy:photosTracked', { count: history.length })}</span>
                             </div>
 
                             <div className="p-6">
@@ -850,7 +852,7 @@ export default function ImagePrivacy() {
                                                         </div>
                                                     </div>
                                                     <div className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase ${scanConfig.bg} ${scanConfig.text} border border-current/10 ml-4`}>
-                                                        {scan.status === 'clean' ? 'Clean' : scan.status === 'has_exif' ? 'Found' : 'Cleaned'}
+                                                        {scan.status === 'clean' ? t('imagePrivacy:clean') : scan.status === 'has_exif' ? t('imagePrivacy:found') : t('imagePrivacy:clean')}
                                                     </div>
                                                 </motion.div>
                                             );
@@ -861,8 +863,8 @@ export default function ImagePrivacy() {
                                         <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <Search className={`text-primary/20`} size={40} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>No history yet!</h3>
-                                        <p className={`text-lg ${mutedText} mt-2`}>Your photo scan history will appear here.</p>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('imagePrivacy:noHistoryYet')}</h3>
+                                        <p className={`text-lg ${mutedText} mt-2`}>{t('imagePrivacy:photosWillAppear')}</p>
                                     </div>
                                 )}
                             </div>

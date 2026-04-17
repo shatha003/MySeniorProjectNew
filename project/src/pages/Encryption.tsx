@@ -4,6 +4,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { Lock, Unlock, Copy, Check, Eye, EyeOff, ShieldCheck, AlertTriangle, Key, RotateCcw, Star, Shield, Zap } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -23,6 +24,7 @@ const itemVariants = {
 };
 
 export default function Encryption() {
+    const { t } = useTranslation(['encryption', 'common']);
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
 
@@ -109,10 +111,10 @@ export default function Encryption() {
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
     const passwordStrength = password.length < 6
-        ? { label: 'Too Short!', color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', emoji: '😟' }
+        ? { label: t('encryption:tooShort'), color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', emoji: '😟' }
         : password.length < 10
-            ? { label: 'Getting Better!', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', emoji: '🙂' }
-            : { label: 'Super Strong!', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', emoji: '💪' };
+            ? { label: t('encryption:gettingBetter'), color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', emoji: '🙂' }
+            : { label: t('encryption:superStrong'), color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', emoji: '💪' };
 
     return (
         <motion.div
@@ -140,11 +142,11 @@ export default function Encryption() {
                                         <Shield size={28} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-4xl font-black tracking-tight ${headingColor}`}>
-                                        Secret Messages
+                                        {t('encryption:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg font-medium ${mutedText}`}>
-                                    Turn your messages into secret code that only your friends can read! 🤫
+                                    {t('encryption:subtitle')}
                                 </p>
                             </div>
 
@@ -152,7 +154,7 @@ export default function Encryption() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+10 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Use</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perUse')}</span>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +176,7 @@ export default function Encryption() {
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Lock size={18} />
-                                Lock It 🔒
+                                {t('encryption:lockIt')}
                             </motion.button>
                             <motion.button
                                 onClick={() => { setMode('decrypt'); setOutputText(''); setHasResult(false); setError(''); }}
@@ -186,7 +188,7 @@ export default function Encryption() {
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Unlock size={18} />
-                                Unlock It 🔓
+                                {t('encryption:unlockIt')}
                             </motion.button>
                         </div>
 
@@ -205,19 +207,19 @@ export default function Encryption() {
                                             {mode === 'encrypt' ? (
                                                 <>
                                                     <Zap size={16} className="text-yellow-500" />
-                                                    Your Message
+                                                    {t('encryption:yourMessage')}
                                                 </>
                                             ) : (
                                                 <>
                                                     <Lock size={16} className="text-purple-500" />
-                                                    Secret Code
+                                                    {t('encryption:secretCode')}
                                                 </>
                                             )}
                                         </label>
                                         <textarea
                                             value={inputText}
                                             onChange={(e) => { setInputText(e.target.value); setError(''); }}
-                                            placeholder={mode === 'encrypt' ? 'Type your secret message here...' : 'Paste the secret code here...'}
+                                            placeholder={mode === 'encrypt' ? t('encryption:messagePlaceholder') : t('encryption:codePlaceholder')}
                                             rows={4}
                                             className={`w-full rounded-2xl border-2 bg-transparent px-5 py-4 text-sm font-mono resize-none focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                         />
@@ -227,14 +229,14 @@ export default function Encryption() {
                                     <div>
                                         <label className={`flex items-center gap-2 text-sm font-black mb-3 ${headingColor}`}>
                                             <Key size={16} className="text-blue-500" />
-                                            Secret Password
+                                            {t('encryption:secretPassword')}
                                         </label>
                                         <div className="relative">
                                             <input
                                                 type={showPassword ? 'text' : 'password'}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Pick a password only you know..."
+                                                placeholder={t('encryption:passwordPlaceholder')}
                                                 className={`block w-full pl-5 pr-14 py-4 rounded-2xl border-2 bg-transparent text-sm font-mono focus:outline-none transition-all ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                             />
                                             <button
@@ -275,12 +277,12 @@ export default function Encryption() {
                                         {isProcessing ? (
                                             <>
                                                 <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                                                Working on it...
+                                                {t('encryption:workingOnIt')}
                                             </>
                                         ) : (
                                             <>
                                                 {mode === 'encrypt' ? <Lock size={22} /> : <Unlock size={22} />}
-                                                {mode === 'encrypt' ? 'Lock My Message!' : 'Unlock It!'}
+                                                {mode === 'encrypt' ? t('encryption:lockMyMessage') : t('encryption:unlockMessage')}
                                             </>
                                         )}
                                     </motion.button>
@@ -300,10 +302,10 @@ export default function Encryption() {
                                         </div>
                                         <div>
                                             <div className={`text-xs font-black uppercase tracking-[0.2em] ${mode === 'encrypt' ? 'text-emerald-500' : 'text-blue-500'}`}>
-                                                Done!
+                                                {t('encryption:done')}
                                             </div>
                                             <h2 className={`text-2xl font-black font-display ${headingColor}`}>
-                                                {mode === 'encrypt' ? 'Message Locked! 🔒' : 'Message Unlocked! 🔓'}
+                                                {mode === 'encrypt' ? t('encryption:messageLocked') : t('encryption:messageUnlocked')}
                                             </h2>
                                         </div>
                                     </div>
@@ -325,7 +327,7 @@ export default function Encryption() {
                                             whileTap={{ scale: 0.95 }}
                                         >
                                             {copied ? <Check size={18} /> : <Copy size={18} />}
-                                            {copied ? 'Copied!' : 'Copy It!'}
+                                            {copied ? t('common:copied') : t('common:copy')}
                                         </motion.button>
 
                                         <motion.button
@@ -335,7 +337,7 @@ export default function Encryption() {
                                             whileTap={{ scale: 0.95 }}
                                         >
                                             <RotateCcw size={18} />
-                                            New Message
+                                            {t('encryption:newMessage')}
                                         </motion.button>
                                     </div>
 
@@ -349,7 +351,7 @@ export default function Encryption() {
                                         >
                                             <span className="text-lg">💡</span>
                                             <p className={`text-sm font-medium ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
-                                                <strong>Remember:</strong> Share the secret code AND the password with your friend. Without the password, nobody can read it!
+                                                {t('encryption:shareTip')}
                                             </p>
                                         </motion.div>
                                     )}
@@ -368,7 +370,7 @@ export default function Encryption() {
                                 >
                                     <div className="flex justify-between items-center text-sm font-black uppercase tracking-wider">
                                         <span className={mutedText}>
-                                            {mode === 'encrypt' ? 'Locking your message...' : 'Unlocking...'}
+                                            {mode === 'encrypt' ? t('encryption:locking') : t('encryption:unlocking')}
                                         </span>
                                         <span className={headingColor}>{Math.round(scanProgress)}%</span>
                                     </div>
@@ -407,16 +409,16 @@ export default function Encryption() {
                     <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
                         <div className={`p-6 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center gap-3 bg-primary/5`}>
                             <span className="text-2xl">🎓</span>
-                            <h2 className={`font-display text-xl font-black ${headingColor}`}>How Does This Work?</h2>
+                            <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('encryption:howDoesThisWork')}</h2>
                         </div>
 
                         <div className="p-6 md:p-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {[
-                                    { emoji: '🔐', title: 'Super Strong Lock', text: 'We use AES-256 — the same encryption that banks and governments use to keep secrets safe!' },
-                                    { emoji: '🎲', title: 'Always Different', text: 'Even if you encrypt the same message twice, the secret code looks totally different each time!' },
-                                    { emoji: '🏠', title: 'All On Your Computer', text: 'Your message never leaves your device. Everything happens right here — super private!' },
-                                    { emoji: '⚠️', title: 'Password = Key', text: 'If you forget your password, the message is gone forever. No one can get it back — not even us!' },
+                                    { emoji: '🔐', title: t('encryption:tip1Title'), text: t('encryption:tip1Text') },
+                                    { emoji: '🎲', title: t('encryption:tip2Title'), text: t('encryption:tip2Text') },
+                                    { emoji: '🏠', title: t('encryption:tip3Title'), text: t('encryption:tip3Text') },
+                                    { emoji: '⚠️', title: t('encryption:tip4Title'), text: t('encryption:tip4Text') },
                                 ].map((tip, i) => (
                                     <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-muted/30">
                                         <span className="text-2xl shrink-0">{tip.emoji}</span>

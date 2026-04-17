@@ -33,6 +33,7 @@ import {
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { NovaChat } from '../ui/NovaChat';
+import { useTranslation } from 'react-i18next';
 
 interface NavItemProps {
     to: string;
@@ -90,6 +91,7 @@ const NavItem = ({ to, icon, label, onClick, end, isDark }: NavItemProps) => {
 };
 
 export default function DashboardLayout() {
+    const { t } = useTranslation(['nav', 'common']);
     const navigate = useNavigate();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -168,36 +170,36 @@ export default function DashboardLayout() {
 
     const navSections = [
         {
-            label: "Scanning Tools",
+            label: t('nav:scanningTools'),
             icon: <FolderOpen size={14} />,
             items: [
-                { to: "/dashboard/link-scanner", icon: <ScanSearch size={18} />, label: "Link Checker" },
-                { to: "/dashboard/file-scanner", icon: <FileCheck size={18} />, label: "File Checker" },
-                { to: "/dashboard/metadata", icon: <Camera size={18} />, label: "Photo Secrets" },
+                { to: "/dashboard/link-scanner", icon: <ScanSearch size={18} />, label: t('nav:linkChecker') },
+                { to: "/dashboard/file-scanner", icon: <FileCheck size={18} />, label: t('nav:fileChecker') },
+                { to: "/dashboard/metadata", icon: <Camera size={18} />, label: t('nav:photoSecrets') },
             ]
         },
         {
-            label: "Password Tools",
+            label: t('nav:passwordTools'),
             icon: <KeyRound size={14} />,
             items: [
-                { to: "/dashboard/password-gen", icon: <Wand2 size={18} />, label: "Make Password" },
-                { to: "/dashboard/password-check", icon: <Shield size={18} />, label: "Test Password" },
+                { to: "/dashboard/password-gen", icon: <Wand2 size={18} />, label: t('nav:makePassword') },
+                { to: "/dashboard/password-check", icon: <Shield size={18} />, label: t('nav:testPassword') },
             ]
         },
         {
-            label: "Encryption & Vault",
+            label: t('nav:encryptionAndVault'),
             icon: <Lock size={14} />,
             items: [
-                { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: "Secret Codes" },
-                { to: "/dashboard/vault", icon: <Vault size={18} />, label: "Treasure Box" },
+                { to: "/dashboard/encryption", icon: <LockKeyhole size={18} />, label: t('nav:secretCodes') },
+                { to: "/dashboard/vault", icon: <Vault size={18} />, label: t('nav:treasureBox') },
             ]
         },
         {
-            label: "Game Zone",
+            label: t('nav:gameZone'),
             icon: <Gamepad2 size={14} />,
             items: [
-                { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: "Quiz Arena" },
-                { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: "Phishing Dojo" },
+                { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: t('nav:quizArena') },
+                { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: t('nav:phishingDojo') },
             ]
         },
     ];
@@ -250,8 +252,8 @@ export default function DashboardLayout() {
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
                 {/* Standalone items */}
-                <NavItem to="/dashboard" icon={<Home size={18} />} label="Home" end isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
-                <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label="Ask Nova" isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                <NavItem to="/dashboard" icon={<Home size={18} />} label={t('nav:home')} end isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
+                <NavItem to="/dashboard/ai-agent" icon={<BotMessageSquare size={18} />} label={t('nav:askNova')} isDark={isDark} onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined} />
 
                 {/* Sections */}
                 {navSections.map((section) => (
@@ -271,7 +273,7 @@ export default function DashboardLayout() {
 
             {/* Footer */}
             <div className={`px-3 py-3 border-t ${footerBorderColor} space-y-0.5`}>
-                <NavItem to="/dashboard/settings" icon={<Settings size={18} />} label="Settings" isDark={isDark} />
+                <NavItem to="/dashboard/settings" icon={<Settings size={18} />} label={t('nav:settings')} isDark={isDark} />
                 <button
                     onClick={handleLogout}
                     className={`sidebar-nav-item font-display flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left text-sm font-bold ${sectionLabelColor} ${logoutHover}`}
@@ -282,7 +284,7 @@ export default function DashboardLayout() {
                     >
                         <LogOut size={18} />
                     </motion.span>
-                    <span className="font-display font-bold">Log Out</span>
+                    <span className="font-display font-bold">{t('nav:logOut')}</span>
                 </button>
             </div>
 
@@ -307,7 +309,7 @@ export default function DashboardLayout() {
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                <span className="font-body tracking-wide">AES-256 Encrypted</span>
+                <span className="font-body tracking-wide">{t('nav:aes256Encrypted')}</span>
             </motion.div>
         </div>
     );
@@ -378,10 +380,10 @@ export default function DashboardLayout() {
                             </motion.span>
                             <div>
                                 <h2 className={`text-lg font-black ${isDark ? 'text-[#F4F6FF]' : 'text-gray-900'}`}>
-                                    Hey, {displayName}!
+                                    {t('nav:greeting', { name: displayName })}
                                 </h2>
                                 <p className={`text-xs font-bold ${isDark ? 'text-[#8AB4F8]/50' : 'text-gray-400'}`}>
-                                    Ready for today's mission? 🚀
+                                    {t('nav:readyMission')}
                                 </p>
                             </div>
                         </motion.div>
@@ -411,7 +413,7 @@ export default function DashboardLayout() {
                                 transition={{ delay: 0.5 }}
                             >
                                 <Zap size={14} className="text-emerald-500" />
-                                <span className="text-xs font-black text-emerald-500">{progress.xp} XP</span>
+                                <span className="text-xs font-black text-emerald-500">{progress.xp} {t('common:xp')}</span>
                             </motion.div>
                         )}
 

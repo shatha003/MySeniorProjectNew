@@ -11,6 +11,7 @@ import PasswordInput from '@/components/ui/PasswordInput'
 import PasswordStrength from '@/components/ui/PasswordStrength'
 import Checkbox from '@/components/ui/Checkbox'
 import { Mail, User, Lock, ShieldCheck, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -42,6 +43,7 @@ export default function Register() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
+  const { t } = useTranslation(['auth', 'common'])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -55,23 +57,23 @@ export default function Register() {
     const newErrors: Record<string, string> = {}
 
     if (!formData.email) {
-      newErrors.email = 'Oops! We need your email 📧'
+      newErrors.email = t('validationEmailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Hmm, that email does not look quite right 🤔'
+      newErrors.email = t('validationEmailInvalid')
     }
 
     if (!formData.password) {
-      newErrors.password = 'Do not forget your password! 🔒'
+      newErrors.password = t('validationPasswordRequired')
     } else if (formData.password.length < 12) {
-      newErrors.password = 'Make it longer — at least 12 characters! 💪'
+      newErrors.password = t('validationPasswordLength')
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Oops! Those passwords do not match 🔄'
+      newErrors.confirmPassword = t('validationPasswordsNoMatch')
     }
 
     if (!agreedToTerms) {
-      newErrors.terms = 'Please agree to the rules first! 📋'
+      newErrors.terms = t('validationTermsRequired')
     }
 
     setErrors(newErrors)
@@ -97,7 +99,7 @@ export default function Register() {
       } catch (err: any) {
         console.error("Error in createUserWithEmailAndPassword:", err)
         if (err.code === 'auth/email-already-in-use') {
-          throw new Error('That email is already taken! Try another one 🤷')
+          throw new Error(t('emailAlreadyTaken'))
         }
         throw err
       }
@@ -126,7 +128,7 @@ export default function Register() {
       navigate('/dashboard')
     } catch (err: any) {
       console.error("Final catch block:", err)
-      let errorMessage = err.message || 'Oops! Something went wrong. Try again! 😅'
+      let errorMessage = err.message || t('genericError')
       setErrors({ email: errorMessage, submit: errorMessage })
     } finally {
       setLoading(false)
@@ -157,10 +159,10 @@ export default function Register() {
            
           </div>
           <h2 className={`font-display text-3xl font-black tracking-tight ${headingColor}`}>
-            Join the Team! 🚀
+            {t('createAccount')}
           </h2>
           <p className={`text-base font-medium ${mutedText}`}>
-            Create your account and start your adventure!
+            {t('createSubtitle')}
           </p>
         </motion.div>
 
@@ -173,14 +175,14 @@ export default function Register() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <Mail size={16} />
-                  Email
+                  {t('email')}
                 </span>
               }
               value={formData.email}
               onChange={handleChange}
               error={errors.email}
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="you@example.com"
+              placeholder={t('emailPlaceholder')}
             />
           </motion.div>
 
@@ -191,14 +193,14 @@ export default function Register() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <User size={16} />
-                  Your Name
+                  {t('yourName')}
                 </span>
               }
               value={formData.displayName}
               onChange={handleChange}
               error={errors.displayName}
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="What should we call you?"
+              placeholder={t('namePlaceholder')}
             />
           </motion.div>
 
@@ -208,7 +210,7 @@ export default function Register() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <Lock size={16} />
-                  Password
+                  {t('password')}
                 </span>
               }
               value={formData.password}
@@ -216,7 +218,7 @@ export default function Register() {
               error={errors.password}
               autoComplete="new-password"
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="Create a super secret password"
+              placeholder={t('createPasswordPlaceholder')}
             />
           </motion.div>
 
@@ -236,7 +238,7 @@ export default function Register() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <ShieldCheck size={16} />
-                  Confirm Password
+                  {t('confirmPassword')}
                 </span>
               }
               value={formData.confirmPassword}
@@ -244,7 +246,7 @@ export default function Register() {
               error={errors.confirmPassword}
               autoComplete="new-password"
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="Type it one more time"
+              placeholder={t('confirmPasswordPlaceholder')}
             />
             {formData.confirmPassword && !passwordsMatch && (
               <motion.p
@@ -255,7 +257,7 @@ export default function Register() {
                 }`}
               >
                 <span>🔄</span>
-                Passwords do not match
+                {t('passwordsDoNotMatch')}
               </motion.p>
             )}
             {formData.confirmPassword && passwordsMatch && formData.password && (
@@ -267,7 +269,7 @@ export default function Register() {
                 }`}
               >
                 <span>✅</span>
-                Passwords match!
+                {t('passwordsMatch')}
               </motion.p>
             )}
           </motion.div>
@@ -276,10 +278,10 @@ export default function Register() {
             <Checkbox
               label={
                 <span className="text-sm font-medium">
-                  I agree to the{' '}
-                  <Link to="/terms" className={`font-bold ${linkColor}`}>Rules</Link>
-                  {' '}and{' '}
-                  <Link to="/privacy" className={`font-bold ${linkColor}`}>Privacy Stuff</Link>
+                  {t('agreeToTerms')}{' '}
+                  <Link to="/terms" className={`font-bold ${linkColor}`}>{t('rules')}</Link>
+                  {' '}{t('common:and')}{' '}
+                  <Link to="/privacy" className={`font-bold ${linkColor}`}>{t('privacyStuff')}</Link>
                 </span>
               }
               checked={agreedToTerms}
@@ -323,11 +325,11 @@ export default function Register() {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                  Creating account...
+                   {t('creatingAccount')}
                 </>
               ) : (
                 <>
-                  Join Now! ✨
+                   {t('joinNow')}
                   <Sparkles size={20} />
                 </>
               )}
@@ -339,7 +341,7 @@ export default function Register() {
         <motion.div variants={itemVariants} className="flex items-center gap-3">
           <div className={`flex-1 h-px ${dividerColor}`} />
           <span className={`text-xs font-black uppercase tracking-wider ${dividerTextColor}`}>
-            or
+            {t('common:or')}
           </span>
           <div className={`flex-1 h-px ${dividerColor}`} />
         </motion.div>
@@ -349,12 +351,12 @@ export default function Register() {
           variants={itemVariants}
           className={`text-center text-sm font-medium ${isDark ? 'text-white/40' : 'text-gray-400'}`}
         >
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className={`font-black ${linkColor}`}
-          >
-            Sign in! 👋
+           {t('alreadyHaveAccount')}{' '}
+           <Link
+             to="/login"
+             className={`font-black ${linkColor}`}
+           >
+             {t('signIn')}
           </Link>
         </motion.p>
       </motion.div>

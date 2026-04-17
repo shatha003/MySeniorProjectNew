@@ -1,0 +1,22 @@
+{
+  "title": "Nova",
+  "subtitle": "Ask me anything about cybersecurity! I'm here to help 🤖✨",
+  "welcomeMessage": "Hey there! 👋 I'm your AI cybersecurity buddy. I know everything about CHEA - from our Link Scanner to the Password Vault, XP system, and all 14 tools! Ask me anything about staying safe online or how to use any feature! 🛡️✨",
+  "cyberExpert": "Cybersecurity & AI Expert",
+  "chats": "Chats",
+  "new": "New",
+  "noChatsYet": "No chats yet!",
+  "startNewChat": "Start a new chat below",
+  "loadingConversation": "Loading conversation...",
+  "thinking": "Thinking...",
+  "placeholder": "Ask Nova anything about cybersecurity...",
+  "clickAgainConfirm": "Click again to confirm",
+  "deleteChat": "Delete chat",
+  "novaChatTitle": "Nova",
+  "novaChatPlaceholder": "Ask me anything...",
+  "novaChatThinking": "Thinking...",
+  "recentConversations": "Recent Conversations",
+  "chatsSaved": "{{count}} Chats Saved",
+  "noChatsYetFull": "No chats yet!",
+  "startFirstConversation": "Start your first conversation above."
+}

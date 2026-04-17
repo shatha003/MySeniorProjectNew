@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['landing', 'common']);
 
   return (
     <div className="bg-surface text-on-surface min-h-screen font-body selection:bg-primary/30 selection:text-primary">
@@ -11,15 +13,15 @@ const LandingPage: React.FC = () => {
         <div className="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto headline tracking-wider uppercase">
           <div className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-600 bg-clip-text text-transparent">CHEA</div>
           <div className="hidden md:flex items-center space-x-8">
-            <a className="text-cyan-400 border-b-2 border-cyan-400 pb-1 hover:text-cyan-300 transition-colors" href="#features">Features</a>
-            <a className="text-slate-400 hover:text-cyan-200 transition-colors" href="#mission">Mission</a>
-            <a className="text-slate-400 hover:text-cyan-200 transition-colors" href="#training">Training</a>
+            <a className="text-cyan-400 border-b-2 border-cyan-400 pb-1 hover:text-cyan-300 transition-colors" href="#features">{t('landing:navFeatures')}</a>
+            <a className="text-slate-400 hover:text-cyan-200 transition-colors" href="#mission">{t('landing:navMission')}</a>
+            <a className="text-slate-400 hover:text-cyan-200 transition-colors" href="#training">{t('landing:navTraining')}</a>
           </div>
           <button 
             onClick={() => navigate('/login')}
             className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2 rounded-xl font-bold active:scale-95 duration-200 ease-out"
           >
-            Connect HUD
+            {t('landing:connectHud')}
           </button>
         </div>
       </nav>
@@ -36,22 +38,22 @@ const LandingPage: React.FC = () => {
           />
         </div>
         <div className="max-w-7xl mx-auto px-8 flex flex-col items-center text-center">
-          <span className="label-md uppercase tracking-[0.2em] text-primary mb-6 headline font-bold">System Online: Guardian Protocol</span>
+          <span className="label-md uppercase tracking-[0.2em] text-primary mb-6 headline font-bold">{t('landing:systemOnline')}</span>
           <h1 className="text-6xl md:text-8xl headline font-extrabold mb-6 leading-tight max-w-4xl">
-            CHEA: Your <span className="glitch-accent">Cyber-Defender</span> Toolkit
+            {t('landing:heroTitleBefore')}<span className="glitch-accent">{t('landing:heroTitleAccent')}</span>{t('landing:heroTitleAfter')}
           </h1>
           <p className="text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-10 font-body">
-            The ultimate digital shield built for the next generation. Master the internet, protect your data, and level up your security skills. Designed for legends aged 9-15.
+            {t('landing:heroDesc')}
           </p>
           <div className="flex flex-col md:flex-row gap-4 items-center">
-            <button 
+            <button
               onClick={() => navigate('/register')}
               className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-4 rounded-xl font-bold text-lg kinetic-button glow-primary"
             >
-              Initialize Protocol
+              {t('landing:initializeProtocol')}
             </button>
             <button className="border border-primary/20 text-primary px-10 py-4 rounded-xl font-bold text-lg kinetic-button hover:bg-primary/5">
-              View Intel
+              {t('landing:viewIntel')}
             </button>
           </div>
         </div>
@@ -69,18 +71,18 @@ const LandingPage: React.FC = () => {
             />
           </div>
           <div>
-            <h2 className="text-4xl headline font-bold mb-8">The Mission: Secure Your World</h2>
+            <h2 className="text-4xl headline font-bold mb-8">{t('landing:missionTitle')}</h2>
             <p className="text-lg text-on-surface-variant leading-relaxed mb-6">
-              The digital world is your playground, but even the best explorers need gear. CHEA turns complex cybersecurity into a tactical game. No boring manuals—just high-tech gadgets and smart training to keep you ahead of hackers and safe from online traps.
+              {t('landing:missionDesc')}
             </p>
             <div className="grid grid-cols-2 gap-6">
               <div className="p-4 rounded-xl bg-surface-container-high border border-outline-variant/10">
                 <span className="material-symbols-outlined text-primary mb-2">verified_user</span>
-                <h4 className="headline font-bold text-sm">Pro Protection</h4>
+                <h4 className="headline font-bold text-sm">{t('landing:proProtection')}</h4>
               </div>
               <div className="p-4 rounded-xl bg-surface-container-high border border-outline-variant/10">
                 <span className="material-symbols-outlined text-secondary mb-2">bolt</span>
-                <h4 className="headline font-bold text-sm">Instant Alerts</h4>
+                <h4 className="headline font-bold text-sm">{t('landing:instantAlerts')}</h4>
               </div>
             </div>
           </div>
@@ -91,8 +93,8 @@ const LandingPage: React.FC = () => {
       <section id="features" className="py-24 max-w-7xl mx-auto px-8">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <h2 className="text-5xl headline font-bold mb-4">The Gadgets</h2>
-            <p className="text-on-surface-variant max-w-md">Equip your digital arsenal with tools built for elite performance.</p>
+            <h2 className="text-5xl headline font-bold mb-4">{t('landing:theGadgets')}</h2>
+            <p className="text-on-surface-variant max-w-md">{t('landing:gadgetsSubtitle')}</p>
           </div>
           <div className="hidden md:block h-px flex-1 mx-12 bg-outline-variant/20"></div>
           <span className="text-tertiary headline font-bold tracking-widest">KIT_V.1.0.4</span>
@@ -104,8 +106,8 @@ const LandingPage: React.FC = () => {
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
               <span className="material-symbols-outlined text-primary text-3xl">policy</span>
             </div>
-            <h3 className="text-xl headline font-bold mb-3">Scan-O-Matic</h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed">Instant deep-scan for links and files. Know if it's safe before you click.</p>
+            <h3 className="text-xl headline font-bold mb-3">{t('landing:gadget1Title')}</h3>
+            <p className="text-sm text-on-surface-variant leading-relaxed">{t('landing:gadget1Desc')}</p>
           </div>
           {/* Gadget 2 */}
           <div className="bg-surface-container-low group hover:bg-surface-container-high transition-all duration-300 p-8 rounded-2xl border border-outline-variant/15 relative overflow-hidden">
@@ -113,8 +115,8 @@ const LandingPage: React.FC = () => {
             <div className="w-14 h-14 bg-secondary/10 rounded-xl flex items-center justify-center mb-6">
               <span className="material-symbols-outlined text-secondary text-3xl">password</span>
             </div>
-            <h3 className="text-xl headline font-bold mb-3">Secret Code Maker</h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed">Forge unhackable passwords that even a supercomputer couldn't crack.</p>
+            <h3 className="text-xl headline font-bold mb-3">{t('landing:gadget2Title')}</h3>
+            <p className="text-sm text-on-surface-variant leading-relaxed">{t('landing:gadget2Desc')}</p>
           </div>
           {/* Gadget 3 */}
           <div className="bg-surface-container-low group hover:bg-surface-container-high transition-all duration-300 p-8 rounded-2xl border border-outline-variant/15 relative overflow-hidden">
@@ -122,8 +124,8 @@ const LandingPage: React.FC = () => {
             <div className="w-14 h-14 bg-tertiary/10 rounded-xl flex items-center justify-center mb-6">
               <span className="material-symbols-outlined text-tertiary text-3xl">encrypted</span>
             </div>
-            <h3 className="text-xl headline font-bold mb-3">Top Secret Chat</h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed">End-to-end encrypted messaging. For your eyes and your team's eyes only.</p>
+            <h3 className="text-xl headline font-bold mb-3">{t('landing:gadget3Title')}</h3>
+            <p className="text-sm text-on-surface-variant leading-relaxed">{t('landing:gadget3Desc')}</p>
           </div>
           {/* Gadget 4 */}
           <div className="bg-surface-container-low group hover:bg-surface-container-high transition-all duration-300 p-8 rounded-2xl border border-outline-variant/15 relative overflow-hidden">
@@ -131,8 +133,8 @@ const LandingPage: React.FC = () => {
             <div className="w-14 h-14 bg-error/10 rounded-xl flex items-center justify-center mb-6">
               <span className="material-symbols-outlined text-error text-3xl">lock</span>
             </div>
-            <h3 className="text-xl headline font-bold mb-3">The Vault</h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed">Ultra-secure credential storage. Locked behind multi-layer bio-auth.</p>
+            <h3 className="text-xl headline font-bold mb-3">{t('landing:gadget4Title')}</h3>
+            <p className="text-sm text-on-surface-variant leading-relaxed">{t('landing:gadget4Desc')}</p>
           </div>
         </div>
       </section>
@@ -141,22 +143,22 @@ const LandingPage: React.FC = () => {
       <section id="training" className="py-24 bg-surface-container-lowest relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-5xl headline font-extrabold mb-4">Training Grounds</h2>
-            <p className="text-on-surface-variant">Don't just use tools. Master the skills.</p>
+            <h2 className="text-5xl headline font-extrabold mb-4">{t('landing:trainingGrounds')}</h2>
+            <p className="text-on-surface-variant">{t('landing:trainingSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             {/* Phishing Dojo */}
             <div className="glass-hud p-10 rounded-[2rem] border border-white/5 relative overflow-hidden group">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                  <h3 className="text-3xl headline font-bold mb-2">Phishing Dojo</h3>
-                  <p className="text-on-surface-variant">Spot the traps, dodge the bait.</p>
+                  <h3 className="text-3xl headline font-bold mb-2">{t('landing:phishingDojoTitle')}</h3>
+                  <p className="text-on-surface-variant">{t('landing:phishingDojoDesc')}</p>
                 </div>
-                <div className="bg-tertiary text-on-tertiary px-4 py-1 rounded-full text-xs font-bold headline">ELITE STATUS</div>
+                <div className="bg-tertiary text-on-tertiary px-4 py-1 rounded-full text-xs font-bold headline">{t('landing:eliteStatus')}</div>
               </div>
               <div className="mb-8">
                 <div className="flex justify-between text-xs font-bold headline text-primary mb-2">
-                  <span>MASTERY XP</span>
+                  <span>{t('landing:masteryXp')}</span>
                   <span>850 / 1000</span>
                 </div>
                 <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
@@ -173,10 +175,10 @@ const LandingPage: React.FC = () => {
             <div className="glass-hud p-10 rounded-[2rem] border border-white/5 relative overflow-hidden group">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                  <h3 className="text-3xl headline font-bold mb-2">Quiz Arena</h3>
-                  <p className="text-on-surface-variant">Duel with friends, climb the ladder.</p>
+                  <h3 className="text-3xl headline font-bold mb-2">{t('landing:quizArenaTitle')}</h3>
+                  <p className="text-on-surface-variant">{t('landing:quizArenaDesc')}</p>
                 </div>
-                <div className="bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold headline">RANK: GUARDIAN</div>
+                <div className="bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold headline">{t('landing:rankGuardian')}</div>
               </div>
               <div className="flex gap-4 mb-8">
                 <div className="w-16 h-16 rounded-xl bg-surface-container-highest flex items-center justify-center border border-primary/20">
@@ -206,16 +208,16 @@ const LandingPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-surface-bright mb-8 ring-4 ring-primary/20">
             <span className="material-symbols-outlined text-primary text-5xl">smart_toy</span>
           </div>
-          <h2 className="text-4xl headline font-bold mb-6">Meet Your AI Sidekick</h2>
+          <h2 className="text-4xl headline font-bold mb-6">{t('landing:aiSidekickTitle')}</h2>
           <p className="text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
-            Never feel alone on your mission. CHEA's built-in AI assistant is ready 24/7 to answer your tech questions, help you analyze suspicious links, and provide tactical advice for staying safe.
+            {t('landing:aiSidekickDesc')}
           </p>
         </div>
       </section>
 
       {/* App Sneak Peek (Bento Grid) */}
       <section className="py-24 max-w-7xl mx-auto px-8">
-        <h2 className="text-4xl headline font-bold mb-12 text-center">System Interface Preview</h2>
+        <h2 className="text-4xl headline font-bold mb-12 text-center">{t('landing:systemPreview')}</h2>
         <div className="grid grid-cols-12 grid-rows-2 gap-4 h-[600px]">
           <div className="col-span-8 row-span-2 rounded-[2rem] bg-surface-container-low overflow-hidden border border-outline-variant/10">
             <img 
@@ -244,20 +246,20 @@ const LandingPage: React.FC = () => {
       {/* Final CTA */}
       <section className="py-32 text-center">
         <div className="max-w-3xl mx-auto px-8">
-          <h2 className="text-5xl md:text-6xl headline font-extrabold mb-8">Start Your Training Today</h2>
-          <p className="text-xl text-on-surface-variant mb-12">Join thousands of young defenders securing the digital frontier. Free to download, easy to master.</p>
+          <h2 className="text-5xl md:text-6xl headline font-extrabold mb-8">{t('landing:startTraining')}</h2>
+          <p className="text-xl text-on-surface-variant mb-12">{t('landing:startTrainingDesc')}</p>
           <a 
             href="https://files.catbox.moe/9tkuow.rar"
             target="_blank"
             rel="noopener noreferrer"
             className="glitch-button-light bg-gradient-to-br from-primary to-primary-container text-on-primary px-12 py-5 rounded-full font-bold text-xl mb-8 inline-block"
           >
-            <span className="glitch-text" data-text="Get CHEA for Windows">Get CHEA for Windows</span>
+            <span className="glitch-text" data-text={t('landing:getWindows')}>{t('landing:getWindows')}</span>
           </a>
           <div className="flex justify-center gap-4 text-on-surface-variant font-label text-sm tracking-widest uppercase">
-            <span>Latest Release: v1.04</span>
+            <span>{t('landing:latestRelease')}</span>
             <span className="text-primary">•</span>
-            <span>Verified Secure</span>
+            <span>{t('landing:verifiedSecure')}</span>
           </div>
         </div>
       </section>
@@ -267,11 +269,11 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="headline font-bold text-cyan-400 text-xl">CHEA Protocol</div>
           <div className="flex gap-8">
-            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="/privacy">Privacy Policy</a>
-            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="/terms">Terms of Service</a>
-            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="#">Security Whitepaper</a>
+            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="/privacy">{t('landing:privacyPolicy')}</a>
+            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="/terms">{t('landing:termsOfService')}</a>
+            <a className="text-slate-500 hover:text-purple-400 transition-colors" href="#">{t('landing:securityWhitepaper')}</a>
           </div>
-          <div className="text-slate-500">© 2024 CHEA Protocol. All Rights Reserved.</div>
+          <div className="text-slate-500">{t('landing:copyright')}</div>
         </div>
       </footer>
     </div>

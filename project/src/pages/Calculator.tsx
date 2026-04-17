@@ -1,10 +1,12 @@
 import { useState, useCallback } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Delete, Divide, X, Minus, Plus, Equal, Percent } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type Operator = '+' | '-' | '*' | '/' | null;
 
 export default function Calculator() {
+    const { t } = useTranslation('calculator');
     const [display, setDisplay] = useState('0');
     const [previousValue, setPreviousValue] = useState<number | null>(null);
     const [operator, setOperator] = useState<Operator>(null);
@@ -137,9 +139,9 @@ export default function Calculator() {
     return (
         <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-md mx-auto">
             <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Calculator</h1>
+                <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
                 <p className="text-muted-foreground">
-                    Perform quick calculations with a clean interface.
+                    {t('subtitle')}
                 </p>
             </div>
 
@@ -208,7 +210,7 @@ export default function Calculator() {
 
             {/* Keyboard shortcuts hint */}
             <div className="text-center text-xs text-muted-foreground">
-                Tip: Use your keyboard for quick input
+                {t('keyboardTip')}
             </div>
         </div>
     );

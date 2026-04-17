@@ -9,6 +9,7 @@ import Input from '@/components/ui/Input'
 import PasswordInput from '@/components/ui/PasswordInput'
 import Checkbox from '@/components/ui/Checkbox'
 import { Mail, Lock, KeyRound } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,6 +38,7 @@ export default function Login() {
   const navigate = useNavigate()
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
+  const { t } = useTranslation(['auth', 'common'])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,7 +52,7 @@ export default function Login() {
       navigate('/dashboard')
     } catch (err: any) {
       console.error(err)
-      setError('Hmm, that does not look right. Try again! 🤔')
+      setError(t('signInError'))
     } finally {
       setLoading(false)
     }
@@ -78,10 +80,10 @@ export default function Login() {
            
           </div>
           <h2 className={`font-display text-3xl font-black tracking-tight ${headingColor}`}>
-            Welcome Back! 👋
+            {t('welcomeBack')}
           </h2>
           <p className={`text-base font-medium ${mutedText}`}>
-            Sign in to your account and let's go on an adventure!
+            {t('signInSubtitle')}
           </p>
         </motion.div>
 
@@ -93,14 +95,14 @@ export default function Login() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <Mail size={16} />
-                  Email
+                  {t('email')}
                 </span>
               }
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="you@example.com"
+              placeholder={t('emailPlaceholder')}
             />
           </motion.div>
 
@@ -109,14 +111,14 @@ export default function Login() {
               label={
                 <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
                   <Lock size={16} />
-                  Password
+                  {t('password')}
                 </span>
               }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-              placeholder="Enter your secret password"
+              placeholder={t('passwordPlaceholder')}
             />
           </motion.div>
 
@@ -124,7 +126,7 @@ export default function Login() {
             <Checkbox
               label={
                 <span className={`text-sm font-medium ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
-                  Remember me ✨
+                   {t('rememberMe')}
                 </span>
               }
               checked={rememberMe}
@@ -135,7 +137,7 @@ export default function Login() {
               className={`text-sm font-bold flex items-center gap-1 ${linkColor}`}
             >
               <KeyRound size={14} />
-              Forgot password?
+               {t('forgotPassword')}
             </Link>
           </motion.div>
 
@@ -169,11 +171,11 @@ export default function Login() {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                  Signing in...
+                   {t('signingIn')}
                 </>
               ) : (
                 <>
-                  Let's Go! 🚀
+                   {t('letsGo')}
                   
                 </>
               )}
@@ -185,7 +187,7 @@ export default function Login() {
         <motion.div variants={itemVariants} className="flex items-center gap-3">
           <div className={`flex-1 h-px ${dividerColor}`} />
           <span className={`text-xs font-black uppercase tracking-wider ${dividerTextColor}`}>
-            or
+            {t('common:or')}
           </span>
           <div className={`flex-1 h-px ${dividerColor}`} />
         </motion.div>
@@ -195,12 +197,12 @@ export default function Login() {
           variants={itemVariants}
           className={`text-center text-sm font-medium ${isDark ? 'text-white/40' : 'text-gray-400'}`}
         >
-          Don't have an account?{' '}
-          <Link
-            to="/register"
-            className={`font-black ${linkColor}`}
-          >
-            Join the team! ✨
+           {t('noAccount')}{' '}
+           <Link
+             to="/register"
+             className={`font-black ${linkColor}`}
+           >
+             {t('joinTeam')}
           </Link>
         </motion.p>
       </motion.div>

@@ -1,4 +1,5 @@
 import { forwardRef, useState, useId } from 'react'
+import { useTranslation } from 'react-i18next'
 import Input from './Input'
 
 interface PasswordInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -11,6 +12,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ label, error, showRequirements = false, className = '', ...props }, ref) => {
     const id = useId()
     const [showPassword, setShowPassword] = useState(false)
+    const { t } = useTranslation('components')
 
     return (
       <Input
@@ -25,7 +27,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-0.5"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? t('components:passwordInput.hidePassword') : t('components:passwordInput.showPassword')}
           >
             {showPassword ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

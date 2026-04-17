@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Copy, Check, Star, RefreshCw, KeyRound } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -28,15 +29,16 @@ const SYMBOLS = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
 const SIMILAR_CHARS = /[ilLI|`oO01]/g;
 
 const presets = [
-    { label: 'Easy', length: 8, emoji: '🔑', desc: 'Simple accounts' },
-    { label: 'Good', length: 12, emoji: '🔐', desc: 'Most websites' },
-    { label: 'Strong', length: 16, emoji: '🛡️', desc: 'Email & games' },
-    { label: 'Super', length: 24, emoji: '🚀', desc: 'Super important!' },
+    { label: 'Easy', length: 8, emoji: '🔑', descKey: 'presetEasy' },
+    { label: 'Good', length: 12, emoji: '🔐', descKey: 'presetGood' },
+    { label: 'Strong', length: 16, emoji: '🛡️', descKey: 'presetStrong' },
+    { label: 'Super', length: 24, emoji: '🚀', descKey: 'presetSuper' },
 ];
 
 export default function PasswordGenerator() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['passwordGenerator', 'common']);
 
     const [password, setPassword] = useState('');
     const [length, setLength] = useState(16);
@@ -101,12 +103,12 @@ export default function PasswordGenerator() {
     const entropy = calculateEntropy(length, poolSize);
 
     const strength = entropy >= 80
-        ? { label: 'Super Strong!', color: 'text-indigo-500', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20', emoji: '🚀', width: '100%', gradient: 'from-indigo-400 to-purple-600' }
+        ? { label: t('passwordGenerator:superStrong'), color: 'text-indigo-500', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20', emoji: '🚀', width: '100%', gradient: 'from-indigo-400 to-purple-600' }
         : entropy >= 60
-            ? { label: 'Really Strong!', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', emoji: '💪', width: '75%', gradient: 'from-emerald-400 to-teal-500' }
+            ? { label: t('passwordGenerator:reallyStrong'), color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', emoji: '💪', width: '75%', gradient: 'from-emerald-400 to-teal-500' }
             : entropy >= 40
-                ? { label: 'Pretty Good', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', emoji: '🙂', width: '50%', gradient: 'from-amber-400 to-yellow-500' }
-                : { label: 'Too Weak!', color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', emoji: '😟', width: '25%', gradient: 'from-red-500 to-orange-600' };
+                ? { label: t('passwordGenerator:prettyGood'), color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', emoji: '🙂', width: '50%', gradient: 'from-amber-400 to-yellow-500' }
+                : { label: t('passwordGenerator:tooWeak'), color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', emoji: '😟', width: '25%', gradient: 'from-red-500 to-orange-600' };
 
     const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900';
     const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500';
@@ -139,11 +141,11 @@ export default function PasswordGenerator() {
                                         <KeyRound size={28} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-4xl font-black tracking-tight ${headingColor}`}>
-                                        Password Maker
+                                        {t('passwordGenerator:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg font-medium ${mutedText}`}>
-                                    Create super strong passwords that keep the bad guys out! 🛡️
+                                    {t('passwordGenerator:subtitle')}
                                 </p>
                             </div>
 
@@ -151,7 +153,7 @@ export default function PasswordGenerator() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+10 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Use</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perUse')}</span>
                                 </div>
                             </div>
                         </div>
@@ -198,7 +200,7 @@ export default function PasswordGenerator() {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     {copied ? <Check size={22} /> : <Copy size={22} />}
-                                    {copied ? 'Copied!' : 'Copy It!'}
+                                    {copied ? t('common:copied') : t('passwordGenerator:copyIt')}
                                 </motion.button>
 
                                 <motion.button
@@ -208,7 +210,7 @@ export default function PasswordGenerator() {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     <RefreshCw size={20} />
-                                    New One
+                                    {t('passwordGenerator:newOne')}
                                 </motion.button>
                             </div>
                         </div>
@@ -218,7 +220,7 @@ export default function PasswordGenerator() {
                 {/* Length Presets */}
                 <motion.div variants={itemVariants}>
                     <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-8 shadow-lg`}>
-                        <h3 className={`text-lg font-black mb-4 ${headingColor}`}>How Long?</h3>
+                        <h3 className={`text-lg font-black mb-4 ${headingColor}`}>{t('passwordGenerator:howLong')}</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             {presets.map((preset) => (
                                 <motion.button
@@ -235,7 +237,7 @@ export default function PasswordGenerator() {
                                     <p className={`text-lg font-black mt-1 ${length === preset.length ? 'text-primary' : headingColor}`}>
                                         {preset.length}
                                     </p>
-                                    <p className={`text-[10px] font-bold ${mutedText}`}>{preset.desc}</p>
+                                    <p className={`text-[10px] font-bold ${mutedText}`}>{t('passwordGenerator:' + preset.descKey)}</p>
                                 </motion.button>
                             ))}
                         </div>
@@ -243,7 +245,7 @@ export default function PasswordGenerator() {
                         {/* Custom Length Slider */}
                         <div className="mt-6 space-y-3">
                             <div className="flex justify-between items-center">
-                                <span className={`text-sm font-bold ${mutedText}`}>Or pick your own:</span>
+                                <span className={`text-sm font-bold ${mutedText}`}>{t('passwordGenerator:orPickOwn')}</span>
                                 <span className={`text-2xl font-black ${headingColor}`}>{length}</span>
                             </div>
                             <input
@@ -264,7 +266,7 @@ export default function PasswordGenerator() {
                 {/* Character Options */}
                 <motion.div variants={itemVariants}>
                     <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-6 md:p-8 shadow-lg`}>
-                        <h3 className={`text-lg font-black mb-4 ${headingColor}`}>What's Inside?</h3>
+                        <h3 className={`text-lg font-black mb-4 ${headingColor}`}>{t('passwordGenerator:whatsInside')}</h3>
                         <div className="grid grid-cols-2 gap-3">
                             <label className={`group flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${useUppercase ? 'border-primary/40 bg-primary/5' : `${isDark ? 'border-white/10' : 'border-gray-200'} hover:border-primary/30`}`}>
                                 <div className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-colors shrink-0 ${useUppercase ? 'bg-primary border-primary text-primary-foreground' : `${isDark ? 'border-white/20' : 'border-gray-300'}`}`}>
@@ -273,7 +275,7 @@ export default function PasswordGenerator() {
                                 <input type="checkbox" checked={useUppercase} onChange={() => setUseUppercase(!useUppercase)} className="hidden" />
                                 <div>
                                     <p className={`text-sm font-black ${headingColor}`}>ABC</p>
-                                    <p className={`text-[10px] font-bold ${mutedText}`}>Uppercase</p>
+                                    <p className={`text-[10px] font-bold ${mutedText}`}>{t('passwordGenerator:uppercase')}</p>
                                 </div>
                             </label>
 
@@ -284,7 +286,7 @@ export default function PasswordGenerator() {
                                 <input type="checkbox" checked={useLowercase} onChange={() => setUseLowercase(!useLowercase)} className="hidden" />
                                 <div>
                                     <p className={`text-sm font-black ${headingColor}`}>abc</p>
-                                    <p className={`text-[10px] font-bold ${mutedText}`}>Lowercase</p>
+                                    <p className={`text-[10px] font-bold ${mutedText}`}>{t('passwordGenerator:lowercase')}</p>
                                 </div>
                             </label>
 
@@ -295,7 +297,7 @@ export default function PasswordGenerator() {
                                 <input type="checkbox" checked={useNumbers} onChange={() => setUseNumbers(!useNumbers)} className="hidden" />
                                 <div>
                                     <p className={`text-sm font-black ${headingColor}`}>123</p>
-                                    <p className={`text-[10px] font-bold ${mutedText}`}>Numbers</p>
+                                    <p className={`text-[10px] font-bold ${mutedText}`}>{t('passwordGenerator:numbers')}</p>
                                 </div>
                             </label>
 
@@ -306,7 +308,7 @@ export default function PasswordGenerator() {
                                 <input type="checkbox" checked={useSymbols} onChange={() => setUseSymbols(!useSymbols)} className="hidden" />
                                 <div>
                                     <p className={`text-sm font-black ${headingColor}`}>!@#</p>
-                                    <p className={`text-[10px] font-bold ${mutedText}`}>Symbols</p>
+                                    <p className={`text-[10px] font-bold ${mutedText}`}>{t('passwordGenerator:symbols')}</p>
                                 </div>
                             </label>
                         </div>
@@ -316,9 +318,9 @@ export default function PasswordGenerator() {
                                 {excludeSimilar && <Check className="w-3 h-3" />}
                             </div>
                             <input type="checkbox" checked={excludeSimilar} onChange={() => setExcludeSimilar(!excludeSimilar)} className="hidden" />
-                            <span className={`text-sm font-bold ${excludeSimilar ? 'text-purple-500' : mutedText}`}>
-                                No confusing letters (1, l, 0, O)
-                            </span>
+                                <span className={`text-sm font-bold ${excludeSimilar ? 'text-purple-500' : mutedText}`}>
+                                    {t('passwordGenerator:noConfusingLetters')}
+                                </span>
                         </label>
                     </div>
                 </motion.div>
@@ -328,16 +330,16 @@ export default function PasswordGenerator() {
                     <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
                         <div className={`p-6 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center gap-3 bg-primary/5`}>
                             <span className="text-2xl">💡</span>
-                            <h2 className={`font-display text-xl font-black ${headingColor}`}>Password Tips</h2>
+                            <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('passwordGenerator:passwordTips')}</h2>
                         </div>
 
                         <div className="p-6 md:p-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {[
-                                    { emoji: '📏', title: 'Longer = Stronger', text: 'A 16-character password is WAY harder to crack than an 8-character one!' },
-                                    { emoji: '🎲', title: 'Mix It Up', text: 'Use letters, numbers, AND symbols for the strongest passwords.' },
-                                    { emoji: '🚫', title: 'Never Reuse', text: 'Use a different password for every account. That way if one gets stolen, the others are safe!' },
-                                    { emoji: '🤫', title: 'Keep It Secret', text: 'Never share your passwords with friends. Not even your best friend!' },
+                                    { emoji: '📏', title: t('passwordGenerator:tipLongerTitle'), text: t('passwordGenerator:tipLongerText') },
+                                    { emoji: '🎲', title: t('passwordGenerator:tipMixTitle'), text: t('passwordGenerator:tipMixText') },
+                                    { emoji: '🚫', title: t('passwordGenerator:tipReuseTitle'), text: t('passwordGenerator:tipReuseText') },
+                                    { emoji: '🤫', title: t('passwordGenerator:tipSecretTitle'), text: t('passwordGenerator:tipSecretText') },
                                 ].map((tip, i) => (
                                     <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-muted/30">
                                         <span className="text-2xl shrink-0">{tip.emoji}</span>

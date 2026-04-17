@@ -7,6 +7,7 @@ import { useTheme } from '@/components/theme-provider'
 import AuthLayout from '@/components/auth/AuthLayout'
 import Input from '@/components/ui/Input'
 import { Mail, ArrowLeft, CheckCircle, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,6 +33,7 @@ export default function ForgotPassword() {
   const [sent, setSent] = useState(false)
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
+  const { t } = useTranslation(['auth', 'common'])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,13 +46,13 @@ export default function ForgotPassword() {
     } catch (err: any) {
       console.error(err)
       if (err.code === 'auth/user-not-found') {
-        setError('No account found with that email 🤷')
+        setError(t('errorUserNotFound'))
       } else if (err.code === 'auth/invalid-email') {
-        setError('Hmm, that does not look like a valid email 🤔')
+        setError(t('errorInvalidEmail'))
       } else if (err.code === 'auth/too-many-requests') {
-        setError('Whoa, too many tries! Take a break and try again later ⏳')
+        setError(t('errorTooManyRequests'))
       } else {
-        setError('Oops! Something went wrong. Try again! 😅')
+        setError(t('genericError'))
       }
     } finally {
       setLoading(false)
@@ -92,12 +94,10 @@ export default function ForgotPassword() {
                 <CheckCircle size={40} className={isDark ? 'text-emerald-400' : 'text-emerald-600'} />
               </motion.div>
               <h2 className={`font-display text-3xl font-black tracking-tight text-center ${headingColor}`}>
-                Check Your Inbox! 📬
+                {t('checkInbox')}
               </h2>
               <p className={`text-base font-medium text-center leading-relaxed ${mutedText}`}>
-                We sent a password reset link to{' '}
-                <span className={`font-bold ${isDark ? 'text-white/80' : 'text-gray-800'}`}>{email}</span>.
-                Follow the instructions to get back in!
+                {t('resetSentTo', { email: <span key="email" className={`font-bold ${isDark ? 'text-white/80' : 'text-gray-800'}`}>{email}</span> })}
               </p>
             </div>
 
@@ -112,7 +112,7 @@ export default function ForgotPassword() {
                 className={`inline-flex items-center gap-2 text-sm font-bold ${linkColor}`}
               >
                 <ArrowLeft size={16} />
-                Back to login
+                {t('backToLogin')}
               </Link>
             </motion.div>
           </motion.div>
@@ -128,10 +128,10 @@ export default function ForgotPassword() {
             <motion.div variants={itemVariants} className="space-y-4">
               
               <h2 className={`font-display text-3xl font-black tracking-tight ${headingColor}`}>
-                Forgot Password? 🔑
+                {t('forgotTitle')}
               </h2>
               <p className={`text-base font-medium ${mutedText}`}>
-                No worries! Enter your email and we'll help you get back in.
+                {t('forgotSubtitle')}
               </p>
             </motion.div>
 
@@ -142,15 +142,15 @@ export default function ForgotPassword() {
                   type="email"
                   label={
                     <span className={`flex items-center gap-2 text-sm font-bold ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
-                      <Mail size={16} />
-                      Email
+                       <Mail size={16} />
+                      {t('email')}
                     </span>
                   }
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="rounded-xl py-4 text-base font-medium placeholder:font-medium"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                 />
               </motion.div>
 
@@ -184,11 +184,11 @@ export default function ForgotPassword() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                      Sending...
+                       {t('sending')}
                     </>
                   ) : (
                     <>
-                      Send Reset Link! 
+                       {t('sendResetLink')}
                       <Sparkles size={20} />
                     </>
                   )}
@@ -200,7 +200,7 @@ export default function ForgotPassword() {
             <motion.div variants={itemVariants} className="flex items-center gap-3">
               <div className={`flex-1 h-px ${dividerColor}`} />
               <span className={`text-xs font-black uppercase tracking-wider ${dividerTextColor}`}>
-                or
+                {t('common:or')}
               </span>
               <div className={`flex-1 h-px ${dividerColor}`} />
             </motion.div>
@@ -210,12 +210,12 @@ export default function ForgotPassword() {
               variants={itemVariants}
               className={`text-center text-sm font-medium ${isDark ? 'text-white/40' : 'text-gray-400'}`}
             >
-              Remember your password?{' '}
+              {t('rememberPassword')}{' '}
               <Link
                 to="/login"
                 className={`font-black ${linkColor}`}
               >
-                Sign in! 👋
+                {t('signIn')}
               </Link>
             </motion.p>
           </motion.div>

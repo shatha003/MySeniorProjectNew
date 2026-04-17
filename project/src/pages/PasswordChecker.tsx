@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -42,23 +43,24 @@ const itemVariants = {
     },
 };
 
-const formatTimeToCrack = (entropy: number) => {
+const formatTimeToCrack = (entropy: number, t: any) => {
     const guessesPerSecond = 1e10;
     const totalCombinations = Math.pow(2, Math.min(entropy, 1024));
     const seconds = totalCombinations / guessesPerSecond;
 
-    if (seconds < 1) return { value: "Instant", unit: "No time at all", color: "text-red-500", bg: 'bg-red-500/10', border: 'border-red-500/20', icon: <Zap size={22} className="animate-pulse" /> };
-    if (seconds < 60) return { value: `${Math.max(1, Math.round(seconds))}s`, unit: "Quick break", color: "text-orange-500", bg: 'bg-orange-500/10', border: 'border-orange-500/20', icon: <Hourglass size={22} /> };
-    if (seconds < 3600) return { value: `${Math.max(1, Math.round(seconds / 60))}m`, unit: "Snack break", color: "text-amber-500", bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: <Hourglass size={22} /> };
-    if (seconds < 86400) return { value: `${Math.max(1, Math.round(seconds / 3600))}h`, unit: "Gaming day", color: "text-yellow-500", bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', icon: <Clock size={22} /> };
-    if (seconds < 31536000) return { value: `${Math.max(1, Math.round(seconds / 86400))}d`, unit: "School week", color: "text-emerald-500", bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: <Clock size={22} /> };
-    if (seconds < 3153600000) return { value: "Years", unit: "A lifetime", color: "text-emerald-500", bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: <Calendar size={22} /> };
-    if (seconds < 315360000000) return { value: "Centuries", unit: "Super hacker proof", color: "text-purple-500", bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: <Calendar size={22} /> };
+    if (seconds < 1) return { value: t('passwordChecker:crackInstant'), unit: t('passwordChecker:crackInstantUnit'), color: "text-red-500", bg: 'bg-red-500/10', border: 'border-red-500/20', icon: <Zap size={22} className="animate-pulse" /> };
+    if (seconds < 60) return { value: `${Math.max(1, Math.round(seconds))}s`, unit: t('passwordChecker:crackQuickBreak'), color: "text-orange-500", bg: 'bg-orange-500/10', border: 'border-orange-500/20', icon: <Hourglass size={22} /> };
+    if (seconds < 3600) return { value: `${Math.max(1, Math.round(seconds / 60))}m`, unit: t('passwordChecker:crackSnackBreak'), color: "text-amber-500", bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: <Hourglass size={22} /> };
+    if (seconds < 86400) return { value: `${Math.max(1, Math.round(seconds / 3600))}h`, unit: t('passwordChecker:crackGamingDay'), color: "text-yellow-500", bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', icon: <Clock size={22} /> };
+    if (seconds < 31536000) return { value: `${Math.max(1, Math.round(seconds / 86400))}d`, unit: t('passwordChecker:crackSchoolWeek'), color: "text-emerald-500", bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: <Clock size={22} /> };
+    if (seconds < 3153600000) return { value: t('passwordChecker:crackYears'), unit: t('passwordChecker:crackLifetime'), color: "text-emerald-500", bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: <Calendar size={22} /> };
+    if (seconds < 315360000000) return { value: t('passwordChecker:crackCenturies'), unit: t('passwordChecker:crackSuperHacker'), color: "text-purple-500", bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: <Calendar size={22} /> };
 
-    return { value: "Forever!", unit: "Galaxy guarded", color: "text-indigo-500", bg: 'bg-indigo-500/10', border: 'border-indigo-500/20', icon: <InfinityIcon size={22} className="animate-bounce" /> };
+    return { value: t('passwordChecker:crackForever'), unit: t('passwordChecker:crackGalaxyGuarded'), color: "text-indigo-500", bg: 'bg-indigo-500/10', border: 'border-indigo-500/20', icon: <InfinityIcon size={22} className="animate-bounce" /> };
 };
 
 export default function PasswordChecker() {
+    const { t } = useTranslation(['passwordChecker', 'common']);
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
 
@@ -84,7 +86,7 @@ export default function PasswordChecker() {
     if (checks.special) poolSize += 32;
 
     const entropy = password.length > 0 && poolSize > 0 ? password.length * Math.log2(poolSize) : 0;
-    const timeToCrack = formatTimeToCrack(entropy);
+    const timeToCrack = formatTimeToCrack(entropy, t);
 
     useEffect(() => {
         if (!password) {
@@ -102,24 +104,24 @@ export default function PasswordChecker() {
         if (password.length >= 16) currentScore += 1;
 
         if (checks.uppercase) currentScore += 1;
-        else currentFeedback.push('Add uppercase letters (A-Z)');
+        else currentFeedback.push(t('passwordChecker:feedbackAddUppercase'));
 
         if (checks.lowercase) currentScore += 1;
-        else currentFeedback.push('Add lowercase letters (a-z)');
+        else currentFeedback.push(t('passwordChecker:feedbackAddLowercase'));
 
         if (checks.number) currentScore += 1;
-        else currentFeedback.push('Add numbers (0-9)');
+        else currentFeedback.push(t('passwordChecker:feedbackAddNumbers'));
 
         if (checks.special) currentScore += 2;
-        else currentFeedback.push('Add special characters (!@#$%^&*)');
+        else currentFeedback.push(t('passwordChecker:feedbackAddSpecial'));
 
         if (password.length < 12 && password.length > 0) {
-            currentFeedback.push('Make it longer (at least 12 characters recommended)');
+            currentFeedback.push(t('passwordChecker:feedbackMakeLonger'));
         }
 
         if (/^[a-zA-Z]+$/.test(password) || /^[0-9]+$/.test(password)) {
             currentScore = Math.min(currentScore, 2);
-            currentFeedback.push('Mix letters, numbers, and symbols');
+            currentFeedback.push(t('passwordChecker:feedbackMixCharacters'));
         }
 
         setScore(currentScore);
@@ -130,7 +132,7 @@ export default function PasswordChecker() {
         }
 
         if (currentFeedback.length === 0) {
-            currentFeedback.push('Your password is very strong!');
+            currentFeedback.push(t('passwordChecker:feedbackVeryStrong'));
         }
 
         setFeedback(currentFeedback);
@@ -153,7 +155,7 @@ export default function PasswordChecker() {
             bg: isDark ? 'bg-red-500/10' : 'bg-red-50',
             border: 'border-red-500/20',
             text: 'text-red-500',
-            label: 'WEAK PASSWORD!',
+            label: t('passwordChecker:strengthWeak'),
             icon: ShieldAlert,
             width: '25%',
         },
@@ -163,7 +165,7 @@ export default function PasswordChecker() {
             bg: isDark ? 'bg-amber-500/10' : 'bg-amber-50',
             border: 'border-amber-500/20',
             text: 'text-amber-500',
-            label: 'FAIR PASSWORD!',
+            label: t('passwordChecker:strengthFair'),
             icon: ShieldHalf,
             width: '50%',
         },
@@ -173,7 +175,7 @@ export default function PasswordChecker() {
             bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
             border: 'border-emerald-500/20',
             text: 'text-emerald-500',
-            label: 'GOOD PASSWORD!',
+            label: t('passwordChecker:strengthGood'),
             icon: ShieldCheck,
             width: '75%',
         },
@@ -183,7 +185,7 @@ export default function PasswordChecker() {
             bg: isDark ? 'bg-indigo-500/10' : 'bg-indigo-50',
             border: 'border-indigo-500/20',
             text: 'text-indigo-500',
-            label: 'EXCELLENT!',
+            label: t('passwordChecker:strengthExcellent'),
             icon: ShieldCheck,
             width: '100%',
         },
@@ -227,11 +229,11 @@ export default function PasswordChecker() {
                                         <KeyRound size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Test Password
+                                        {t('passwordChecker:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Test your password strength and see how long it takes to crack! 🕵️‍♂️
+                                    {t('passwordChecker:subtitle')}
                                 </p>
                             </div>
                             
@@ -239,7 +241,7 @@ export default function PasswordChecker() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+10 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Check</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perCheck')}</span>
                                 </div>
                             </div>
                         </div>
@@ -257,7 +259,7 @@ export default function PasswordChecker() {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Type your password to test..."
+                                placeholder={t('passwordChecker:placeholder')}
                                 className={`block w-full pl-14 pr-14 py-5 rounded-2xl border-2 bg-transparent ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} text-lg font-bold font-mono focus:outline-none transition-all ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                             />
                             <button
@@ -271,7 +273,7 @@ export default function PasswordChecker() {
 
                         {password && (
                             <div className="mt-6 flex justify-between items-center text-sm font-bold uppercase tracking-wider">
-                                <span className={mutedText}>Analyzing strength...</span>
+                                <span className={mutedText}>{t('passwordChecker:analyzingStrength')}</span>
                                 <span className={strengthConfig_current.text}>{strengthConfig_current.label}</span>
                             </div>
                         )}
@@ -301,7 +303,7 @@ export default function PasswordChecker() {
                                         </div>
                                         <div className="text-center md:text-left space-y-2">
                                             <div className={`text-xs font-black uppercase tracking-[0.2em] ${strengthConfig_current.text}`}>
-                                                Strength Verdict
+                                                {t('passwordChecker:strengthVerdict')}
                                             </div>
                                             <h2 className={`text-4xl md:text-5xl font-black font-display ${headingColor}`}>
                                                 {strengthConfig_current.label}
@@ -315,9 +317,9 @@ export default function PasswordChecker() {
                                     {/* Big Score Stats */}
                                     <div className="grid grid-cols-3 gap-6 w-full lg:w-auto">
                                         {[
-                                            { label: 'Score', value: `${score}/8`, color: strengthConfig_current.text },
-                                            { label: 'Entropy', value: `${entropy.toFixed(0)}`, color: 'text-blue-500' },
-                                            { label: 'Crack Time', value: timeToCrack.value, color: timeToCrack.color }
+                                            { label: t('passwordChecker:score'), value: `${score}/8`, color: strengthConfig_current.text },
+                                            { label: t('passwordChecker:entropy'), value: `${entropy.toFixed(0)}`, color: 'text-blue-500' },
+                                            { label: t('passwordChecker:crackTime'), value: timeToCrack.value, color: timeToCrack.color }
                                         ].map((stat, i) => (
                                             <div key={i} className={`flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-current/5`}>
                                                 <span className={`text-2xl md:text-3xl font-black font-display ${stat.color}`}>{stat.value}</span>
@@ -330,7 +332,7 @@ export default function PasswordChecker() {
                                 {/* Strength Bar */}
                                 <div className="mt-8">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className={`text-xs font-black uppercase tracking-wider ${mutedText}`}>Password Strength</span>
+                                        <span className={`text-xs font-black uppercase tracking-wider ${mutedText}`}>{t('passwordChecker:passwordStrength')}</span>
                                         <span className={`text-xs font-black uppercase tracking-wider ${strengthConfig_current.text}`}>{strengthConfig_current.label}</span>
                                     </div>
                                     <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -355,22 +357,22 @@ export default function PasswordChecker() {
                                         <div className={`p-3 rounded-2xl ${timeToCrack.bg} ${timeToCrack.color}`}>
                                             {timeToCrack.icon}
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Time to Crack</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('passwordChecker:timeToCrack')}</h3>
                                     </div>
                                     
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end">
-                                            <span className={`text-sm font-bold ${mutedText}`}>Estimated time</span>
+                                            <span className={`text-sm font-bold ${mutedText}`}>{t('passwordChecker:estimatedTime')}</span>
                                             <span className={`text-4xl font-black ${timeToCrack.color}`}>{timeToCrack.value}</span>
                                         </div>
                                         <p className={`text-lg font-bold leading-relaxed ${headingColor}`}>
-                                            {entropy >= 80 ? 'Wow! This password would take forever to crack. Super hacker proof! 🌟' :
-                                             entropy >= 60 ? 'Looking great! It would take years to break this one. 👍' :
-                                             entropy >= 40 ? 'Not bad, but adding more length or symbols would make it stronger! 🤔' :
-                                             'Uh oh... This password could be cracked quickly. Add more characters! 🛑'}
+                                            {entropy >= 80 ? t('passwordChecker:entropyExcellent') :
+                                             entropy >= 60 ? t('passwordChecker:entropyGood') :
+                                             entropy >= 40 ? t('passwordChecker:entropyFair') :
+                                             t('passwordChecker:entropyWeak')}
                                         </p>
                                         <div className={`text-sm ${mutedText} font-medium`}>
-                                            Based on 10 billion guesses per second.
+                                            {t('passwordChecker:basedOnGuesses')}
                                         </div>
                                     </div>
                                 </motion.div>
@@ -384,16 +386,16 @@ export default function PasswordChecker() {
                                         <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500">
                                             <BarChart3 size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Security Checks</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('passwordChecker:securityChecks')}</h3>
                                     </div>
                                     
                                     <div className="space-y-3">
                                         {[
-                                            { label: '12+ Characters', pass: checks.length },
-                                            { label: 'Uppercase (A-Z)', pass: checks.uppercase },
-                                            { label: 'Lowercase (a-z)', pass: checks.lowercase },
-                                            { label: 'Numbers (0-9)', pass: checks.number },
-                                            { label: 'Special (!@#$)', pass: checks.special },
+                                            { label: t('passwordChecker:check12Chars'), pass: checks.length },
+                                            { label: t('passwordChecker:checkUppercase'), pass: checks.uppercase },
+                                            { label: t('passwordChecker:checkLowercase'), pass: checks.lowercase },
+                                            { label: t('passwordChecker:checkNumbers'), pass: checks.number },
+                                            { label: t('passwordChecker:checkSpecial'), pass: checks.special },
                                         ].map((check, i) => (
                                             <div key={i} className={`flex items-center justify-between p-3 rounded-xl ${check.pass ? (isDark ? 'bg-emerald-500/5' : 'bg-emerald-50') : (isDark ? 'bg-white/5' : 'bg-gray-50')}`}>
                                                 <span className={`text-sm font-bold ${check.pass ? (isDark ? 'text-emerald-400' : 'text-emerald-600') : mutedText}`}>{check.label}</span>
@@ -418,7 +420,7 @@ export default function PasswordChecker() {
                                         <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500">
                                             <AlertTriangle size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Recommendations</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('passwordChecker:recommendations')}</h3>
                                     </div>
 
                                     <div className="space-y-3">
@@ -442,9 +444,9 @@ export default function PasswordChecker() {
                                         <CheckCircle size={32} />
                                     </div>
                                     <div>
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>Excellent!</h3>
+                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('passwordChecker:excellentMsg')}</h3>
                                         <p className={`text-lg font-medium ${mutedText} mt-1`}>
-                                            Your password meets all best practices for security and complexity. It would take a supercomputer millions of years to crack this.
+                                            {t('passwordChecker:excellentDescription')}
                                         </p>
                                     </div>
                                 </motion.div>
@@ -460,9 +462,9 @@ export default function PasswordChecker() {
                                         <ShieldAlert size={32} />
                                     </div>
                                     <div>
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>Vulnerability Warning</h3>
+                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('passwordChecker:vulnerabilityWarning')}</h3>
                                         <p className={`text-sm font-medium ${mutedText} mt-1`}>
-                                            Passwords with a "Weak" or "Fair" rating are highly susceptible to dictionary attacks and brute-forcing. Consider using the Password Generator to create a secure alternative.
+                                            {t('passwordChecker:vulnerabilityDescription')}
                                         </p>
                                     </div>
                                 </motion.div>
@@ -477,9 +479,9 @@ export default function PasswordChecker() {
                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
                                     <div className="flex items-center gap-3">
                                         <Shield className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Ready to Test</h2>
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('passwordChecker:readyToTest')}</h2>
                                     </div>
-                                    <span className={`text-sm font-bold ${mutedText}`}>Type above to begin</span>
+                                    <span className={`text-sm font-bold ${mutedText}`}>{t('passwordChecker:typeToBegin')}</span>
                                 </div>
 
                                 <div className="p-10">
@@ -487,9 +489,9 @@ export default function PasswordChecker() {
                                         <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center mx-auto">
                                             <Search className={`text-primary/20`} size={48} />
                                         </div>
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>Start typing a password</h3>
+                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('passwordChecker:startTyping')}</h3>
                                         <p className={`text-lg ${mutedText} max-w-md mx-auto`}>
-                                            We'll instantly analyze its strength, estimate crack time, and give you tips to make it stronger. Your password never leaves your device!
+                                            {t('passwordChecker:startTypingDescription')}
                                         </p>
                                     </div>
                                 </div>

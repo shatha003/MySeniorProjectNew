@@ -8,6 +8,7 @@ import {
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUserProgressStore } from '@/store/useUserProgressStore';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 import {
     QuizQuestion,
     getQuestionsForTier,
@@ -55,6 +56,7 @@ export default function QuizArena() {
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['quiz', 'common']);
     const user = useAuthStore((s) => s.user);
     const { progress, earnXp, fetchProgress } = useUserProgressStore();
 
@@ -75,9 +77,9 @@ export default function QuizArena() {
 
     const tier = progress ? getTierForLevel(progress.level) : 'cadet';
     const tierLabels: Record<string, { label: string; color: string; emoji: string }> = {
-        cadet: { label: 'Cadet', color: 'text-amber-500', emoji: '🎖️' },
-        analyst: { label: 'Analyst', color: 'text-blue-500', emoji: '🔍' },
-        operator: { label: 'Operator', color: 'text-purple-500', emoji: '⚡' },
+        cadet: { label: t('quiz:cadetMode').replace(' Mode', ''), color: 'text-amber-500', emoji: '🎖️' },
+        analyst: { label: t('quiz:analystMode').replace(' Mode', ''), color: 'text-blue-500', emoji: '🔍' },
+        operator: { label: t('quiz:operatorMode').replace(' Mode', ''), color: 'text-purple-500', emoji: '⚡' },
     };
 
     const encouragements = [
@@ -186,33 +188,33 @@ export default function QuizArena() {
                         </motion.div>
 
                         <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>
-                            Quiz Arena
+                            {t('quiz:title')}
                         </h1>
                         <p className={`text-lg font-medium ${mutedText} mb-6`}>
-                            Test your cybersecurity knowledge!
+                            {t('quiz:subtitle')}
                         </p>
 
                         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} mb-6`}>
                             <span className={`text-sm font-bold ${tierLabels[tier].color}`}>
-                                {tierLabels[tier].emoji} {tierLabels[tier].label} Mode
+                                {tierLabels[tier].emoji} {tierLabels[tier].label} {t('quiz:modeLabel', { defaultValue: 'Mode' })}
                             </span>
                             <span className={`text-xs ${mutedText}`}>
-                                (Level {progress?.level || 1})
+                                {t('quiz:level', { level: progress?.level || 1 })}
                             </span>
                         </div>
 
                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
                             <div className="flex items-center gap-2">
                                 <Zap size={16} className="text-amber-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>5 Questions per round</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('quiz:questionsPerRound')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Flame size={16} className="text-orange-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>Build streaks for bonus XP</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('quiz:buildStreaks')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Brain size={16} className="text-blue-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>Learn from explanations</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('quiz:learnExplanations')}</span>
                             </div>
                         </div>
 
@@ -222,7 +224,7 @@ export default function QuizArena() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            Start Quiz <ChevronRight size={20} />
+                            {t('quiz:startQuiz')} <ChevronRight size={20} />
                         </motion.button>
 
                         <motion.button
@@ -231,7 +233,7 @@ export default function QuizArena() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            <Home size={16} /> Back to Dashboard
+                            <Home size={16} /> {t('quiz:backToDashboard')}
                         </motion.button>
                     </motion.div>
                 </div>
@@ -413,9 +415,9 @@ export default function QuizArena() {
                                         whileTap={{ scale: 0.98 }}
                                     >
                                         {currentIndex < questions.length - 1 ? (
-                                            <>Next Question <ChevronRight size={18} /></>
+                                            <>{t('quiz:nextQuestion')} <ChevronRight size={18} /></>
                                         ) : (
-                                            <>See Results <Trophy size={18} /></>
+                                            <>{t('quiz:seeResults')} <Trophy size={18} /></>
                                         )}
                                     </motion.button>
                                 )}
@@ -430,11 +432,11 @@ export default function QuizArena() {
     if (gameState === 'results') {
         const percentage = Math.round((correctCount / questions.length) * 100);
         const getGrade = () => {
-            if (percentage === 100) return { emoji: '🏆', label: 'Perfect Score!', color: 'text-amber-500' };
-            if (percentage >= 80) return { emoji: '🌟', label: 'Excellent!', color: 'text-emerald-500' };
-            if (percentage >= 60) return { emoji: '👍', label: 'Good Job!', color: 'text-blue-500' };
-            if (percentage >= 40) return { emoji: '💪', label: 'Keep Practicing!', color: 'text-orange-500' };
-            return { emoji: '📚', label: 'Keep Learning!', color: 'text-red-500' };
+            if (percentage === 100) return { emoji: '🏆', label: t('quiz:perfectScore'), color: 'text-amber-500' };
+            if (percentage >= 80) return { emoji: '🌟', label: t('quiz:excellent'), color: 'text-emerald-500' };
+            if (percentage >= 60) return { emoji: '👍', label: t('quiz:goodJob'), color: 'text-blue-500' };
+            if (percentage >= 40) return { emoji: '💪', label: t('quiz:keepPracticing'), color: 'text-orange-500' };
+            return { emoji: '📚', label: t('quiz:keepLearning'), color: 'text-red-500' };
         };
 
         const grade = getGrade();
@@ -466,21 +468,21 @@ export default function QuizArena() {
                             {grade.label}
                         </h1>
                         <p className={`text-sm ${mutedText} mb-6`}>
-                            {tierLabels[tier].emoji} {tierLabels[tier].label} Mode Complete
+                            {t('quiz:modeComplete', { emoji: tierLabels[tier].emoji, mode: tierLabels[tier].label })}
                         </p>
 
                         <div className="grid grid-cols-3 gap-4 mb-6">
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className={`text-2xl font-black ${grade.color}`}>{correctCount}/{questions.length}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Correct</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('quiz:correct')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-orange-500">{maxStreak}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Best Streak</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('quiz:bestStreak')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-emerald-500">+{totalXpEarned}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>XP Earned</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('quiz:xpEarned')}</div>
                             </div>
                         </div>
 
@@ -505,7 +507,7 @@ export default function QuizArena() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <RotateCcw size={18} /> Play Again
+                                <RotateCcw size={18} /> {t('quiz:playAgain')}
                             </motion.button>
 
                             <motion.button
@@ -514,7 +516,7 @@ export default function QuizArena() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Home size={16} /> Back to Dashboard
+                                <Home size={16} /> {t('quiz:backToDashboard')}
                             </motion.button>
                         </div>
                     </motion.div>

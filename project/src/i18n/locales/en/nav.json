@@ -1,0 +1,23 @@
+{
+  "home": "Home",
+  "askNova": "Ask Nova",
+  "scanningTools": "Scanning Tools",
+  "linkChecker": "Link Checker",
+  "fileChecker": "File Checker",
+  "photoSecrets": "Photo Secrets",
+  "passwordTools": "Password Tools",
+  "makePassword": "Make Password",
+  "testPassword": "Test Password",
+  "encryptionAndVault": "Encryption & Vault",
+  "secretCodes": "Secret Codes",
+  "treasureBox": "Treasure Box",
+  "gameZone": "Game Zone",
+  "quizArena": "Quiz Arena",
+  "phishingDojo": "Phishing Dojo",
+  "settings": "Settings",
+  "logOut": "Log Out",
+  "aes256Encrypted": "AES-256 Encrypted",
+  "greeting": "Hey, {{name}}!",
+  "readyMission": "Ready for today's mission? 🚀",
+  "dayStreak": "Day Streak"
+}

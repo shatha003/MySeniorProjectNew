@@ -1,6 +1,7 @@
-﻿import { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from '@/components/theme-provider'
+import { useTranslation } from 'react-i18next'
 
 interface AuthLayoutProps {
   children: ReactNode
@@ -9,6 +10,7 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children }: AuthLayoutProps) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
+  const { t } = useTranslation('components')
 
   return (
     <div className="h-full flex overflow-hidden relative">
@@ -97,7 +99,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <span className="font-body tracking-wide">Secured with AES-256 encryption</span>
+          <span className="font-body tracking-wide">{t('components:authLayout.securedWith')}</span>
         </motion.div>
       </div>
 
@@ -176,12 +178,12 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           {isDark ? (
             <div className="auth-status-badge">
               <div className="auth-status-dot" />
-              System Active
+              {t('components:authLayout.systemActive')}
             </div>
           ) : (
             <div className="auth-status-badge-light">
               <div className="auth-status-dot-light" />
-              System Active
+              {t('components:authLayout.systemActive')}
             </div>
           )}
         </motion.div>

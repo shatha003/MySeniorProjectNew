@@ -20,6 +20,7 @@ import {
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { invoke } from '@tauri-apps/api/core';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,6 +72,7 @@ interface HistoryItem {
 export default function LinkScanner() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['linkScanner', 'common']);
 
     const [url, setUrl] = useState('');
     const [isScanning, setIsScanning] = useState(false);
@@ -166,7 +168,7 @@ export default function LinkScanner() {
             bg: isDark ? 'bg-red-500/10' : 'bg-red-50',
             border: 'border-red-500/20',
             text: 'text-red-500',
-            label: 'DANGER DETECTED!',
+            label: 'dangerDetected',
             icon: ShieldAlert,
         },
         suspicious: {
@@ -175,7 +177,7 @@ export default function LinkScanner() {
             bg: isDark ? 'bg-orange-500/10' : 'bg-amber-50',
             border: 'border-orange-500/20',
             text: 'text-orange-500',
-            label: 'CAREFUL NOW...',
+            label: 'carefulNow',
             icon: AlertTriangle,
         },
         clean: {
@@ -184,7 +186,7 @@ export default function LinkScanner() {
             bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
             border: 'border-emerald-500/20',
             text: 'text-emerald-500',
-            label: 'SAFE TO GO!',
+            label: 'safeToGo',
             icon: ShieldCheck,
         },
     };
@@ -222,11 +224,11 @@ export default function LinkScanner() {
                                         <LinkIcon size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Link Checker
+                                        {t('linkScanner:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Is this link safe to click? Let's check it out! 🕵️‍♂️
+                                    {t('linkScanner:subtitle')}
                                 </p>
                             </div>
                             
@@ -234,7 +236,7 @@ export default function LinkScanner() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+10 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Scan</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perScan')}</span>
                                 </div>
                             </div>
                         </div>
@@ -253,7 +255,7 @@ export default function LinkScanner() {
                                     type="url"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
-                                    placeholder="Paste your link here (e.g., https://safe-site.com)"
+                                    placeholder={t('linkScanner:placeholder')}
                                     className={`block w-full pl-14 pr-6 py-5 rounded-2xl border-2 bg-transparent ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} text-lg font-bold focus:outline-none transition-all ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                     required
                                     disabled={isScanning}
@@ -273,12 +275,12 @@ export default function LinkScanner() {
                                 {isScanning ? (
                                     <>
                                         <div className="animate-spin rounded-full h-5 w-5 border-3 border-white/30 border-t-white"></div>
-                                        Checking...
+                                        {t('linkScanner:checking')}
                                     </>
                                 ) : (
                                     <>
                                         <Scan size={24} />
-                                        Scan Now!
+                                        {t('linkScanner:scanNow')}
                                     </>
                                 )}
                             </motion.button>
@@ -294,7 +296,7 @@ export default function LinkScanner() {
                                     exit={{ opacity: 0, height: 0 }}
                                 >
                                     <div className="flex justify-between items-center text-sm font-bold uppercase tracking-wider">
-                                        <span className={mutedText}>Analyzing security layers...</span>
+                                        <span className={mutedText}>{t('linkScanner:analyzingLayers')}</span>
                                         <span className={headingColor}>{Math.round(scanProgress)}%</span>
                                     </div>
                                     <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -350,10 +352,10 @@ export default function LinkScanner() {
                                                 </div>
                                                 <div className="text-center md:text-left space-y-2">
                                                     <div className={`text-xs font-black uppercase tracking-[0.2em] ${config.text}`}>
-                                                        Security Verdict
+                                                        {t('linkScanner:securityVerdict')}
                                                     </div>
                                                     <h2 className={`text-4xl md:text-5xl font-black font-display ${headingColor}`}>
-                                                        {config.label}
+                                                        {t('linkScanner:' + config.label)}
                                                     </h2>
                                                     <a 
                                                         href={scanResult.target} 
@@ -370,9 +372,9 @@ export default function LinkScanner() {
                                             {/* Big Score Stats */}
                                             <div className="grid grid-cols-3 gap-6 w-full lg:w-auto">
                                                 {[
-                                                    { label: 'Threats', value: scanResult.stats.malicious, color: 'text-red-500' },
-                                                    { label: 'Alerts', value: scanResult.stats.suspicious, color: 'text-orange-500' },
-                                                    { label: 'Safe', value: cleanCount, color: 'text-emerald-500' }
+                                                    { label: t('linkScanner:threats'), value: scanResult.stats.malicious, color: 'text-red-500' },
+                                                    { label: t('linkScanner:alerts'), value: scanResult.stats.suspicious, color: 'text-orange-500' },
+                                                    { label: t('linkScanner:safe'), value: cleanCount, color: 'text-emerald-500' }
                                                 ].map((stat, i) => (
                                                     <div key={i} className={`flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-current/5`}>
                                                         <span className={`text-4xl font-black font-display ${stat.color}`}>{stat.value}</span>
@@ -405,16 +407,16 @@ export default function LinkScanner() {
                                             <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500">
                                                 <BarChart3 size={24} />
                                             </div>
-                                            <h3 className={`text-xl font-black ${headingColor}`}>Engine Results</h3>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>{t('linkScanner:engineResults')}</h3>
                                         </div>
-                                        <span className={`text-sm font-black ${mutedText}`}>{totalDetections} Flags / {totalEngines} Vendors</span>
+                                        <span className={`text-sm font-black ${mutedText}`}>{t('linkScanner:flagsVendors', { flags: totalDetections, vendors: totalEngines })}</span>
                                     </div>
                                     
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end">
-                                            <span className={`text-sm font-bold ${mutedText}`}>Overall Risk Level</span>
+                                            <span className={`text-sm font-bold ${mutedText}`}>{t('linkScanner:overallRisk')}</span>
                                             <span className={`text-lg font-black ${totalDetections > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
-                                                {totalDetections > 5 ? 'High Risk' : totalDetections > 0 ? 'Medium Risk' : 'Perfectly Safe'}
+                                                {totalDetections > 5 ? t('linkScanner:highRisk') : totalDetections > 0 ? t('linkScanner:mediumRisk') : t('linkScanner:perfectlySafe')}
                                             </span>
                                         </div>
                                         <div className={`h-6 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -438,7 +440,7 @@ export default function LinkScanner() {
                                             <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
                                                 <Globe size={24} />
                                             </div>
-                                            <h3 className={`text-xl font-black ${headingColor}`}>Community Trust</h3>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>{t('linkScanner:communityTrust')}</h3>
                                         </div>
                                         <div className={`px-4 py-1.5 rounded-full font-black text-sm ${
                                             scanResult.reputation >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
@@ -449,13 +451,13 @@ export default function LinkScanner() {
 
                                     <div className="space-y-4">
                                         <p className={`text-lg font-bold leading-relaxed ${headingColor}`}>
-                                            {scanResult.reputation > 50 ? 'Wow! The community loves this site. It\'s super trusted! 🌟' :
-                                             scanResult.reputation > 0 ? 'Looking good! Most people say this link is fine. 👍' :
-                                             scanResult.reputation === 0 ? 'We don\'t have much info from others yet. Be careful! 🤔' :
-                                             'Uh oh... People have reported this link as dangerous! 🛑'}
+                                            {scanResult.reputation > 50 ? t('linkScanner:communityHigh') :
+                                             scanResult.reputation > 0 ? t('linkScanner:communityGood') :
+                                             scanResult.reputation === 0 ? t('linkScanner:communityNeutral') :
+                                             t('linkScanner:communityBad')}
                                         </p>
                                         <div className={`text-sm ${mutedText} font-medium`}>
-                                            Based on feedback from {totalEngines} security researchers.
+                                            {t('linkScanner:communityBasedOn', { count: totalEngines })}
                                         </div>
                                     </div>
                                 </motion.div>
@@ -466,10 +468,10 @@ export default function LinkScanner() {
                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
                                     <div className="flex items-center gap-3">
                                         <Activity className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Detailed Investigation</h2>
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('linkScanner:detailedInvestigation')}</h2>
                                     </div>
                                     <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
-                                        {totalEngines} Security Checks
+                                        {t('linkScanner:securityChecks', { count: totalEngines })}
                                     </span>
                                 </div>
 
@@ -477,9 +479,9 @@ export default function LinkScanner() {
                                     <table className="w-full">
                                         <thead>
                                             <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Security Expert</th>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>Reason</th>
-                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Status</th>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:securityExpert')}</th>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('linkScanner:reason')}</th>
+                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:status')}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y-2 divide-current/5">
@@ -496,7 +498,7 @@ export default function LinkScanner() {
                                                             </div>
                                                         </td>
                                                         <td className="px-8 py-5 hidden sm:table-cell">
-                                                            <span className={`text-sm font-medium ${mutedText}`}>{det.result || 'No threats found'}</span>
+                                                            <span className={`text-sm font-medium ${mutedText}`}>{det.result || t('linkScanner:noThreatsFound')}</span>
                                                         </td>
                                                         <td className="px-8 py-5 text-right">
                                                             <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
@@ -524,9 +526,9 @@ export default function LinkScanner() {
                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
                                     <div className="flex items-center gap-3">
                                         <Clock className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Recent Investigations</h2>
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('linkScanner:recentInvestigations')}</h2>
                                     </div>
-                                    <span className={`text-sm font-bold ${mutedText}`}>{history.length} Logs Saved</span>
+                                    <span className={`text-sm font-bold ${mutedText}`}>{t('linkScanner:logsSaved', { count: history.length })}</span>
                                 </div>
 
                                 <div className="p-6">
@@ -566,8 +568,8 @@ export default function LinkScanner() {
                                             <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                                                 <Search className={`text-primary/20`} size={40} />
                                             </div>
-                                            <h3 className={`text-xl font-black ${headingColor}`}>No logs yet!</h3>
-                                            <p className={`text-lg ${mutedText} mt-2`}>Start your first investigation above.</p>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>{t('linkScanner:noLogsYet')}</h3>
+                                            <p className={`text-lg ${mutedText} mt-2`}>{t('linkScanner:startFirst')}</p>
                                         </div>
                                     )}
                                 </div>

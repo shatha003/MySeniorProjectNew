@@ -23,6 +23,7 @@ import { useTrackActivity } from '../hooks/useTrackActivity';
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useTheme } from '@/components/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -75,6 +76,7 @@ interface HistoryItem {
 export default function FileScanner() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['fileScanner', 'common']);
 
     const [isScanning, setIsScanning] = useState(false);
     const [hasScanned, setHasScanned] = useState(false);
@@ -177,7 +179,7 @@ export default function FileScanner() {
             bg: isDark ? 'bg-red-500/10' : 'bg-red-50',
             border: 'border-red-500/20',
             text: 'text-red-500',
-            label: 'DANGER FOUND!',
+            label: 'dangerFound',
             icon: ShieldAlert,
         },
         suspicious: {
@@ -186,7 +188,7 @@ export default function FileScanner() {
             bg: isDark ? 'bg-orange-500/10' : 'bg-amber-50',
             border: 'border-orange-500/20',
             text: 'text-orange-500',
-            label: 'STAY ALERT...',
+            label: 'stayAlert',
             icon: AlertTriangle,
         },
         clean: {
@@ -195,7 +197,7 @@ export default function FileScanner() {
             bg: isDark ? 'bg-emerald-500/10' : 'bg-emerald-50',
             border: 'border-emerald-500/20',
             text: 'text-emerald-500',
-            label: 'TOTALLY SAFE!',
+            label: 'totallySafe',
             icon: ShieldCheck,
         },
     };
@@ -238,11 +240,11 @@ export default function FileScanner() {
                                         <FileSearch size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        File Checker
+                                        {t('fileScanner:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Let's check your files for hidden monsters! 🛡️
+                                    {t('fileScanner:subtitle')}
                                 </p>
                             </div>
                             
@@ -250,7 +252,7 @@ export default function FileScanner() {
                                 <Star size={20} fill="currentColor" className="animate-bounce" />
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black leading-none">+15 XP</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Per Scan</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('common:perScan')}</span>
                                 </div>
                             </div>
                         </div>
@@ -272,10 +274,9 @@ export default function FileScanner() {
                                     </motion.div>
 
                                     <div className="space-y-3">
-                                        <h3 className={`text-3xl font-black ${headingColor}`}>Ready to scan?</h3>
+                                        <h3 className={`text-3xl font-black ${headingColor}`}>{t('fileScanner:readyToScan')}</h3>
                                         <p className={`text-lg font-medium ${mutedText} max-w-md mx-auto`}>
-                                            Choose any file and we'll make sure it's safe for you. 
-                                            We check against 70+ security experts!
+                                            {t('fileScanner:uploadDescription')}
                                         </p>
                                     </div>
 
@@ -289,11 +290,11 @@ export default function FileScanner() {
                                         whileHover={{ y: -5, scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        Pick a File!
+                                        {t('fileScanner:pickAFile')}
                                     </motion.button>
                                     
                                     <p className={`text-xs font-bold uppercase tracking-widest ${mutedText} opacity-50`}>
-                                        Max size: 650MB • All file types welcome
+                                        {t('fileScanner:maxSizeInfo')}
                                     </p>
                                 </div>
                             ) : (
@@ -307,10 +308,10 @@ export default function FileScanner() {
                                     </div>
                                     
                                     <div className="space-y-4">
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>Analyzing your file...</h3>
+                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('fileScanner:analyzingFile')}</h3>
                                         <div className="max-w-md mx-auto space-y-3">
                                             <div className="flex justify-between text-xs font-black uppercase tracking-widest">
-                                                <span className={mutedText}>Deep Inspection</span>
+                                                <span className={mutedText}>{t('fileScanner:deepInspection')}</span>
                                                 <span className={headingColor}>{Math.round(scanProgress)}%</span>
                                             </div>
                                             <div className={`h-4 w-full ${isDark ? 'bg-cyber-surface' : 'bg-gray-100'} rounded-full p-1 border ${isDark ? 'border-white/5' : 'border-gray-200'}`}>
@@ -334,10 +335,10 @@ export default function FileScanner() {
                                 >
                                     <AlertCircle size={24} className="shrink-0" />
                                     <div className="space-y-2">
-                                        <h4 className="font-black text-lg">Oops! Something went wrong</h4>
+                                        <h4 className="font-black text-lg">{t('fileScanner:oopsWrong')}</h4>
                                         <p className="font-medium text-sm">{errorMsg}</p>
                                         <button onClick={() => setErrorMsg(null)} className="mt-2 text-xs font-black uppercase tracking-widest bg-current/10 px-4 py-2 rounded-xl">
-                                            Try Again
+                                            {t('fileScanner:tryAgain')}
                                         </button>
                                     </div>
                                 </motion.div>
@@ -373,10 +374,10 @@ export default function FileScanner() {
                                                 </div>
                                                 <div className="text-center md:text-left space-y-2">
                                                     <div className={`text-xs font-black uppercase tracking-[0.2em] ${config.text}`}>
-                                                        Security Report
+                                                        {t('fileScanner:securityReport')}
                                                     </div>
                                                     <h2 className={`text-4xl md:text-5xl font-black font-display ${headingColor}`}>
-                                                        {config.label}
+                                                        {t('fileScanner:' + config.label)}
                                                     </h2>
                                                     <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-current/10 text-sm font-bold ${mutedText} mt-2`}>
                                                         <FileIcon size={14} className={config.text} />
@@ -388,9 +389,9 @@ export default function FileScanner() {
                                             {/* Big Score Stats */}
                                             <div className="grid grid-cols-3 gap-6 w-full lg:w-auto">
                                                 {[
-                                                    { label: 'Dangers', value: scanResult.stats?.malicious || 0, color: 'text-red-500' },
-                                                    { label: 'Warnings', value: scanResult.stats?.suspicious || 0, color: 'text-orange-500' },
-                                                    { label: 'Safe', value: cleanCount, color: 'text-emerald-500' }
+                                                    { label: t('fileScanner:dangers'), value: scanResult.stats?.malicious || 0, color: 'text-red-500' },
+                                                    { label: t('fileScanner:warnings'), value: scanResult.stats?.suspicious || 0, color: 'text-orange-500' },
+                                                    { label: t('fileScanner:safe'), value: cleanCount, color: 'text-emerald-500' }
                                                 ].map((stat, i) => (
                                                     <div key={i} className={`flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-current/5`}>
                                                         <span className={`text-4xl font-black font-display ${stat.color}`}>{stat.value}</span>
@@ -422,18 +423,18 @@ export default function FileScanner() {
                                         <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500">
                                             <HardDrive size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>File Info</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:fileInfo')}</h3>
                                     </div>
                                     
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-center">
-                                            <span className={`text-sm font-bold ${mutedText}`}>Size</span>
+                                            <span className={`text-sm font-bold ${mutedText}`}>{t('fileScanner:size')}</span>
                                             <span className={`text-lg font-black ${headingColor}`}>
-                                                {scanResult.file_size ? `${(scanResult.file_size / 1024 / 1024).toFixed(2)} MB` : 'Unknown'}
+                                                {scanResult.file_size ? `${(scanResult.file_size / 1024 / 1024).toFixed(2)} MB` : t('fileScanner:unknown')}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className={`text-sm font-bold ${mutedText}`}>Status</span>
+                                            <span className={`text-sm font-bold ${mutedText}`}>{t('fileScanner:statusLabel')}</span>
                                             <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
                                                 scanResult.status === 'clean' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
                                             }`}>
@@ -452,12 +453,12 @@ export default function FileScanner() {
                                         <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500">
                                             <BarChart3 size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Detection</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:detection')}</h3>
                                     </div>
                                     
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end">
-                                            <span className={`text-sm font-bold ${mutedText}`}>Engine Flags</span>
+                                            <span className={`text-sm font-bold ${mutedText}`}>{t('fileScanner:engineFlags')}</span>
                                             <span className={`text-lg font-black ${totalDetections > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
                                                 {totalDetections} / {totalEngines}
                                             </span>
@@ -482,13 +483,13 @@ export default function FileScanner() {
                                         <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
                                             <Fingerprint size={24} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>Fingerprint</h3>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:fingerprint')}</h3>
                                     </div>
                                     
                                     <div className="space-y-2">
-                                        <span className={`text-[10px] font-black uppercase tracking-widest ${mutedText}`}>SHA-256 Hash</span>
+                                        <span className={`text-[10px] font-black uppercase tracking-widest ${mutedText}`}>{t('fileScanner:sha256Hash')}</span>
                                         <div className={`p-3 rounded-xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border border-current/5 break-all text-[10px] font-mono leading-relaxed opacity-70`}>
-                                            {scanResult.file_hash || 'Calculating...'}
+                                            {scanResult.file_hash || t('fileScanner:calculating')}
                                         </div>
                                     </div>
                                 </motion.div>
@@ -505,16 +506,16 @@ export default function FileScanner() {
                                             <ShieldAlert size={32} />
                                         </div>
                                         <div>
-                                            <h3 className={`text-xl font-black ${headingColor}`}>Safety First!</h3>
-                                            <p className={`text-sm font-medium ${mutedText}`}>This file could harm your computer. Choose an action:</p>
+                                            <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:safetyFirst')}</h3>
+                                            <p className={`text-sm font-medium ${mutedText}`}>{t('fileScanner:safetyFirstDesc')}</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap gap-4 w-full md:w-auto">
                                         <button className="flex-1 md:flex-none px-6 py-3 bg-orange-500 text-white font-black rounded-xl hover:scale-105 transition-all text-sm uppercase tracking-wider">
-                                            Quarantine
+                                            {t('fileScanner:quarantine')}
                                         </button>
                                         <button className="flex-1 md:flex-none px-6 py-3 bg-red-600 text-white font-black rounded-xl hover:scale-105 transition-all text-sm uppercase tracking-wider shadow-lg shadow-red-600/20">
-                                            Delete Forever
+                                            {t('fileScanner:deleteForever')}
                                         </button>
                                     </div>
                                 </motion.div>
@@ -525,10 +526,10 @@ export default function FileScanner() {
                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
                                     <div className="flex items-center gap-3">
                                         <Activity className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>Expert Analysis</h2>
+                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('fileScanner:expertAnalysis')}</h2>
                                     </div>
                                     <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
-                                        {totalEngines} Security Checks
+                                        {t('fileScanner:securityChecks', { count: totalEngines })}
                                     </span>
                                 </div>
 
@@ -536,9 +537,9 @@ export default function FileScanner() {
                                     <table className="w-full">
                                         <thead>
                                             <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Security Expert</th>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>Finding</th>
-                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>Verdict</th>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:securityExpert')}</th>
+                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('fileScanner:finding')}</th>
+                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:verdict')}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y-2 divide-current/5">
@@ -556,7 +557,7 @@ export default function FileScanner() {
                                                                 </div>
                                                             </td>
                                                             <td className="px-8 py-5 hidden sm:table-cell">
-                                                                <span className={`text-sm font-medium ${mutedText} truncate max-w-[300px] block`}>{det.result || 'No threats detected'}</span>
+                                                                <span className={`text-sm font-medium ${mutedText} truncate max-w-[300px] block`}>{det.result || t('fileScanner:noThreatsDetected')}</span>
                                                             </td>
                                                             <td className="px-8 py-5 text-right">
                                                                 <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
@@ -576,8 +577,8 @@ export default function FileScanner() {
                                                         <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                                                             <CheckCircle className="text-emerald-500" size={40} />
                                                         </div>
-                                                        <h3 className={`text-xl font-black ${headingColor}`}>Clean as a whistle!</h3>
-                                                        <p className={`text-lg ${mutedText} mt-2`}>No security experts found any issues with this file.</p>
+                                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:cleanWhistle')}</h3>
+                                                        <p className={`text-lg ${mutedText} mt-2`}>{t('fileScanner:cleanWhistleDesc')}</p>
                                                     </td>
                                                 </tr>
                                             )}
@@ -596,9 +597,9 @@ export default function FileScanner() {
                             <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between`}>
                                 <div className="flex items-center gap-3">
                                     <Clock className="text-primary" />
-                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>Recent Scans</h2>
+                                    <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('fileScanner:recentScans')}</h2>
                                 </div>
-                                <span className={`text-sm font-bold ${mutedText}`}>{history.length} Files Tracked</span>
+                                <span className={`text-sm font-bold ${mutedText}`}>{t('fileScanner:filesTracked', { count: history.length })}</span>
                             </div>
 
                             <div className="p-6">
@@ -634,8 +635,8 @@ export default function FileScanner() {
                                         <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <Search className={`text-primary/20`} size={40} />
                                         </div>
-                                        <h3 className={`text-xl font-black ${headingColor}`}>No history yet!</h3>
-                                        <p className={`text-lg ${mutedText} mt-2`}>Your scanned files will appear here.</p>
+                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:noHistoryYet')}</h3>
+                                        <p className={`text-lg ${mutedText} mt-2`}>{t('fileScanner:noHistoryDesc')}</p>
                                     </div>
                                 )}
                             </div>

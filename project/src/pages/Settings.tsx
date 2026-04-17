@@ -23,6 +23,7 @@ import { hasVaultSetup, setupMasterPassword, verifyMasterPassword } from '../ser
 import PasswordInput from '../components/ui/PasswordInput';
 import { updateProfile } from 'firebase/auth';
 import { saveAvatar, loadAvatar, type SavedAvatar } from '../lib/avatar';
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -51,6 +52,7 @@ type TabType = 'account' | 'security' | 'notifications';
 export default function Settings() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation(['settings', 'common']);
 
     const [activeTab, setActiveTab] = useState<TabType>('account');
     const [autoLockEnabled, setAutoLockEnabled] = useState(true);
@@ -110,27 +112,27 @@ export default function Settings() {
 
         if (vaultSetup) {
             if (!currentMaster) {
-                setMasterMsg('Please enter your current master password');
+                setMasterMsg(t('settings:enterCurrentMaster'));
                 return;
             }
             try {
                 const isValid = await verifyMasterPassword(user.uid, currentMaster);
                 if (!isValid) {
-                    setMasterMsg('Current master password is incorrect');
+                    setMasterMsg(t('settings:currentMasterIncorrect'));
                     return;
                 }
             } catch (error) {
-                setMasterMsg('Error verifying current password');
+                setMasterMsg(t('settings:errorVerifying'));
                 return;
             }
         }
 
         if (newMaster.length < 4) {
-            setMasterMsg('Password must be at least 4 characters');
+            setMasterMsg(t('settings:mustBe4Chars'));
             return;
         }
         if (newMaster !== confirmMaster) {
-            setMasterMsg('Passwords do not match');
+            setMasterMsg(t('settings:passwordsNoMatch'));
             return;
         }
 
@@ -139,12 +141,12 @@ export default function Settings() {
         const success = await setupMasterPassword(user.uid, newMaster);
         if (success) {
             setVaultSetup(true);
-            setMasterMsg(vaultSetup ? 'Master password updated successfully!' : 'Master password set successfully!');
+            setMasterMsg(vaultSetup ? t('settings:masterUpdated') : t('settings:masterSet'));
             setNewMaster('');
             setConfirmMaster('');
             setCurrentMaster('');
         } else {
-            setMasterMsg(vaultSetup ? 'Failed to update master password.' : 'Failed to set master password.');
+            setMasterMsg(vaultSetup ? t('settings:failedUpdate') : t('settings:failedSet'));
         }
         setIsSavingMaster(false);
     };
@@ -154,12 +156,12 @@ export default function Settings() {
         if (!file || !user) return;
 
         if (!file.type.startsWith('image/')) {
-            setMasterMsg('Please select an image file');
+            setMasterMsg(t('settings:selectImage'));
             return;
         }
 
         if (file.size > 2 * 1024 * 1024) {
-            setMasterMsg('Image is too large. Please choose one under 2MB');
+            setMasterMsg(t('settings:imageTooLarge'));
             return;
         }
 
@@ -171,12 +173,10 @@ export default function Settings() {
             const base64String = reader.result as string;
             saveAvatar('photo', base64String);
             setCustomAvatar({ type: 'photo', data: base64String });
-            setMasterMsg('Avatar updated! 🎉');
-            setShowAvatarPicker(false);
-            setIsSavingAvatar(false);
+                setMasterMsg(t('settings:avatarUpdated'));
         };
-        reader.onerror = () => {
-            setMasterMsg('Failed to process image');
+            reader.onerror = () => {
+                setMasterMsg(t('settings:failedProcessImage'));
             setIsSavingAvatar(false);
         };
         reader.readAsDataURL(file);
@@ -198,7 +198,7 @@ export default function Settings() {
                 const base64String = reader.result as string;
                 saveAvatar('photo', base64String);
                 setCustomAvatar({ type: 'photo', data: base64String });
-                setMasterMsg('Avatar updated! 🎉');
+            setMasterMsg(t('settings:avatarUpdated'));
                 setShowAvatarPicker(false);
                 setIsSavingAvatar(false);
             };
@@ -209,7 +209,7 @@ export default function Settings() {
             reader.readAsDataURL(blob);
         } catch (err: any) {
             console.error('Failed to update avatar:', err);
-            setMasterMsg('Failed to update avatar');
+            setMasterMsg(t('settings:failedUpdateAvatar'));
             setIsSavingAvatar(false);
         }
     };
@@ -231,14 +231,14 @@ export default function Settings() {
             setTimeout(() => setSaveSuccess(false), 3000);
         } catch (err) {
             console.error('Failed to save:', err);
-            setMasterMsg('Failed to save changes');
+            setMasterMsg(t('settings:failedSave'));
         }
     };
 
     const tabs = [
-        { id: 'account' as TabType, label: 'My Profile', emoji: '👤' },
-        { id: 'security' as TabType, label: 'Security', emoji: '🔒' },
-        { id: 'notifications' as TabType, label: 'Preferences', emoji: '🔔' },
+        { id: 'account' as TabType, label: t('settings:tabProfile'), emoji: '👤' },
+        { id: 'security' as TabType, label: t('settings:tabSecurity'), emoji: '🔒' },
+        { id: 'notifications' as TabType, label: t('settings:tabPreferences'), emoji: '🔔' },
     ];
 
     return (
@@ -268,19 +268,19 @@ export default function Settings() {
                                         <SettingsIcon size={24} />
                                     </div>
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Settings
+                                        {t('settings:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
-                                    Customize your CHEA experience and keep your account safe! 🛠️
+                                    {t('settings:subtitle')}
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500">
                                 <Sparkles size={20} className="animate-bounce" />
                                 <div className="flex flex-col">
-                                    <span className="text-xl font-black leading-none">Your Space</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-wider">Make it yours!</span>
+                                    <span className="text-xl font-black leading-none">{t('settings:yourSpace')}</span>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider">{t('settings:makeItYours')}</span>
                                 </div>
                             </div>
                         </div>
@@ -342,8 +342,8 @@ export default function Settings() {
                                             <User size={24} />
                                         </div>
                                         <div>
-                                            <h2 className={`text-2xl font-black ${headingColor}`}>My Profile</h2>
-                                            <p className={`text-sm font-medium ${mutedText}`}>This is how others see you</p>
+                                            <h2 className={`text-2xl font-black ${headingColor}`}>{t('settings:myProfile')}</h2>
+                                            <p className={`text-sm font-medium ${mutedText}`}>{t('settings:howOthersSeeYou')}</p>
                                         </div>
                                     </div>
 
@@ -375,7 +375,7 @@ export default function Settings() {
                                             <h3 className={`text-xl font-black ${headingColor}`}>{displayUser}</h3>
                                             <p className={`text-sm font-medium ${mutedText}`}>{user?.email}</p>
                                             <p className={`text-xs font-bold mt-1 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
-                                                ✨ Account Active
+                                                {t('settings:accountActive')}
                                             </p>
                                         </div>
                                     </div>
@@ -390,7 +390,7 @@ export default function Settings() {
                                                 className={`rounded-2xl border-2 ${borderColor} p-6 mb-6 overflow-hidden`}
                                             >
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <h4 className={`text-lg font-black ${headingColor}`}>Pick Your Avatar</h4>
+                                                    <h4 className={`text-lg font-black ${headingColor}`}>{t('settings:pickAvatar')}</h4>
                                                     <button
                                                         onClick={() => setShowAvatarPicker(false)}
                                                         className={`p-2 rounded-xl hover:bg-white/10 transition-colors ${mutedText}`}
@@ -416,13 +416,13 @@ export default function Settings() {
                                                         <ImageIcon size={20} />
                                                     </div>
                                                     <div className="text-left">
-                                                        <p className={`font-black ${headingColor}`}>Upload Your Photo</p>
-                                                        <p className={`text-xs font-medium ${mutedText}`}>PNG, JPG up to 2MB</p>
+                                                        <p className={`font-black ${headingColor}`}>{t('settings:uploadPhoto')}</p>
+                                                        <p className={`text-xs font-medium ${mutedText}`}>{t('settings:pngJpg2mb')}</p>
                                                     </div>
                                                 </motion.label>
 
                                                 {/* Emoji Avatars */}
-                                                <p className={`text-sm font-bold ${mutedText} mb-3`}>Or pick a preset avatar:</p>
+                                                <p className={`text-sm font-bold ${mutedText} mb-3`}>{t('settings:orPresetAvatar')}</p>
                                                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
                                                     {avatarOptions.map((avatar) => (
                                                         <motion.button
@@ -452,21 +452,21 @@ export default function Settings() {
                                     {/* Name & Email Fields */}
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <label className={`text-sm font-black ${headingColor}`}>Your Name</label>
+                                            <label className={`text-sm font-black ${headingColor}`}>{t('settings:yourName')}</label>
                                             <div className="relative">
                                                 <User size={18} className={`absolute left-4 top-1/2 -translate-y-1/2 ${mutedText}`} />
                                                 <input
                                                     type="text"
                                                     value={displayName}
                                                     onChange={(e) => setDisplayName(e.target.value)}
-                                                    placeholder="Enter your name"
+                                                    placeholder={t('settings:enterName')}
                                                     className={`w-full pl-12 pr-4 py-4 rounded-2xl border-2 bg-transparent ${isDark ? 'border-white/10 focus:border-primary/50' : 'border-gray-200 focus:border-primary/50'} text-base font-bold focus:outline-none transition-all ${headingColor} placeholder:font-medium placeholder:opacity-50`}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className={`text-sm font-black ${headingColor}`}>Email Address</label>
+                                            <label className={`text-sm font-black ${headingColor}`}>{t('settings:emailAddress')}</label>
                                             <div className="relative">
                                                 <Mail size={18} className={`absolute left-4 top-1/2 -translate-y-1/2 ${mutedText}`} />
                                                 <input
@@ -477,7 +477,7 @@ export default function Settings() {
                                                 />
                                             </div>
                                             <p className={`text-xs font-medium ${mutedText}`}>
-                                                Your email can't be changed. Contact support if needed.
+                                                {t('settings:emailCantChange')}
                                             </p>
                                         </div>
                                     </div>
@@ -502,11 +502,11 @@ export default function Settings() {
                                         <Lock size={24} />
                                     </div>
                                     <div>
-                                        <h2 className={`text-2xl font-black ${headingColor}`}>Vault Password</h2>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('settings:vaultPassword')}</h2>
                                         <p className={`text-sm font-medium ${mutedText}`}>
                                             {vaultSetup
-                                                ? "Your vault is locked and safe! 🔒"
-                                                : "Set up your vault password to keep secrets safe! 🔐"}
+                                                ? t('settings:vaultLockedSafe')
+                                                : t('settings:setUpVault')}
                                         </p>
                                     </div>
                                 </div>
@@ -515,8 +515,8 @@ export default function Settings() {
                                     {vaultSetup && (
                                         <div className="space-y-2">
                                             <PasswordInput
-                                                label="Current Vault Password"
-                                                placeholder="Enter your current password"
+                                                label={t('settings:currentVaultPassword')}
+                                                placeholder={t('settings:enterCurrentPassword')}
                                                 value={currentMaster}
                                                 onChange={(e: any) => setCurrentMaster(e.target.value)}
                                             />
@@ -524,16 +524,16 @@ export default function Settings() {
                                     )}
                                     <div className="space-y-2">
                                         <PasswordInput
-                                            label="New Vault Password"
-                                            placeholder="Pick a strong new password"
+                                            label={t('settings:newVaultPassword')}
+                                            placeholder={t('settings:pickStrongNew')}
                                             value={newMaster}
                                             onChange={(e: any) => setNewMaster(e.target.value)}
                                         />
                                     </div>
                                     <div className="space-y-2">
                                         <PasswordInput
-                                            label="Confirm New Password"
-                                            placeholder="Type it again to confirm"
+                                            label={t('settings:confirmNewPassword')}
+                                            placeholder={t('settings:typeAgainConfirm')}
                                             value={confirmMaster}
                                             onChange={(e: any) => setConfirmMaster(e.target.value)}
                                         />
@@ -573,7 +573,7 @@ export default function Settings() {
                                         ) : (
                                             <>
                                                 <Lock size={20} />
-                                                {vaultSetup ? 'Update Vault Password' : 'Set Up Vault Password'}
+                                                {vaultSetup ? t('settings:updateVaultPassword') : t('settings:setUpVaultPassword')}
                                             </>
                                         )}
                                     </motion.button>
@@ -589,8 +589,8 @@ export default function Settings() {
                                         <Clock size={24} />
                                     </div>
                                     <div>
-                                        <h2 className={`text-2xl font-black ${headingColor}`}>Auto-Lock Timer</h2>
-                                        <p className={`text-sm font-medium ${mutedText}`}>Lock your vault when you step away</p>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('settings:autoLockTimer')}</h2>
+                                        <p className={`text-sm font-medium ${mutedText}`}>{t('settings:lockVaultAway')}</p>
                                     </div>
                                 </div>
 
@@ -598,8 +598,8 @@ export default function Settings() {
                                     {/* Toggle */}
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
-                                            <h4 className={`text-base font-black ${headingColor}`}>Auto-Lock Vault</h4>
-                                            <p className={`text-sm font-medium ${mutedText}`}>Automatically lock when you're idle</p>
+                                            <h4 className={`text-base font-black ${headingColor}`}>{t('settings:autoLockVault')}</h4>
+                                            <p className={`text-sm font-medium ${mutedText}`}>{t('settings:autoLockDesc')}</p>
                                         </div>
                                         <motion.button
                                             onClick={() => setAutoLockEnabled(!autoLockEnabled)}
@@ -624,7 +624,7 @@ export default function Settings() {
                                                 exit={{ opacity: 0, height: 0 }}
                                                 className="space-y-3"
                                             >
-                                                <label className={`text-sm font-bold ${mutedText}`}>Lock after how long?</label>
+                                                <label className={`text-sm font-bold ${mutedText}`}>{t('settings:lockAfterHowLong')}</label>
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                                     {[
                                                         { value: '5', label: '5 min', emoji: '⚡' },
@@ -674,8 +674,8 @@ export default function Settings() {
                                         <Music size={24} />
                                     </div>
                                     <div>
-                                        <h2 className={`text-2xl font-black ${headingColor}`}>Music Player</h2>
-                                        <p className={`text-sm font-medium ${mutedText}`}>Background music while you browse</p>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('settings:musicPlayer')}</h2>
+                                        <p className={`text-sm font-medium ${mutedText}`}>{t('settings:musicPlayerDesc')}</p>
                                     </div>
                                 </div>
 
@@ -687,8 +687,8 @@ export default function Settings() {
                                                 <Music size={20} />
                                             </div>
                                             <div>
-                                                <h4 className={`text-base font-black ${headingColor}`}>Show Music Player</h4>
-                                                <p className={`text-sm font-medium ${mutedText}`}>Display music player on the dashboard</p>
+                                                <h4 className={`text-base font-black ${headingColor}`}>{t('settings:showMusicPlayer')}</h4>
+                                                <p className={`text-sm font-medium ${mutedText}`}>{t('settings:showMusicPlayerDesc')}</p>
                                             </div>
                                         </div>
                                         <motion.button
@@ -717,8 +717,8 @@ export default function Settings() {
                                         <Bell size={24} />
                                     </div>
                                     <div>
-                                        <h2 className={`text-2xl font-black ${headingColor}`}>Notifications</h2>
-                                        <p className={`text-sm font-medium ${mutedText}`}>Choose how you want to hear from us</p>
+                                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('settings:notifications')}</h2>
+                                        <p className={`text-sm font-medium ${mutedText}`}>{t('settings:notificationsDesc')}</p>
                                     </div>
                                 </div>
 
@@ -730,8 +730,8 @@ export default function Settings() {
                                                 <Mail size={20} />
                                             </div>
                                             <div>
-                                                <h4 className={`text-base font-black ${headingColor}`}>Email Alerts</h4>
-                                                <p className={`text-sm font-medium ${mutedText}`}>Get updates about your account</p>
+                                                <h4 className={`text-base font-black ${headingColor}`}>{t('settings:emailAlerts')}</h4>
+                                                <p className={`text-sm font-medium ${mutedText}`}>{t('settings:emailAlertsDesc')}</p>
                                             </div>
                                         </div>
                                         <motion.button
@@ -756,8 +756,8 @@ export default function Settings() {
                                                 <Smartphone size={20} />
                                             </div>
                                             <div>
-                                                <h4 className={`text-base font-black ${headingColor}`}>Push Notifications</h4>
-                                                <p className={`text-sm font-medium ${mutedText}`}>Get alerts on your screen</p>
+                                                <h4 className={`text-base font-black ${headingColor}`}>{t('settings:pushNotifications')}</h4>
+                                                <p className={`text-sm font-medium ${mutedText}`}>{t('settings:pushNotificationsDesc')}</p>
                                             </div>
                                         </div>
                                         <motion.button
@@ -797,12 +797,12 @@ export default function Settings() {
                         {saveSuccess ? (
                             <>
                                 <Check size={20} />
-                                Saved!
+                                {t('settings:saved')}
                             </>
                         ) : (
                             <>
                                 <Save size={20} />
-                                Save Changes
+                                {t('settings:saveChanges')}
                             </>
                         )}
                     </motion.button>
