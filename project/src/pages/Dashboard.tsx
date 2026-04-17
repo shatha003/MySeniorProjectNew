@@ -15,7 +15,6 @@ import { getUserCredentials } from '../services/credentialService';
 import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
 import { MusicPlayer } from '@/components/ui/MusicPlayer';
-import { NovaChat } from '@/components/ui/NovaChat';
 import { useWidgetPosition } from '@/hooks/useWidgetPosition';
 
 const containerVariants = {
@@ -253,7 +252,6 @@ const Dashboard = () => {
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
     return (
-        <>
         <motion.div
             className="relative min-h-full pb-10"
             variants={containerVariants}
@@ -614,8 +612,6 @@ const Dashboard = () => {
                 </div>
             </div>
         </motion.div>
-        <NovaChat defaultPosition={{ x: 24, y: 100 }} />
-        </>
     );
 };
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { NovaChat } from '../ui/NovaChat';
 
 interface NavItemProps {
     to: string;
@@ -90,11 +91,15 @@ const NavItem = ({ to, icon, label, onClick, end, isDark }: NavItemProps) => {
 
 export default function DashboardLayout() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const user = useAuthStore((s) => s.user);
     const { progress, fetchProgress } = useUserProgressStore();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+
+    // Hide NovaChat on AI Agent page since it has its own chat interface
+    const isAIAgentPage = location.pathname === '/dashboard/ai-agent';
 
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
     const initials = displayName.charAt(0).toUpperCase();
@@ -506,6 +511,9 @@ export default function DashboardLayout() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Nova AI Chat - Floating on all dashboard pages except AI Agent */}
+            {!isAIAgentPage && <NovaChat />}
         </div>
     );
 }
