@@ -1,0 +1,20 @@
+{
+  "sectionTitle": "Choose Your Agent",
+  "sectionSubtitle": "Customize your digital identity. Pick an avatar that represents your cybersecurity style.",
+  "featuredAvatars": [
+    { "id": 1, "name": "Agent Neon" },
+    { "id": 5, "name": "Cyber Wolf" },
+    { "id": 8, "name": "Tech Ninja" },
+    { "id": 12, "name": "Data Drake" },
+    { "id": 15, "name": "Net Runner" },
+    { "id": 17, "name": "Byte Master" }
+  ],
+  "stats": {
+    "uniqueAvatars": "Unique Avatars",
+    "customization": "Customization",
+    "free": "Free",
+    "count": "17",
+    "infinity": "∞",
+    "percent": "100%"
+  }
+}

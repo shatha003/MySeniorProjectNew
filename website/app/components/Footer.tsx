@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 
 export default function Footer() {
+  const { t } = useTranslation("footer");
   const [currentYear, setCurrentYear] = useState(2024);
   const [mounted, setMounted] = useState(false);
 
@@ -106,7 +108,7 @@ export default function Footer() {
               isDark ? "text-neon-crimson" : "text-neon-violet"
             }`}
           >
-            Privacy Policy
+            {t("privacyPolicy")}
           </a>
           <a
             href="/terms-of-service"
@@ -114,7 +116,7 @@ export default function Footer() {
               isDark ? "text-neon-crimson" : "text-neon-violet"
             }`}
           >
-            Terms of Service
+            {t("termsOfService")}
           </a>
         </motion.div>
 
@@ -142,7 +144,7 @@ export default function Footer() {
               <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            <span>AES-256 Encrypted</span>
+            <span>{t("encrypted")}</span>
           </div>
           <div className="w-px h-4 bg-white/20" />
           <div className="flex items-center gap-2">
@@ -151,7 +153,7 @@ export default function Footer() {
                 isDark ? "bg-neon-crimson" : "bg-neon-violet"
               } animate-pulse`}
             />
-            <span>System Online</span>
+            <span>{t("systemOnline")}</span>
           </div>
         </motion.div>
       </div>
@@ -165,7 +167,7 @@ export default function Footer() {
         className="mt-5 pt-5 border-t border-white/10 text-center text-sm text-on-surface-variant/40 font-headline"
         suppressHydrationWarning
       >
-        © {currentYear} CHEA. All rights reserved.
+        {t("copyright", { year: currentYear })}
       </motion.div>
     </footer>
   );

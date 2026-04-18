@@ -1,0 +1,27 @@
+{
+  "sectionTitle": "The Gadgets",
+  "sectionSubtitle": "Equip your digital arsenal with tools built for elite performance.",
+  "kitVersion": "KIT_V.1.0.4",
+  "gadgets": [
+    {
+      "icon": "policy",
+      "title": "Scan-O-Matic",
+      "description": "Instant deep-scan for links and files. Know if it's safe before you click."
+    },
+    {
+      "icon": "password",
+      "title": "Secret Code Maker",
+      "description": "Forge unhackable passwords that even a supercomputer couldn't crack."
+    },
+    {
+      "icon": "encrypted",
+      "title": "Top Secret Chat",
+      "description": "End-to-end encrypted messaging. For your eyes and your team's eyes only."
+    },
+    {
+      "icon": "lock",
+      "title": "The Vault",
+      "description": "Ultra-secure credential storage. Locked behind multi-layer bio-auth."
+    }
+  ]
+}

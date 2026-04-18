@@ -4,6 +4,7 @@ import { Send, X, Loader2, Zap, Bell, Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuthStore } from '@/store/useAuthStore';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 // Short, punchy security tips (max 60 chars)
 const NOVA_TIPS = [
@@ -49,6 +50,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
     const user = useAuthStore((s) => s.user);
+    const { t } = useTranslation(['aiAgent', 'common']);
     const userId = user?.uid;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +106,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
         if (dragging.current) { dragging.current = false; return; }
         setIsOpen((prev) => !prev);
         if (!isOpen && messages.length === 0) {
-            setMessages([{ role: 'assistant', content: "Hey! 👋 I'm Nova — your security sidekick. Ask me anything!" }]);
+            setMessages([{ role: 'assistant', content: t('aiAgent:novaInitialGreeting') }]);
         }
     };
 
@@ -136,7 +138,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                 body: JSON.stringify({
                     model: 'x-ai/grok-4-fast',
                     messages: [
-                        { role: 'system', content: 'You are Nova, a friendly cybersecurity assistant. Keep responses to 1-2 short sentences. Use emojis occasionally.' },
+                        { role: 'system', content: t('aiAgent:novaSystemPrompt') },
                         ...messages.map((m) => ({ role: m.role, content: m.content })),
                         { role: 'user', content: userMsg },
                     ],
@@ -181,7 +183,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
             }
         } catch (err) {
             console.error('Nova AI Error:', err);
-            setMessages((p) => [...p, { role: 'assistant', content: 'Oops! Something went wrong 😅 Try again!' }]);
+            setMessages((p) => [...p, { role: 'assistant', content: t('aiAgent:novaErrorMessage') }]);
         } finally {
             setIsLoading(false);
             setIsStreaming(false);
@@ -251,7 +253,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className={cn('text-xs font-black uppercase tracking-wider', isDark ? 'text-neon-crimson' : 'text-violet-600')}>
-                                            Nova Tip
+                                            {t('aiAgent:novaTipLabel')}
                                         </span>
                                     </div>
                                     <p className={cn('text-sm font-medium leading-relaxed', text)}>{currentTip}</p>
@@ -303,10 +305,10 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                                 <div className="flex items-center gap-3">
                                     <img src="/aibox.png" alt="Nova" className="w-9 h-9 rounded-full object-cover" />
                                     <div>
-                                        <h3 className={cn('font-black text-sm', text)}>Nova</h3>
+                                        <h3 className={cn('font-black text-sm', text)}>{t('aiAgent:novaTitle')}</h3>
                                         <div className="flex items-center gap-1.5">
                                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                            <p className={cn('text-[10px]', muted)}>Security AI</p>
+                                            <p className={cn('text-[10px]', muted)}>{t('aiAgent:novaSubtitle')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -320,7 +322,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                                                 ? (isDark ? 'hover:bg-white/10 text-emerald-400' : 'hover:bg-gray-200 text-emerald-600')
                                                 : (isDark ? 'hover:bg-white/10 text-gray-500' : 'hover:bg-gray-200 text-gray-400')
                                         )}
-                                        title={enabled ? 'Tips enabled' : 'Tips disabled'}
+                                        title={enabled ? t('aiAgent:tipsEnabled') : t('aiAgent:tipsDisabled')}
                                     >
                                         {enabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                                     </button>
@@ -338,8 +340,8 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                                 {messages.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center h-full">
                                         <img src="/aibox.png" alt="Nova" className="w-16 h-16 rounded-full object-cover mb-3 opacity-60" />
-                                        <p className={cn('text-sm font-bold', text)}>Ask me anything!</p>
-                                        <p className={cn('text-xs mt-1', muted)}>Security tips, passwords, safety — I've got you! 🛡️</p>
+                                        <p className={cn('text-sm font-bold', text)}>{t('aiAgent:askMeAnything')}</p>
+                                        <p className={cn('text-xs mt-1', muted)}>{t('aiAgent:novaHelperText')}</p>
                                     </div>
                                 ) : messages.map((msg, i) => (
                                     <div key={i} className={cn('flex w-full', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
@@ -378,7 +380,7 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
                                         type="text" 
                                         value={input} 
                                         onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Ask about security..."
+                                        placeholder={t('aiAgent:inputPlaceholder')}
                                         className={cn(
                                             'flex-1 rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all',
                                             isDark 

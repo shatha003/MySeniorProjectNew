@@ -1,0 +1,43 @@
+{
+  "sectionTitle": "أرض التدريب",
+  "sectionSubtitle": "لا تستخدم الأدوات فقط. أتقن المهارات.",
+  "phishingDojo": {
+    "title": "دوجو الاحتيال",
+    "subtitle": "اكتشف الفخاخ، تجنب الطعم.",
+    "status": "حالة النخبة",
+    "xpLabel": "نقاط الإتقان",
+    "xpProgress": "٨٥٠ / ١٠٠٠",
+    "stats": {
+      "levels": "١٢ مستوى",
+      "accuracy": "٩٨٪ دقة"
+    }
+  },
+  "quizArena": {
+    "title": "ساحة الاختبار",
+    "subtitle": "تنافس مع الأصدقاء، تسلق السلم.",
+    "rank": "الرتبة: حارس",
+    "stats": {
+      "players": "+٥٠٠ لاعب",
+      "rewards": "مكافآت أسبوعية"
+    }
+  },
+  "rankProgression": {
+    "title": "تدرج الرتب",
+    "subtitle": "تسلق الرتب واصبح أسطورة سيبرانية!",
+    "ranks": {
+      "rookie": "مبتدئ",
+      "guardian": "حارس",
+      "elite": "نخبة",
+      "legend": "أسطورة"
+    },
+    "stats": {
+      "currentRank": "الرتبة الحالية",
+      "xpToNext": "نقاط للتالي",
+      "totalXP": "إجمالي النقاط",
+      "xpValue": "٨٥٠ / ١٠٠٠ نقطة",
+      "xpToNextValue": "١٥٠ نقطة",
+      "totalXpValue": "٣٤٥٠ نقطة"
+    },
+    "motivationalMessage": "استمر في التدريب! رتبة النخبة على بعد خطوات!"
+  }
+}

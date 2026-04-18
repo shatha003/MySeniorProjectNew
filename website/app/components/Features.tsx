@@ -1,38 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 
-const gadgets = [
-  {
-    icon: "policy",
-    title: "Scan-O-Matic",
-    description: "Instant deep-scan for links and files. Know if it's safe before you click.",
-    color: "primary",
-  },
-  {
-    icon: "password",
-    title: "Secret Code Maker",
-    description: "Forge unhackable passwords that even a supercomputer couldn't crack.",
-    color: "secondary",
-  },
-  {
-    icon: "encrypted",
-    title: "Top Secret Chat",
-    description: "End-to-end encrypted messaging. For your eyes and your team's eyes only.",
-    color: "tertiary",
-  },
-  {
-    icon: "lock",
-    title: "The Vault",
-    description: "Ultra-secure credential storage. Locked behind multi-layer bio-auth.",
-    color: "error",
-  },
-];
-
 export default function Features() {
+  const { t } = useTranslation("features");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
+
+  const gadgets = [
+    {
+      icon: "policy",
+      title: t("gadgets.0.title"),
+      description: t("gadgets.0.description"),
+      color: "primary",
+    },
+    {
+      icon: "password",
+      title: t("gadgets.1.title"),
+      description: t("gadgets.1.description"),
+      color: "secondary",
+    },
+    {
+      icon: "encrypted",
+      title: t("gadgets.2.title"),
+      description: t("gadgets.2.description"),
+      color: "tertiary",
+    },
+    {
+      icon: "lock",
+      title: t("gadgets.3.title"),
+      description: t("gadgets.3.description"),
+      color: "error",
+    },
+  ];
 
   const getColorClass = (color: string) => {
     // All icons use Cyber-Defender colors
@@ -63,31 +65,24 @@ export default function Features() {
               </p>
             </div>
             <div className="hidden md:block h-px flex-1 mx-12 bg-outline-variant/20" />
-            <span className={`${isDark ? "text-neon-crimson" : "text-neon-violet"} font-headline font-bold tracking-widest text-sm`}>
+            <span className="text-neon-crimson font-headline font-bold tracking-widest text-sm">
               KIT_V.1.0.4
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {gadgets.map((gadget) => (
+            {[
+              { icon: "policy", title: "Scan-O-Matic", description: "Instant deep-scan for links and files. Know if it's safe before you click." },
+              { icon: "password", title: "Secret Code Maker", description: "Forge unhackable passwords that even a supercomputer couldn't crack." },
+              { icon: "encrypted", title: "Top Secret Chat", description: "End-to-end encrypted messaging. For your eyes and your team's eyes only." },
+              { icon: "lock", title: "The Vault", description: "Ultra-secure credential storage. Locked behind multi-layer bio-auth." },
+            ].map((gadget) => (
               <div
                 key={gadget.title}
-                className={`group bg-surface-container-low hover:bg-surface-container-high p-8 rounded-2xl border border-outline-variant/15 relative overflow-hidden transition-all duration-300 ${
-                  isDark 
-                    ? "group-hover:shadow-[0_0_30px_rgba(255,10,84,0.2)]" 
-                    : "group-hover:shadow-[0_0_30px_rgba(77,0,255,0.2)]"
-                }`}
+                className="group bg-surface-container-low hover:bg-surface-container-high p-8 rounded-2xl border border-outline-variant/15 relative overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(255,10,84,0.2)]"
               >
-                <div
-                  className={`absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full blur-3xl opacity-20 transition-opacity duration-300 ${
-                    isDark ? "bg-neon-crimson group-hover:opacity-40" : "bg-neon-violet group-hover:opacity-40"
-                  }`}
-                />
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${
-                  isDark 
-                    ? "text-neon-crimson bg-neon-crimson/10" 
-                    : "text-neon-violet bg-neon-violet/10"
-                }`}>
+                <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full blur-3xl opacity-20 bg-neon-crimson group-hover:opacity-40 transition-opacity duration-300" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-neon-crimson bg-neon-crimson/10">
                   <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                     {gadget.icon}
                   </span>
@@ -119,15 +114,15 @@ export default function Features() {
         >
           <div>
             <h2 className="text-4xl sm:text-5xl font-headline font-bold mb-4 text-on-surface">
-              The Gadgets
+              {t("sectionTitle")}
             </h2>
             <p className="text-on-surface-variant max-w-md font-body">
-              Equip your digital arsenal with tools built for elite performance.
+              {t("sectionSubtitle")}
             </p>
           </div>
             <div className="hidden md:block h-px flex-1 mx-12 bg-outline-variant/20" />
             <span className={`${isDark ? "text-neon-crimson" : "text-neon-violet"} font-headline font-bold tracking-widest text-sm`}>
-              KIT_V.1.0.4
+              {t("kitVersion")}
             </span>
         </motion.div>
 

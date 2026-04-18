@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 import FloatingAvatars from "./FloatingAvatars";
 
 export default function Hero() {
+  const { t } = useTranslation("hero");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
   const [isClient, setIsClient] = useState(false);
@@ -48,11 +50,7 @@ export default function Hero() {
           </div>
         </div>
         
-        {/* Floating Avatars Background - Static version */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 opacity-0">
-          {/* Placeholder for SSR */}
-        </div>
-
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 opacity-0" />
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent pointer-events-none" />
       </header>
     );
@@ -116,10 +114,12 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-headline font-bold mb-6 leading-tight max-w-5xl"
         >
-          CHEA:{" "}
-          <span className={`glitch-accent drop-shadow-[0_0_15px_rgba(255,10,84,0.5)] ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>Cyber-Defender</span>
+          {t("titlePrefix")}{" "}
+          <span className={`glitch-accent drop-shadow-[0_0_15px_rgba(255,10,84,0.5)] ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>
+            {t("titleAccent")}
+          </span>
           <br />
-          Toolkit
+          {t("titleSuffix")}
         </motion.h1>
 
         {/* Subtitle */}
@@ -129,8 +129,7 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="text-lg sm:text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-10 font-body"
         >
-          The ultimate digital shield built for the next generation. Master the internet, 
-          protect your data, and level up your security skills.
+          {t("description")}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -153,7 +152,7 @@ export default function Hero() {
             <span className="material-symbols-outlined text-2xl">
               download
             </span>
-            <span className="glitch-text" data-text="Get Started">Get Started</span>
+            <span className="glitch-text" data-text={t("getStarted")}>{t("getStarted")}</span>
           </a>
         </motion.div>
       </div>

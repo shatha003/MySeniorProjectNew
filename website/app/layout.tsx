@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fredoka, Nunito, Balsamiq_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
+import { I18nProvider } from "./components/i18n-provider";
 
 const fredoka = Fredoka({
   variable: "--font-headline",
@@ -32,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang="en" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         <link 
           rel="stylesheet" 
@@ -40,9 +41,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${fredoka.variable} ${nunito.variable} ${balsamiqSans.variable} antialiased`}>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <I18nProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   );

@@ -13,6 +13,7 @@ import {
   Check,
   Download
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -26,7 +27,7 @@ interface Message {
 }
 
 // Copy button component for messages
-function CopyButton({ text, className }: { text: string; className?: string }) {
+function CopyButton({ text, className, copiedText, copyText }: { text: string; className?: string; copiedText: string; copyText: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -43,14 +44,14 @@ function CopyButton({ text, className }: { text: string; className?: string }) {
     <button
       onClick={handleCopy}
       className={`flex items-center gap-1 text-xs transition-all hover:scale-105 ${className}`}
-      title="Copy message"
+      title={copyText}
     >
       {copied ? (
         <Check size={14} className="text-emerald-500" />
       ) : (
         <Copy size={14} />
       )}
-      {copied && <span className="text-emerald-500 font-medium">Copied!</span>}
+      {copied && <span className="text-emerald-500 font-medium">{copiedText}</span>}
     </button>
   );
 }
@@ -69,6 +70,7 @@ function formatTime(timestamp: number): string {
 }
 
 export default function AISidekick() {
+  const { t } = useTranslation("ai");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
 
@@ -92,7 +94,7 @@ export default function AISidekick() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hey there! 👋 I'm Nova, your AI cybersecurity buddy. CHEA stands for Cyber Hygiene Educator and Assistant. Ask me about CHEA's features, security tips, or how to stay safe online! 🛡️✨",
+      content: "Hey there! I'm Nova, your AI sidekick. I'm here 24/7 to help you analyze suspicious links, answer security questions, and give you tactical advice for staying safe online. You get 10 free messages here - then download CHEA for unlimited access!",
       timestamp: Date.now(),
     },
   ]);
@@ -102,8 +104,8 @@ export default function AISidekick() {
     if (!hasMounted) return;
     
     const welcomeMessage = hasReachedLimit
-      ? "🎉 You've used all 10 free messages! Download CHEA for more AI chats and access to all 14 cybersecurity tools. Your security journey continues there! 🚀"
-      : `Hey there! 👋 I'm Nova, your AI cybersecurity buddy. CHEA stands for Cyber Hygiene Educator and Assistant. You have ${MAX_FREE_MESSAGES - userMessageCount} free messages remaining. Ask me about CHEA's features, security tips, or how to stay safe online! 🛡️✨`;
+      ? t("limitReached.welcomeMessage")
+      : t("chatWelcomeWithCount", { count: MAX_FREE_MESSAGES - userMessageCount });
     
     setMessages(prev => {
       // Only update if the first message is from assistant (welcome message)
@@ -115,7 +117,7 @@ export default function AISidekick() {
       }
       return prev;
     });
-  }, [userMessageCount, hasReachedLimit, hasMounted]);
+  }, [userMessageCount, hasReachedLimit, hasMounted, t]);
   
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -181,8 +183,8 @@ export default function AISidekick() {
   // Clear chat function
   const handleClearChat = () => {
     const welcomeMessage = hasReachedLimit
-      ? "🎉 You've used all 10 free messages! Download CHEA for more AI chats and access to all 14 cybersecurity tools. Your security journey continues there! 🚀"
-      : `Hey there! 👋 I'm Nova, your AI cybersecurity buddy. CHEA stands for Cyber Hygiene Educator and Assistant. You have ${MAX_FREE_MESSAGES - userMessageCount} free messages remaining. Ask me about CHEA's features, security tips, or how to stay safe online! 🛡️✨`;
+      ? t("limitReached.welcomeMessage")
+      : t("chatWelcomeWithCount", { count: MAX_FREE_MESSAGES - userMessageCount });
     
     setMessages([{
       role: "assistant",
@@ -233,15 +235,15 @@ export default function AISidekick() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         if (response.status === 429) {
-          throw new Error(errorData.message || "Rate limit exceeded. Please wait a moment before sending another message.");
+          throw new Error(errorData.message || t("rateLimit"));
         }
-        throw new Error(errorData.message || "Failed to get response from AI");
+        throw new Error(errorData.message || t("responseError"));
       }
 
       // Handle streaming response
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error("Failed to read response");
+        throw new Error(t("readError"));
       }
 
       const decoder = new TextDecoder();
@@ -291,7 +293,7 @@ export default function AISidekick() {
             ...prev,
             {
               role: "assistant",
-              content: "🎉 You've used all 10 free messages! Download CHEA for more AI chats and access to all 14 cybersecurity tools. Your security journey continues there! 🚀",
+              content: t("limitReached.message"),
               timestamp: Date.now(),
             },
           ]);
@@ -299,12 +301,12 @@ export default function AISidekick() {
       }
     } catch (err: any) {
       console.error("Chat error:", err);
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.message || t("genericError"));
       setMessages((prev) => [
         ...prev,
         { 
           role: "assistant", 
-          content: `Sorry, I encountered an error: ${err.message || "Unknown error"}`,
+          content: t("errorMessage", { error: err.message || t("unknownError") }),
           timestamp: Date.now(),
         },
       ]);
@@ -320,6 +322,14 @@ export default function AISidekick() {
       handleSend();
     }
   };
+
+  // Features list for intro view
+  const features = [
+    { icon: "chat", text: "Instant Answers" },
+    { icon: "link", text: "Link Analysis" },
+    { icon: "school", text: "Security Tips" },
+    { icon: "support_agent", text: "24/7 Support" },
+  ];
 
   // Static version for SSR
   if (!mounted) {
@@ -469,10 +479,10 @@ export default function AISidekick() {
                   {/* AI Name */}
                   <div className="text-center md:text-left">
                     <h3 className="text-2xl font-headline font-bold text-on-surface mb-1">
-                      Nova
+                      {t("name")}
                     </h3>
                     <p className="text-sm text-on-surface-variant font-body">
-                      Cybernetic Helper & Educational AI
+                      {t("role")}
                     </p>
                   </div>
                 </motion.div>
@@ -488,20 +498,13 @@ export default function AISidekick() {
                   {/* Comic Speech Bubble */}
                   <div className="comic-bubble relative">
                     <p className="text-base sm:text-lg leading-relaxed font-comic">
-                      &ldquo;Hey there! I&apos;m your AI sidekick. I&apos;m here 24/7 to help you learn about CHEA, 
-                      answer security questions, and give you tactical advice for staying safe online. 
-                      Think of me as your personal cybersecurity coach!&rdquo;
+                      &ldquo;{t("welcomeMessage")}&rdquo;
                     </p>
                   </div>
 
                   {/* Features List */}
                   <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-3 sm:gap-4">
-                    {[
-                      { icon: "chat", text: "Instant Answers" },
-                      { icon: "link", text: "Link Analysis" },
-                      { icon: "school", text: "Security Tips" },
-                      { icon: "support_agent", text: "24/7 Support" },
-                    ].map((feature, index) => (
+                    {features.map((feature, index) => (
                       <motion.div
                         key={feature.text}
                         initial={{ opacity: 0, y: 10 }}
@@ -534,7 +537,7 @@ export default function AISidekick() {
                     }`}
                   >
                     <MessageCircle size={20} />
-                    Chat with Me!
+                    {t("chatButton")}
                   </motion.button>
                 </motion.div>
               </motion.div>
@@ -560,7 +563,7 @@ export default function AISidekick() {
                       <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-surface-container-high ring-2 flex items-center justify-center overflow-hidden">
                         <img
                           src="/new_pic/aibox.png"
-                          alt="Nova AI"
+                          alt={t("name")}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -570,10 +573,10 @@ export default function AISidekick() {
                     </motion.div>
                     <div>
                       <h3 className="text-lg sm:text-xl font-headline font-bold text-on-surface flex items-center gap-2">
-                        Nova
+                        {t("name")}
                         <Sparkles size={14} className={`${isDark ? "text-neon-crimson" : "text-neon-violet"} sm:size-4`} />
                       </h3>
-                      <p className="text-xs sm:text-sm text-on-surface-variant font-body">Ask me about CHEA or cybersecurity!</p>
+                      <p className="text-xs sm:text-sm text-on-surface-variant font-body">{t("chatSubtitle")}</p>
                     </div>
                   </div>
                   
@@ -588,7 +591,7 @@ export default function AISidekick() {
                           ? "hover:bg-surface-container-high text-on-surface-variant hover:text-red-400" 
                           : "hover:bg-gray-100 text-gray-500 hover:text-red-500"
                       }`}
-                      title="Clear chat"
+                      title={t("clearChat")}
                     >
                       <Trash2 size={18} />
                     </motion.button>
@@ -603,6 +606,7 @@ export default function AISidekick() {
                           ? "hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface" 
                           : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
                       }`}
+                      title={t("close")}
                     >
                       <X size={20} />
                     </motion.button>
@@ -635,7 +639,7 @@ export default function AISidekick() {
                           <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-surface-container-high ring-2 flex-shrink-0 flex items-center justify-center overflow-hidden ${isDark ? "ring-neon-crimson/20" : "ring-neon-violet/20"}`}>
                             <img
                               src="/new_pic/aibox.png"
-                              alt="Nova"
+                              alt={t("name")}
                               className="w-full h-full object-cover"
                             />
                           </div>
@@ -667,6 +671,8 @@ export default function AISidekick() {
                                           <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <CopyButton 
                                               text={codeString} 
+                                              copiedText={t("copied")}
+                                              copyText={t("copy")}
                                               className={`p-1.5 rounded-md backdrop-blur-sm shadow-sm ${isDark ? "bg-surface/80 text-on-surface" : "bg-white/80 text-gray-700"}`}
                                             />
                                           </div>
@@ -724,6 +730,8 @@ export default function AISidekick() {
                             )}
                             <CopyButton 
                               text={msg.content} 
+                              copiedText={t("copied")}
+                              copyText={t("copy")}
                               className={`${isDark ? "text-on-surface-variant/40 hover:text-on-surface-variant" : "text-gray-400 hover:text-gray-600"}`}
                             />
                           </div>
@@ -748,7 +756,7 @@ export default function AISidekick() {
                         <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-surface-container-high ring-2 flex-shrink-0 flex items-center justify-center overflow-hidden ${isDark ? "ring-neon-crimson/20" : "ring-neon-violet/20"}`}>
                           <img
                             src="/new_pic/aibox.png"
-                            alt="Nova"
+                            alt={t("name")}
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -768,7 +776,7 @@ export default function AISidekick() {
                         className={`flex items-center gap-2 pl-10 sm:pl-12 text-xs font-medium ${isDark ? "text-neon-crimson/70" : "text-neon-violet/70"}`}
                       >
                         <Loader2 size={12} className="animate-spin" />
-                        <span>Nova is typing...</span>
+                        <span>{t("typingIndicator")}</span>
                       </motion.div>
                     )}
                   </div>
@@ -786,7 +794,7 @@ export default function AISidekick() {
                     }`}
                   >
                     <p className="text-sm sm:text-base font-body text-on-surface mb-4">
-                      You&apos;ve used all <strong>{MAX_FREE_MESSAGES}</strong> free messages!
+                      {t("limitReached.title", { count: MAX_FREE_MESSAGES })}
                     </p>
                     <a
                       href="https://files.catbox.moe/9tkuow.rar"
@@ -799,7 +807,7 @@ export default function AISidekick() {
                       }`}
                     >
                       <Download size={18} />
-                      <span className="glitch-text" data-text="Download CHEA for More">Download CHEA for More</span>
+                      <span className="glitch-text" data-text={t("limitReached.downloadButton")}>{t("limitReached.downloadButton")}</span>
                     </a>
                   </motion.div>
                 ) : (
@@ -812,7 +820,7 @@ export default function AISidekick() {
                         adjustTextareaHeight();
                       }}
                       onKeyDown={handleKeyDown}
-                      placeholder="Ask me about CHEA's features, security tips, or anything else..."
+                      placeholder={t("placeholder")}
                       disabled={isLoading}
                       rows={1}
                       className={`w-full py-3 sm:py-4 pl-4 sm:pl-5 pr-12 sm:pr-14 rounded-2xl border-2 font-body text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none transition-all resize-none overflow-hidden min-h-[52px] max-h-[120px] ${
@@ -841,14 +849,14 @@ export default function AISidekick() {
                 <p className={`mt-3 text-xs text-center font-body ${isDark ? "text-on-surface-variant/60" : "text-gray-400"}`}>
                   {hasReachedLimit ? (
                     <span className={isDark ? "text-neon-crimson" : "text-neon-violet"}>
-                      All free messages used
+                      {t("allMessagesUsed")}
                     </span>
                   ) : (
                     <>
                       <strong className={isDark ? "text-neon-crimson" : "text-neon-violet"}>
                         {MAX_FREE_MESSAGES - userMessageCount}
                       </strong>
-                      {" "}free messages remaining out of {MAX_FREE_MESSAGES}
+                      {" "}{t("freeMessagesLabel")} {MAX_FREE_MESSAGES}
                     </>
                   )}
                 </p>

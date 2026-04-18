@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "../components/theme-provider";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -19,69 +20,50 @@ interface TextItem {
 type ListItem = BoldItem | TextItem;
 
 export default function PrivacyPolicyPage() {
+  const { t } = useTranslation("privacy");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   const sections = [
     {
-      title: "1. Information We Collect",
-      content: "When you use CHEA, we may collect the following types of information:",
-      items: [
-        { bold: "Account Information:", text: " Your email address, display name, and profile picture when you register or sign in with Google." },
-        { bold: "Usage Data:", text: " Information about how you interact with the App, including features used and actions performed." },
-        { bold: "Device Information:", text: " Basic information about the device running the App, such as operating system and version." },
-      ] as BoldItem[]
+      title: t("sections.0.title"),
+      content: t("sections.0.content"),
+      items: t("sections.0.items", { returnObjects: true }) as BoldItem[]
     },
     {
-      title: "2. How We Use Your Information",
-      content: "We use the collected information to:",
-      items: [
-        { text: "Provide, maintain, and improve the App's services" },
-        { text: "Authenticate your identity and manage your account" },
-        { text: "Monitor and analyze usage patterns to enhance the user experience" },
-        { text: "Communicate important updates and security alerts" },
-        { text: "Ensure the safety and security of our platform" },
-      ] as TextItem[]
+      title: t("sections.1.title"),
+      content: t("sections.1.content"),
+      items: t("sections.1.items", { returnObjects: true }) as TextItem[]
     },
     {
-      title: "3. Data Storage & Security",
-      content: "Your data is stored securely using Firebase services with AES-256 encryption. We implement industry-standard security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of electronic storage is 100% secure.",
+      title: t("sections.2.title"),
+      content: t("sections.2.content"),
     },
     {
-      title: "4. Data Sharing",
-      content: "We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:",
-      items: [
-        { text: "With your explicit consent" },
-        { text: "To comply with legal obligations or respond to lawful requests" },
-        { text: "To protect the rights, property, or safety of CHEA, its users, or the public" },
-        { text: "With service providers who assist in operating the App (e.g., Firebase, Google Cloud)" },
-      ] as TextItem[]
+      title: t("sections.3.title"),
+      content: t("sections.3.content"),
+      items: t("sections.3.items", { returnObjects: true }) as TextItem[]
     },
     {
-      title: "5. Children's Privacy",
-      content: "CHEA is designed for users of all ages, including minors. We are committed to protecting children's privacy. If you are under the age of 13, a parent or guardian must consent to and supervise your use of the App. We do not knowingly collect personal information from children under 13 without parental consent.",
+      title: t("sections.4.title"),
+      content: t("sections.4.content"),
     },
     {
-      title: "6. Your Rights",
-      content: "You have the right to:",
-      items: [
-        { text: "Access and review your personal data stored in the App" },
-        { text: "Update or correct your account information at any time" },
-        { text: "Request deletion of your account and associated data" },
-        { text: "Opt out of non-essential data collection" },
-      ] as TextItem[]
+      title: t("sections.5.title"),
+      content: t("sections.5.content"),
+      items: t("sections.5.items", { returnObjects: true }) as TextItem[]
     },
     {
-      title: "7. Cookies & Local Storage",
-      content: "CHEA may use local storage and browser-based persistence mechanisms to maintain your session and preferences. These are essential for the App to function correctly and cannot be disabled without affecting the App's operation.",
+      title: t("sections.6.title"),
+      content: t("sections.6.content"),
     },
     {
-      title: "8. Changes to This Policy",
-      content: "We may update this Privacy Policy from time to time. Any changes will be posted within the App, and the 'Last updated' date will be revised accordingly. Your continued use of the App after any changes constitutes your acceptance of the updated policy.",
+      title: t("sections.7.title"),
+      content: t("sections.7.content"),
     },
     {
-      title: "9. Contact Us",
-      content: "If you have any questions or concerns about this Privacy Policy or how your data is handled, please contact us through the App's support channel or at our official email address.",
+      title: t("sections.8.title"),
+      content: t("sections.8.content"),
     },
   ];
 
@@ -131,14 +113,14 @@ export default function PrivacyPolicyPage() {
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-headline font-bold tracking-wider mb-6 border ${getBgLight()} ${getTextColor()} ${getBorderMedium()}`}
                 >
                   <span className={`w-2 h-2 rounded-full animate-pulse ${getBgGradient()}`} />
-                  LEGAL DOCUMENT
+                  {t("documentLabel")}
                 </motion.div>
                 
                 <h1 className={`font-headline text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${getTextColor()}`}>
-                  Privacy Policy
+                  {t("pageTitle")}
                 </h1>
                 <p className={`${getMutedTextColor()} font-body text-sm sm:text-base`}>
-                  Last updated: March 6, 2026
+                  {t("lastUpdated")}
                 </p>
               </div>
             </div>
@@ -151,8 +133,7 @@ export default function PrivacyPolicyPage() {
               className={`rounded-xl border backdrop-blur-md p-6 ${isDark ? "bg-[#13131c]/60 border-white/5" : "bg-white/60 border-black/5"}`}
             >
               <p className={`${getBodyTextColor()} leading-relaxed text-center`}>
-                At CHEA Protocol, we take your privacy seriously. This Privacy Policy explains how we collect, 
-                use, disclose, and safeguard your information when you use our cybersecurity application.
+                {t("introduction")}
               </p>
             </motion.div>
 
@@ -208,10 +189,10 @@ export default function PrivacyPolicyPage() {
               className={`rounded-2xl border backdrop-blur-xl p-8 text-center ${isDark ? "bg-gradient-to-br from-[#FF0A54]/10 to-[#4D00FF]/10" : "bg-gradient-to-br from-[#4D00FF]/10 to-[#FF0A54]/10"} ${getBorderLight()}`}
             >
               <h3 className={`font-headline text-2xl font-bold mb-3 ${getHeadingColor()}`}>
-                Have Questions?
+                {t("contactCTA.title")}
               </h3>
               <p className={`${getBodyTextColor()} mb-6`}>
-                If you have any concerns about your privacy, we&apos;re here to help.
+                {t("contactCTA.description")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -222,7 +203,7 @@ export default function PrivacyPolicyPage() {
                     <rect width="20" height="16" x="2" y="4" rx="2" />
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </svg>
-                  Contact Support
+                  {t("contactCTA.contactButton")}
                 </Link>
                 <Link
                   href="/"
@@ -232,7 +213,7 @@ export default function PrivacyPolicyPage() {
                     <line x1="19" y1="12" x2="5" y2="12" />
                     <polyline points="12 19 5 12 12 5" />
                   </svg>
-                  Back to Home
+                  {t("contactCTA.backButton")}
                 </Link>
               </div>
             </motion.div>

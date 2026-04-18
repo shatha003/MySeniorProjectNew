@@ -2,82 +2,29 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 
-const screenshots = [
-  {
-    id: 1,
-    src: "/screenshots/login-light.png",
-    title: "Welcome to CHEA",
-    description: "Secure login to begin your cybersecurity journey",
-  },
-  {
-    id: 2,
-    src: "/screenshots/dashbored-light.png",
-    title: "Command Center",
-    description: "Your main dashboard for all security tools",
-  },
-  {
-    id: 3,
-    src: "/screenshots/link-checker-light.png",
-    title: "Link Scanner",
-    description: "Verify links before you click to stay safe",
-  },
-  {
-    id: 4,
-    src: "/screenshots/photo-secrets-light.png",
-    title: "Photo Vault",
-    description: "Secure storage for your private photos",
-  },
-  {
-    id: 5,
-    src: "/screenshots/my-valut-light.png",
-    title: "Password Vault",
-    description: "Encrypted storage for all your passwords",
-  },
-  {
-    id: 6,
-    src: "/screenshots/password-maker-light.png",
-    title: "Password Generator",
-    description: "Create strong, unhackable passwords",
-  },
-  {
-    id: 7,
-    src: "/screenshots/secret-messages-light.png",
-    title: "Secret Messages",
-    description: "End-to-end encrypted messaging",
-  },
-  {
-    id: 8,
-    src: "/screenshots/phishing-dojo-light.png",
-    title: "Phishing Dojo",
-    description: "Master the art of spotting fake emails",
-  },
-  {
-    id: 9,
-    src: "/screenshots/quiz arena-light.png",
-    title: "Quiz Arena",
-    description: "Test your skills and compete with friends",
-  },
-  {
-    id: 10,
-    src: "/screenshots/test-password-light.png",
-    title: "Password Tester",
-    description: "Check how strong your passwords are",
-  },
-  {
-    id: 11,
-    src: "/screenshots/setting-chose- avatrs-light.png",
-    title: "Choose Your Avatar",
-    description: "Customize your digital identity",
-  },
-];
-
 export default function ScreenshotGallery() {
+  const { t } = useTranslation("gallery");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+
+  const screenshots = [
+    { src: "/screenshots/login-light.png", title: t("screenshots.0.title"), description: t("screenshots.0.description") },
+    { src: "/screenshots/dashbored-light.png", title: t("screenshots.1.title"), description: t("screenshots.1.description") },
+    { src: "/screenshots/link-checker-light.png", title: t("screenshots.2.title"), description: t("screenshots.2.description") },
+    { src: "/screenshots/photo-secrets-light.png", title: t("screenshots.3.title"), description: t("screenshots.3.description") },
+    { src: "/screenshots/my-valut-light.png", title: t("screenshots.4.title"), description: t("screenshots.4.description") },
+    { src: "/screenshots/password-maker-light.png", title: t("screenshots.5.title"), description: t("screenshots.5.description") },
+    { src: "/screenshots/secret-messages-light.png", title: t("screenshots.6.title"), description: t("screenshots.6.description") },
+    { src: "/screenshots/phishing-dojo-light.png", title: t("screenshots.7.title"), description: t("screenshots.7.description") },
+    { src: "/screenshots/quiz arena-light.png", title: t("screenshots.8.title"), description: t("screenshots.8.description") },
+    { src: "/screenshots/test-password-light.png", title: t("screenshots.9.title"), description: t("screenshots.9.description") },
+    { src: "/screenshots/setting-chose- avatrs-light.png", title: t("screenshots.10.title"), description: t("screenshots.10.description") },
+  ];
 
   // Auto-advance carousel
   useEffect(() => {
@@ -87,7 +34,7 @@ export default function ScreenshotGallery() {
       setCurrentIndex((prev) => (prev + 1) % screenshots.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [mounted]);
+  }, [mounted, screenshots.length]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -124,10 +71,10 @@ export default function ScreenshotGallery() {
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-headline font-bold mb-4 text-on-surface">
-              See CHEA in Action
+              CHEA in Action
             </h2>
             <p className="text-on-surface-variant font-body text-lg max-w-2xl mx-auto">
-              Explore the features that make CHEA your ultimate cybersecurity companion
+              Explore the powerful features and sleek interface of your cyber-defender toolkit
             </p>
           </div>
 
@@ -160,10 +107,10 @@ export default function ScreenshotGallery() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl sm:text-5xl font-headline font-bold mb-4 text-on-surface">
-            See CHEA in Action
+            {t("sectionTitle")}
           </h2>
           <p className="text-on-surface-variant font-body text-lg max-w-2xl mx-auto">
-            Explore the features that make CHEA your ultimate cybersecurity companion
+            {t("sectionSubtitle")}
           </p>
         </motion.div>
 

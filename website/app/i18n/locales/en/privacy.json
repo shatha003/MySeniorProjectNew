@@ -1,0 +1,74 @@
+{
+  "pageTitle": "Privacy Policy",
+  "documentLabel": "LEGAL DOCUMENT",
+  "lastUpdated": "Last updated: March 6, 2026",
+  "introduction": "At CHEA Protocol, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our cybersecurity application.",
+  "sections": [
+    {
+      "title": "1. Information We Collect",
+      "content": "When you use CHEA, we may collect the following types of information:",
+      "items": [
+        { "bold": "Account Information:", "text": " Your email address, display name, and profile picture when you register or sign in with Google." },
+        { "bold": "Usage Data:", "text": " Information about how you interact with the App, including features used and actions performed." },
+        { "bold": "Device Information:", "text": " Basic information about the device running the App, such as operating system and version." }
+      ]
+    },
+    {
+      "title": "2. How We Use Your Information",
+      "content": "We use the collected information to:",
+      "items": [
+        { "text": "Provide, maintain, and improve the App's services" },
+        { "text": "Authenticate your identity and manage your account" },
+        { "text": "Monitor and analyze usage patterns to enhance the user experience" },
+        { "text": "Communicate important updates and security alerts" },
+        { "text": "Ensure the safety and security of our platform" }
+      ]
+    },
+    {
+      "title": "3. Data Storage & Security",
+      "content": "Your data is stored securely using Firebase services with AES-256 encryption. We implement industry-standard security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of electronic storage is 100% secure."
+    },
+    {
+      "title": "4. Data Sharing",
+      "content": "We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:",
+      "items": [
+        { "text": "With your explicit consent" },
+        { "text": "To comply with legal obligations or respond to lawful requests" },
+        { "text": "To protect the rights, property, or safety of CHEA, its users, or the public" },
+        { "text": "With service providers who assist in operating the App (e.g., Firebase, Google Cloud)" }
+      ]
+    },
+    {
+      "title": "5. Children's Privacy",
+      "content": "CHEA is designed for users of all ages, including minors. We are committed to protecting children's privacy. If you are under the age of 13, a parent or guardian must consent to and supervise your use of the App. We do not knowingly collect personal information from children under 13 without parental consent."
+    },
+    {
+      "title": "6. Your Rights",
+      "content": "You have the right to:",
+      "items": [
+        { "text": "Access and review your personal data stored in the App" },
+        { "text": "Update or correct your account information at any time" },
+        { "text": "Request deletion of your account and associated data" },
+        { "text": "Opt out of non-essential data collection" }
+      ]
+    },
+    {
+      "title": "7. Cookies & Local Storage",
+      "content": "CHEA may use local storage and browser-based persistence mechanisms to maintain your session and preferences. These are essential for the App to function correctly and cannot be disabled without affecting the App's operation."
+    },
+    {
+      "title": "8. Changes to This Policy",
+      "content": "We may update this Privacy Policy from time to time. Any changes will be posted within the App, and the 'Last updated' date will be revised accordingly. Your continued use of the App after any changes constitutes your acceptance of the updated policy."
+    },
+    {
+      "title": "9. Contact Us",
+      "content": "If you have any questions or concerns about this Privacy Policy or how your data is handled, please contact us through the App's support channel or at our official email address."
+    }
+  ],
+  "contactCTA": {
+    "title": "Have Questions?",
+    "description": "If you have any concerns about your privacy, we're here to help.",
+    "contactButton": "Contact Support",
+    "backButton": "Back to Home"
+  }
+}

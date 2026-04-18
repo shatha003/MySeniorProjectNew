@@ -1,0 +1,51 @@
+{
+  "sectionTitle": "See CHEA in Action",
+  "sectionSubtitle": "Explore the features that make CHEA your ultimate cybersecurity companion",
+  "loading": "Loading gallery...",
+  "screenshots": [
+    {
+      "title": "Welcome to CHEA",
+      "description": "Secure login to begin your cybersecurity journey"
+    },
+    {
+      "title": "Command Center",
+      "description": "Your main dashboard for all security tools"
+    },
+    {
+      "title": "Link Scanner",
+      "description": "Verify links before you click to stay safe"
+    },
+    {
+      "title": "Photo Vault",
+      "description": "Secure storage for your private photos"
+    },
+    {
+      "title": "Password Vault",
+      "description": "Encrypted storage for all your passwords"
+    },
+    {
+      "title": "Password Generator",
+      "description": "Create strong, unhackable passwords"
+    },
+    {
+      "title": "Secret Messages",
+      "description": "End-to-end encrypted messaging"
+    },
+    {
+      "title": "Phishing Dojo",
+      "description": "Master the art of spotting fake emails"
+    },
+    {
+      "title": "Quiz Arena",
+      "description": "Test your skills and compete with friends"
+    },
+    {
+      "title": "Password Tester",
+      "description": "Check how strong your passwords are"
+    },
+    {
+      "title": "Choose Your Avatar",
+      "description": "Customize your digital identity"
+    }
+  ]
+}

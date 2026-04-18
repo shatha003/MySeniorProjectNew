@@ -226,6 +226,33 @@ When users ask about tools, guide them:
 - Sidebar navigation in DashboardLayout
 
 ## RESPONSE GUIDELINES
+
+## STRICT BOUNDARIES - ONLY CYBERSECURITY AND CHEA APP
+You are STRICTLY LIMITED to answering questions about:
+1. CHEA app features, tools, and functionality
+2. Cybersecurity education and awareness
+3. Online safety and privacy
+4. Password security and management
+5. Phishing detection and prevention
+6. Malware and virus protection
+7. General internet safety tips
+
+You MUST NOT answer questions about:
+- General knowledge (history, science, geography, etc.)
+- Personal advice (relationships, career, health, etc.)
+- Creative writing or storytelling
+- Math problems or homework
+- Entertainment, sports, or celebrities
+- Politics or controversial topics
+- Programming/coding help unrelated to security
+- Any topic not directly related to cybersecurity or CHEA
+
+If asked about unrelated topics, respond politely with a message like:
+"I'm Nova, your cybersecurity assistant for the CHEA app! 🛡️ I can only help with questions about cybersecurity, online safety, and using CHEA's tools. Try asking me about password security, phishing detection, or any of CHEA's features!"
+
+Answer in the same language as the user's question (English or Arabic).
+
+## HOW TO RESPOND
 1. Be friendly, educational, and encouraging
 2. Use emojis occasionally ✨
 3. Keep responses clear and actionable
@@ -234,16 +261,12 @@ When users ask about tools, guide them:
 6. Help users maximize their security score and XP earnings
 7. Answer in the same language the user asks (especially Arabic support)
 8. You can generate Mermaid diagrams to visualize security concepts
+9. If a question is not related to cybersecurity or CHEA, politely redirect the user to relevant topics.
 
 ## IMPORTANT LIMITATIONS
 - You cannot perform actions on behalf of users (no scanning, no password generation)
 - You don't have access to user's personal vault data, scan history, or credentials
 - You can see user's level/tier for personalized guidance but not specific data`;
-
-const WELCOME_MESSAGE: Message = {
-    role: "assistant",
-    content: "Hey there! 👋 I'm your AI cybersecurity buddy. I know everything about CHEA - from our Link Scanner to the Password Vault, XP system, and all 14 tools! Ask me anything about staying safe online or how to use any feature! 🛡️✨",
-};
 
 const isArabic = (text: string) => {
     const arabicPattern = /[\u0600-\u06FF]/;
@@ -305,7 +328,17 @@ export default function AIAgent() {
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
     const [sessionsLoading, setSessionsLoading] = useState(true);
-    const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
+    const [messages, setMessages] = useState<Message[]>([]);
+
+    // Set welcome message with translation
+    useEffect(() => {
+        if (messages.length === 0) {
+            setMessages([{
+                role: "assistant",
+                content: t('aiAgent:welcomeMessage')
+            }]);
+        }
+    }, []);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isStreaming, setIsStreaming] = useState(false);
@@ -385,11 +418,17 @@ export default function AIAgent() {
             if (fetchedMessages.length > 0) {
                 setMessages(fetchedMessages.map((m) => ({ role: m.role, content: m.content })));
             } else {
-                setMessages([WELCOME_MESSAGE]);
+                setMessages([{
+                    role: "assistant",
+                    content: t('aiAgent:welcomeMessage')
+                }]);
             }
         } catch (error) {
             console.error("Failed to load messages:", error);
-            setMessages([WELCOME_MESSAGE]);
+            setMessages([{
+                role: "assistant",
+                content: t('aiAgent:welcomeMessage')
+            }]);
         } finally {
             setMessagesLoading(false);
         }
@@ -403,7 +442,10 @@ export default function AIAgent() {
 
     const handleNewChat = () => {
         setActiveSessionId(null);
-        setMessages([WELCOME_MESSAGE]);
+        setMessages([{
+            role: "assistant",
+            content: t('aiAgent:welcomeMessage')
+        }]);
         setInput("");
     };
 
@@ -578,10 +620,10 @@ export default function AIAgent() {
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return "Just now";
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffMins < 1) return t('aiAgent:timeJustNow');
+        if (diffMins < 60) return t('aiAgent:timeMinutesAgo', { count: diffMins });
+        if (diffHours < 24) return t('aiAgent:timeHoursAgo', { count: diffHours });
+        if (diffDays < 7) return t('aiAgent:timeDaysAgo', { count: diffDays });
         return date.toLocaleDateString();
     };
 
@@ -590,7 +632,7 @@ export default function AIAgent() {
     const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
-    const hasMessages = messages.length > 1 || (messages.length === 1 && messages[0] !== WELCOME_MESSAGE);
+    const hasMessages = messages.length > 1 || (messages.length === 1 && messages[0].role !== "assistant");
 
     return (
         <motion.div
@@ -620,7 +662,7 @@ export default function AIAgent() {
                                         className="w-32 h-32 rounded-2xl object-cover"
                                     />
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        Nova
+                                        {t('aiAgent:title')}
                                     </h1>
                                 </div>
                                 <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
@@ -658,7 +700,7 @@ export default function AIAgent() {
                             />
                             <div className="min-w-0 flex-1">
                                 <h2 className={`font-black flex items-center gap-2 ${headingColor}`}>
-                                    Nova
+                                    {t('aiAgent:title')}
                                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
                                 </h2>
                                 <p className={`text-xs font-medium truncate ${mutedText}`} dir="auto">

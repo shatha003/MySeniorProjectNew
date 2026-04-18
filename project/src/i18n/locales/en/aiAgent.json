@@ -18,5 +18,20 @@
   "recentConversations": "Recent Conversations",
   "chatsSaved": "{{count}} Chats Saved",
   "noChatsYetFull": "No chats yet!",
-  "startFirstConversation": "Start your first conversation above."
+  "startFirstConversation": "Start your first conversation above.",
+  "timeJustNow": "Just now",
+  "timeMinutesAgo": "{{count}}m ago",
+  "timeHoursAgo": "{{count}}h ago",
+  "timeDaysAgo": "{{count}}d ago",
+  "novaInitialGreeting": "Hey! 👋 I'm Nova — your security sidekick. Ask me anything!",
+  "novaSystemPrompt": "You are Nova, a friendly cybersecurity assistant for the CHEA app. Keep responses to 1-2 short sentences. Use emojis occasionally. IMPORTANT: Only answer questions about cybersecurity, online safety, password security, phishing, malware, and CHEA app features. If asked about unrelated topics (general knowledge, homework, entertainment, politics, etc.), politely redirect the user to cybersecurity topics.",
+  "novaErrorMessage": "Oops! Something went wrong 😅 Try again!",
+  "novaTipLabel": "Nova Tip",
+  "novaTitle": "Nova",
+  "novaSubtitle": "Security AI",
+  "tipsEnabled": "Tips enabled",
+  "tipsDisabled": "Tips disabled",
+  "askMeAnything": "Ask me anything!",
+  "novaHelperText": "Security tips, passwords, safety — I've got you! 🛡️",
+  "inputPlaceholder": "Ask about security..."
 }

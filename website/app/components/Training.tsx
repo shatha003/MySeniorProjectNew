@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 
 export default function Training() {
+  const { t } = useTranslation("training");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
 
@@ -17,7 +19,7 @@ export default function Training() {
               Training Grounds
             </h2>
             <p className="text-on-surface-variant font-body text-lg">
-              Don't just use tools. Master the skills.
+              Level up your cyber skills through hands-on challenges
             </p>
           </div>
 
@@ -30,23 +32,21 @@ export default function Training() {
                     Phishing Dojo
                   </h3>
                   <p className="text-on-surface-variant font-body">
-                    Spot the traps, dodge the bait.
+                    Master the art of spotting fake emails and scams
                   </p>
                 </div>
-                <div className={`${isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"} px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide`}>
-                  ELITE STATUS
+                <div className="bg-neon-crimson text-white px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide">
+                  Active
                 </div>
               </div>
 
               <div className="mb-8">
-                <div className={`flex justify-between text-xs font-headline font-bold mb-2 tracking-wide ${
-                  isDark ? "text-neon-crimson" : "text-neon-violet"
-                }`}>
-                  <span>MASTERY XP</span>
-                  <span>850 / 1000</span>
+                <div className="flex justify-between text-xs font-headline font-bold mb-2 tracking-wide text-neon-crimson">
+                  <span>XP PROGRESS</span>
+                  <span>8,500 / 10,000</span>
                 </div>
                 <div className="xp-bar">
-                  <div className="xp-fill" style={{ width: "85%", background: isDark ? "#FF0A54" : "#4D00FF" }} />
+                  <div className="xp-fill" style={{ width: "85%", background: "#FF0A54" }} />
                 </div>
               </div>
 
@@ -54,23 +54,23 @@ export default function Training() {
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent z-10" />
                 <img
                   src="/new_pic/websitedark.png"
-                  alt="Phishing Dojo Interface"
+                  alt="Phishing Dojo"
                   className="w-full h-48 object-cover rounded-xl opacity-60 group-hover:opacity-80 transition-opacity"
                 />
               </div>
 
                 <div className="flex gap-4 mt-6">
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
-                    <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-neon-crimson" style={{ fontVariationSettings: "'FILL' 1" }}>
                       military_tech
                     </span>
                     <span>12 Levels</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
-                    <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-neon-crimson" style={{ fontVariationSettings: "'FILL' 1" }}>
                       target
                     </span>
-                    <span>98% Accuracy</span>
+                    <span>85% Accuracy</span>
                   </div>
                 </div>
             </div>
@@ -83,11 +83,11 @@ export default function Training() {
                     Quiz Arena
                   </h3>
                   <p className="text-on-surface-variant font-body">
-                    Duel with friends, climb the ladder.
+                    Test your knowledge and climb the ranks
                   </p>
                 </div>
-                <div className={`${isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"} px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide`}>
-                  RANK: GUARDIAN
+                <div className="bg-neon-crimson text-white px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide">
+                  Rank: Guardian
                 </div>
               </div>
 
@@ -99,11 +99,9 @@ export default function Training() {
                 ].map((item) => (
                   <div
                     key={item.icon}
-                    className={`w-16 h-16 rounded-xl bg-surface-container-highest flex items-center justify-center border ${
-                      isDark ? "border-neon-crimson/20" : "border-neon-violet/20"
-                    }`}
+                    className="w-16 h-16 rounded-xl bg-surface-container-highest flex items-center justify-center border border-neon-crimson/20"
                   >
-                    <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"} text-2xl`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-neon-crimson text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                       {item.icon}
                     </span>
                   </div>
@@ -114,20 +112,20 @@ export default function Training() {
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent z-10" />
                 <img
                   src="/new_pic/websitelight.jpeg"
-                  alt="Quiz Arena Interface"
+                  alt="Quiz Arena"
                   className="w-full h-48 object-cover rounded-xl opacity-60 group-hover:opacity-80 transition-opacity"
                 />
               </div>
 
               <div className="flex gap-4 mt-6">
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
-                  <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  <span className="material-symbols-outlined text-neon-crimson" style={{ fontVariationSettings: "'FILL' 1" }}>
                     groups
                   </span>
-                  <span>500+ Players</span>
+                  <span>2,847 Players</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
-                  <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  <span className="material-symbols-outlined text-neon-crimson" style={{ fontVariationSettings: "'FILL' 1" }}>
                     emoji_events
                   </span>
                   <span>Weekly Rewards</span>
@@ -146,17 +144,17 @@ export default function Training() {
                     className="material-symbols-outlined text-4xl"
                     style={{ 
                       fontVariationSettings: "'FILL' 1",
-                      color: isDark ? "#FF0A54" : "#4D00FF"
+                      color: "#FF0A54"
                     }}
                   >
                     stars
                   </span>
-                  Rank Progression
+                  Your Path to Legend
                   <span
                     className="material-symbols-outlined text-4xl"
                     style={{ 
                       fontVariationSettings: "'FILL' 1",
-                      color: isDark ? "#FF0A54" : "#4D00FF"
+                      color: "#FF0A54"
                     }}
                   >
                     stars
@@ -164,7 +162,7 @@ export default function Training() {
                 </span>
               </h3>
               <p className="text-on-surface-variant font-body text-lg">
-                Climb the ranks and become a Cyber Legend!
+                Complete training modules to unlock new ranks and rewards
               </p>
             </div>
 
@@ -177,7 +175,7 @@ export default function Training() {
                   {[
                     { 
                       name: "Rookie", 
-                      color: isDark ? "#6B7280" : "#9CA3AF",
+                      color: "#6B7280",
                       unlocked: true,
                     },
                     { 
@@ -220,7 +218,7 @@ export default function Training() {
                           <div
                             className="absolute -bottom-2 px-2 py-0.5 rounded-full text-xs font-headline font-bold bg-primary-container text-on-primary-container"
                           >
-                            850 / 1000 XP
+                            8,500 XP
                           </div>
                         )}
                       </div>
@@ -251,9 +249,7 @@ export default function Training() {
                   <div
                     className="h-full w-[72%] rounded-full"
                     style={{ 
-                      background: isDark 
-                        ? "linear-gradient(90deg, #FF0A54 0%, #FF6B35 50%, #FFD700 100%)" 
-                        : "linear-gradient(90deg, #4D00FF 0%, #9C27B0 50%, #FFD700 100%)"
+                      background: "linear-gradient(90deg, #FF0A54 0%, #FF6B35 50%, #FFD700 100%)"
                     }}
                   />
                 </div>
@@ -263,8 +259,8 @@ export default function Training() {
               <div className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-10">
                 {[
                   { label: "Current Rank", value: "Guardian", icon: "shield" },
-                  { label: "XP to Next", value: "150 XP", icon: "trending_up" },
-                  { label: "Total XP", value: "3,450 XP", icon: "stars" },
+                  { label: "XP to Next", value: "1,500 XP", icon: "trending_up" },
+                  { label: "Total XP", value: "8,500 XP", icon: "stars" },
                 ].map((stat) => (
                   <div
                     key={stat.label}
@@ -274,7 +270,7 @@ export default function Training() {
                       className="material-symbols-outlined text-xl"
                       style={{ 
                         fontVariationSettings: "'FILL' 1",
-                        color: isDark ? "#FF0A54" : "#4D00FF"
+                        color: "#FF0A54"
                       }}
                     >
                       {stat.icon}
@@ -290,7 +286,7 @@ export default function Training() {
               {/* Motivational Message */}
               <div className="mt-8 text-center">
                 <p className="font-comic text-lg text-on-surface-variant/60 italic">
-                  "Keep training! Elite rank is within reach!"
+                  "Only 1,500 XP until you reach Elite status!"
                 </p>
               </div>
             </div>
@@ -312,10 +308,10 @@ export default function Training() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-headline font-extrabold mb-4 text-on-surface">
-            Training Grounds
+            {t("sectionTitle")}
           </h2>
           <p className="text-on-surface-variant font-body text-lg">
-            Don't just use tools. Master the skills.
+            {t("sectionSubtitle")}
           </p>
         </motion.div>
 
@@ -334,14 +330,14 @@ export default function Training() {
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-headline font-bold mb-2 text-on-surface">
-                  Phishing Dojo
+                  {t("phishingDojo.title")}
                 </h3>
                 <p className="text-on-surface-variant font-body">
-                  Spot the traps, dodge the bait.
+                  {t("phishingDojo.subtitle")}
                 </p>
               </div>
               <div className={`${isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"} px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide`}>
-                ELITE STATUS
+                {t("phishingDojo.status")}
               </div>
             </div>
 
@@ -350,8 +346,8 @@ export default function Training() {
               <div className={`flex justify-between text-xs font-headline font-bold mb-2 tracking-wide ${
                 isDark ? "text-neon-crimson" : "text-neon-violet"
               }`}>
-                <span>MASTERY XP</span>
-                <span>850 / 1000</span>
+                <span>{t("phishingDojo.xpLabel")}</span>
+                <span>{t("phishingDojo.xpProgress")}</span>
               </div>
               <div className="xp-bar">
                 <motion.div
@@ -370,7 +366,7 @@ export default function Training() {
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent z-10" />
               <img
                 src="/new_pic/websitedark.png"
-                alt="Phishing Dojo Interface"
+                alt={t("phishingDojo.title")}
                 className="w-full h-48 object-cover rounded-xl opacity-60 group-hover:opacity-80 transition-opacity"
               />
             </div>
@@ -381,13 +377,13 @@ export default function Training() {
                 <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   military_tech
                 </span>
-                <span>12 Levels</span>
+                <span>{t("phishingDojo.stats.levels")}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
                 <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   target
                 </span>
-                <span>98% Accuracy</span>
+                <span>{t("phishingDojo.stats.accuracy")}</span>
               </div>
             </div>
           </motion.div>
@@ -405,14 +401,14 @@ export default function Training() {
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-headline font-bold mb-2 text-on-surface">
-                  Quiz Arena
+                  {t("quizArena.title")}
                 </h3>
                 <p className="text-on-surface-variant font-body">
-                  Duel with friends, climb the ladder.
+                  {t("quizArena.subtitle")}
                 </p>
               </div>
                 <div className={`${isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"} px-4 py-1.5 rounded-full text-xs font-headline font-bold tracking-wide`}>
-                  RANK: GUARDIAN
+                  {t("quizArena.rank")}
                 </div>
               </div>
 
@@ -445,7 +441,7 @@ export default function Training() {
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent z-10" />
               <img
                 src="/new_pic/websitelight.jpeg"
-                alt="Quiz Arena Interface"
+                alt={t("quizArena.title")}
                 className="w-full h-48 object-cover rounded-xl opacity-60 group-hover:opacity-80 transition-opacity"
               />
             </div>
@@ -456,13 +452,13 @@ export default function Training() {
                 <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   groups
                 </span>
-                <span>500+ Players</span>
+                <span>{t("quizArena.stats.players")}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-on-surface-variant font-body">
                 <span className={`material-symbols-outlined ${isDark ? "text-neon-crimson" : "text-neon-violet"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   emoji_events
                 </span>
-                <span>Weekly Rewards</span>
+                <span>{t("quizArena.stats.rewards")}</span>
               </div>
             </div>
           </motion.div>
@@ -497,7 +493,7 @@ export default function Training() {
                 >
                   stars
                 </motion.span>
-                Rank Progression
+                {t("rankProgression.title")}
                 <motion.span
                   animate={{ rotate: [0, -15, 15, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
@@ -512,7 +508,7 @@ export default function Training() {
               </span>
             </h3>
             <p className="text-on-surface-variant font-body text-lg">
-              Climb the ranks and become a Cyber Legend!
+              {t("rankProgression.subtitle")}
             </p>
           </motion.div>
 
@@ -547,56 +543,60 @@ export default function Training() {
             <div className="relative">
               {/* Rank Cards Row - Above the line */}
               <div className="relative grid grid-cols-4 gap-4 sm:gap-8 z-20 mb-8">
-                {[
-                  { 
-                    name: "Rookie", 
-                    color: isDark ? "#6B7280" : "#9CA3AF",
-                    unlocked: true,
-                    position: 0
-                  },
-                  { 
-                    name: "Guardian", 
-                    color: "#FF0A54",
-                    unlocked: true,
-                    position: 72,
-                    current: true
-                  },
-                  { 
-                    name: "Elite", 
-                    color: "#FFD700",
-                    unlocked: false,
-                    position: 100
-                  },
-                  { 
-                    name: "Legend", 
-                    color: "#FF0A54",
-                    unlocked: false,
-                    position: 100
-                  },
-                  ].map((rank, index) => (
+              {[
+                { 
+                  key: "rookie",
+                  name: t("rankProgression.ranks.rookie"), 
+                  color: isDark ? "#6B7280" : "#9CA3AF",
+                  unlocked: true,
+                  position: 0
+                },
+                { 
+                  key: "guardian",
+                  name: t("rankProgression.ranks.guardian"), 
+                  color: "#FF0A54",
+                  unlocked: true,
+                  position: 72,
+                  current: true
+                },
+                { 
+                  key: "elite",
+                  name: t("rankProgression.ranks.elite"), 
+                  color: "#FFD700",
+                  unlocked: false,
+                  position: 100
+                },
+                { 
+                  key: "legend",
+                  name: t("rankProgression.ranks.legend"), 
+                  color: "#FF0A54",
+                  unlocked: false,
+                  position: 100
+                },
+              ].map((rank, index) => (
+                <motion.div
+                  key={rank.key}
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 + index * 0.15 }}
+                  className="flex flex-col items-center"
+                >
+                  {/* Rank Badge with Image */}
                   <motion.div
-                    key={rank.name}
-                    initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.6 + index * 0.15 }}
-                    className="flex flex-col items-center"
+                    whileHover={rank.unlocked ? { scale: 1.1, y: -5 } : {}}
+                    className={`relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-3 overflow-hidden transition-all duration-300 ${
+                      rank.unlocked 
+                        ? "" 
+                        : "grayscale opacity-80"
+                    }`}
                   >
-                    {/* Rank Badge with Image */}
-                    <motion.div
-                      whileHover={rank.unlocked ? { scale: 1.1, y: -5 } : {}}
-                      className={`relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-3 overflow-hidden transition-all duration-300 ${
-                        rank.unlocked 
-                          ? "" 
-                          : "grayscale opacity-80"
-                      }`}
-                    >
-                      <img 
-                        src={`/ranks/${rank.name === "Guardian" ? "Guardian" : rank.name}.png`}
-                        alt={rank.name}
-                        className={`w-full h-full object-cover`}
-                      />
-                    </motion.div>
+                    <img 
+                      src={`/ranks/${rank.key.charAt(0).toUpperCase() + rank.key.slice(1)}.png`}
+                      alt={rank.name}
+                      className={`w-full h-full object-cover`}
+                    />
+                  </motion.div>
 
                     {/* Rank Name */}
                     <span 
@@ -618,7 +618,7 @@ export default function Training() {
                         className="mt-2 px-3 py-1 rounded-full text-xs font-headline font-bold bg-primary-container text-on-primary-container"
                         whileHover={{ scale: 1.1 }}
                       >
-                        850 / 1000 XP
+                        {t("rankProgression.stats.xpValue")}
                       </motion.div>
                     )}
 
@@ -670,9 +670,9 @@ export default function Training() {
               className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-10"
             >
               {[
-                { label: "Current Rank", value: "Guardian", icon: "shield" },
-                { label: "XP to Next", value: "150 XP", icon: "trending_up" },
-                { label: "Total XP", value: "3,450 XP", icon: "stars" },
+                { label: t("rankProgression.stats.currentRank"), value: t("rankProgression.ranks.guardian"), icon: "shield" },
+                { label: t("rankProgression.stats.xpToNext"), value: t("rankProgression.stats.xpToNextValue"), icon: "trending_up" },
+                { label: t("rankProgression.stats.totalXP"), value: t("rankProgression.stats.totalXpValue"), icon: "stars" },
               ].map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -709,7 +709,7 @@ export default function Training() {
               className="mt-8 text-center"
             >
               <p className="font-comic text-lg text-on-surface-variant/60 italic">
-                "Keep training! Elite rank is within reach!"
+                "{t("rankProgression.motivationalMessage")}"
               </p>
             </motion.div>
           </div>

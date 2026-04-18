@@ -1,20 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 
-const featuredAvatars = [
-  { id: 1, name: "Agent Neon" },
-  { id: 5, name: "Cyber Wolf" },
-  { id: 8, name: "Tech Ninja" },
-  { id: 12, name: "Data Drake" },
-  { id: 15, name: "Net Runner" },
-  { id: 17, name: "Byte Master" },
-];
-
 export default function AvatarShowcase() {
+  const { t } = useTranslation("avatars");
   const { theme, mounted } = useTheme();
   const isDark = theme === "dark";
+
+  const featuredAvatars = [
+    { id: 1, name: t("featuredAvatars.0.name") },
+    { id: 5, name: t("featuredAvatars.1.name") },
+    { id: 8, name: t("featuredAvatars.2.name") },
+    { id: 12, name: t("featuredAvatars.3.name") },
+    { id: 15, name: t("featuredAvatars.4.name") },
+    { id: 17, name: t("featuredAvatars.5.name") },
+  ];
+
+  const stats = [
+    { value: t("stats.count"), label: t("stats.uniqueAvatars") },
+    { value: t("stats.infinity"), label: t("stats.customization") },
+    { value: t("stats.percent"), label: t("stats.free") },
+  ];
 
   // Static version for SSR
   if (!mounted) {
@@ -24,16 +32,23 @@ export default function AvatarShowcase() {
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-headline font-bold mb-4 text-on-surface">
-              Choose Your Agent
+              Choose Your Avatar
             </h2>
             <p className="text-on-surface-variant font-body text-lg max-w-xl mx-auto">
-              Customize your digital identity. Pick an avatar that represents your cybersecurity style.
+              Express yourself with unique cyberpunk avatars. Unlock more as you level up!
             </p>
           </div>
 
           {/* Avatar Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
-            {featuredAvatars.map((avatar) => (
+            {[
+              { id: 1, name: "Cipher" },
+              { id: 5, name: "Glitch" },
+              { id: 8, name: "Neo" },
+              { id: 12, name: "Vortex" },
+              { id: 15, name: "Phantom" },
+              { id: 17, name: "Nova" },
+            ].map((avatar) => (
               <div
                 key={avatar.id}
                 className="group relative cursor-pointer"
@@ -61,7 +76,7 @@ export default function AvatarShowcase() {
           {/* Stats Bar */}
           <div className="mt-12 flex flex-wrap justify-center gap-8 text-center">
             {[
-              { value: "17", label: "Unique Avatars" },
+              { value: "20+", label: "Unique Avatars" },
               { value: "∞", label: "Customization" },
               { value: "100%", label: "Free" },
             ].map((stat) => (
@@ -92,10 +107,10 @@ export default function AvatarShowcase() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-headline font-bold mb-4 text-on-surface">
-            Choose Your Agent
+            {t("sectionTitle")}
           </h2>
           <p className="text-on-surface-variant font-body text-lg max-w-xl mx-auto">
-            Customize your digital identity. Pick an avatar that represents your cybersecurity style.
+            {t("sectionSubtitle")}
           </p>
         </motion.div>
 
@@ -155,11 +170,7 @@ export default function AvatarShowcase() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-12 flex flex-wrap justify-center gap-8 text-center"
         >
-          {[
-            { value: "17", label: "Unique Avatars" },
-            { value: "∞", label: "Customization" },
-            { value: "100%", label: "Free" },
-          ].map((stat) => (
+          {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center">
               <span className={`text-2xl font-headline font-bold ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>
                 {stat.value}

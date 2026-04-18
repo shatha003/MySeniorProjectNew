@@ -1,0 +1,43 @@
+{
+  "sectionTitle": "Training Grounds",
+  "sectionSubtitle": "Don't just use tools. Master the skills.",
+  "phishingDojo": {
+    "title": "Phishing Dojo",
+    "subtitle": "Spot the traps, dodge the bait.",
+    "status": "ELITE STATUS",
+    "xpLabel": "MASTERY XP",
+    "xpProgress": "850 / 1000",
+    "stats": {
+      "levels": "12 Levels",
+      "accuracy": "98% Accuracy"
+    }
+  },
+  "quizArena": {
+    "title": "Quiz Arena",
+    "subtitle": "Duel with friends, climb the ladder.",
+    "rank": "RANK: GUARDIAN",
+    "stats": {
+      "players": "500+ Players",
+      "rewards": "Weekly Rewards"
+    }
+  },
+  "rankProgression": {
+    "title": "Rank Progression",
+    "subtitle": "Climb the ranks and become a Cyber Legend!",
+    "ranks": {
+      "rookie": "Rookie",
+      "guardian": "Guardian",
+      "elite": "Elite",
+      "legend": "Legend"
+    },
+    "stats": {
+      "currentRank": "Current Rank",
+      "xpToNext": "XP to Next",
+      "totalXP": "Total XP",
+      "xpValue": "850 / 1000 XP",
+      "xpToNextValue": "150 XP",
+      "totalXpValue": "3,450 XP"
+    },
+    "motivationalMessage": "Keep training! Elite rank is within reach!"
+  }
+}

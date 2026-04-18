@@ -1,0 +1,40 @@
+{
+  "name": "Nova",
+  "role": "Cybernetic Helper & Educational AI",
+  "welcomeMessage": "Hey there! I'm your AI sidekick. I'm here 24/7 to help you learn about CHEA, answer security questions, and give you tactical advice for staying safe online. Think of me as your personal cybersecurity coach!",
+  "chatWelcome": "Hey there! 👋 I'm Nova, your AI cybersecurity buddy. CHEA stands for Cyber Hygiene Educator and Assistant. Ask me about CHEA's features, security tips, or how to stay safe online! 🛡️✨",
+  "chatWelcomeWithCount": "Hey there! 👋 I'm Nova, your AI cybersecurity buddy. CHEA stands for Cyber Hygiene Educator and Assistant. You have {{count}} free messages remaining. Ask me about CHEA's features, security tips, or how to stay safe online! 🛡️✨",
+  "features": [
+    { "icon": "chat", "text": "Instant Answers" },
+    { "icon": "link", "text": "Link Analysis" },
+    { "icon": "school", "text": "Security Tips" },
+    { "icon": "support_agent", "text": "24/7 Support" }
+  ],
+  "chatButton": "Chat with Me!",
+  "chatSubtitle": "Ask me about CHEA or cybersecurity!",
+  "placeholder": "Ask me about CHEA's features, security tips, or anything else...",
+  "typingIndicator": "Nova is typing...",
+  "freeMessagesLabel": "free messages remaining out of",
+  "allMessagesUsed": "All free messages used",
+  "limitReached": {
+    "title": "You've used all {count} free messages!",
+    "welcomeMessage": "🎉 You've used all 10 free messages! Download CHEA for more AI chats and access to all 14 cybersecurity tools. Your security journey continues there! 🚀",
+    "message": "🎉 You've used all 10 free messages! Download CHEA for more AI chats and access to all 14 cybersecurity tools. Your security journey continues there! 🚀",
+    "downloadButton": "Download CHEA for More"
+  },
+  "clearChat": "Clear chat",
+  "close": "Close",
+  "copied": "Copied!",
+  "copy": "Copy message",
+  "timeFormat": {
+    "justNow": "Just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago"
+  },
+  "rateLimit": "Rate limit exceeded. Please wait a moment before sending another message.",
+  "responseError": "Failed to get response from AI",
+  "readError": "Failed to read response",
+  "genericError": "Something went wrong. Please try again.",
+  "unknownError": "Unknown error",
+  "errorMessage": "Sorry, I encountered an error: {error}"
+}
