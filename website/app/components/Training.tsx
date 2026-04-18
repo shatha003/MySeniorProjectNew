@@ -63,14 +63,22 @@ export default function Training() {
                   </div>
                 </div>
 
-                {/* Image */}
-                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
-                  <img
-                    src="/new_pic/websitedark.png"
-                    alt="Phishing Dojo"
-                    className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                </div>
+              {/* Image - Theme aware */}
+              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
+                <img
+                  src="/new_pic/websitedark.png"
+                  alt="Phishing Dojo"
+                  className={`w-full h-full object-contain transition-all duration-500 ${
+                    isDark 
+                      ? "opacity-90 group-hover:opacity-100" 
+                      : "opacity-70 group-hover:opacity-90 brightness-90"
+                  }`}
+                />
+                {/* Dark overlay for light mode */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-surface-container-lowest/20 to-transparent transition-opacity duration-500 ${
+                  isDark ? "opacity-0" : "opacity-60"
+                }`} />
+              </div>
 
                 {/* Stats */}
                 <div className="flex gap-6">
@@ -125,14 +133,22 @@ export default function Training() {
                   ))}
                 </div>
 
-                {/* Image */}
-                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
-                  <img
-                    src="/new_pic/websitelight.png"
-                    alt="Quiz Arena"
-                    className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                </div>
+              {/* Image - Theme aware */}
+              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
+                <img
+                  src="/new_pic/websitelight.png"
+                  alt="Quiz Arena"
+                  className={`w-full h-full object-contain transition-all duration-500 ${
+                    isDark 
+                      ? "opacity-90 group-hover:opacity-100" 
+                      : "opacity-70 group-hover:opacity-90 brightness-90"
+                  }`}
+                />
+                {/* Dark overlay for light mode */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-surface-container-lowest/20 to-transparent transition-opacity duration-500 ${
+                  isDark ? "opacity-0" : "opacity-60"
+                }`} />
+              </div>
 
                 {/* Stats */}
                 <div className="flex gap-6">
@@ -177,7 +193,7 @@ export default function Training() {
                   { name: "Legend", unlocked: false },
                 ].map((rank) => (
                   <div key={rank.name} className="flex flex-col items-center">
-                    <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden mb-2 ${
+                    <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ${
                       rank.unlocked ? "" : "grayscale opacity-60"
                     }`}>
                       <img 
@@ -185,13 +201,16 @@ export default function Training() {
                         alt={rank.name}
                         className="w-full h-full object-cover"
                       />
-                      {rank.current && (
-                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-headline font-bold bg-neon-crimson text-white">
-                          8,500 XP
-                        </div>
-                      )}
                     </div>
-                    <span className={`font-headline font-bold text-sm ${
+                    
+                    {/* XP Badge - positioned outside image with proper spacing */}
+                    {rank.current && (
+                      <div className="mt-3 px-2 py-1 rounded-full text-[10px] font-headline font-bold bg-neon-crimson text-white whitespace-nowrap">
+                        8,500 XP
+                      </div>
+                    )}
+                    
+                    <span className={`font-headline font-bold text-sm mt-1 ${
                       rank.unlocked ? "text-on-surface" : "text-on-surface-variant/50"
                     }`}>
                       {rank.name}
@@ -332,7 +351,7 @@ export default function Training() {
                 </div>
               </div>
 
-              {/* Image */}
+              {/* Image - Theme aware with dark styling */}
               <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -343,12 +362,16 @@ export default function Training() {
                     src="/new_pic/websitedark.png"
                     alt={t("phishingDojo.title")}
                     className={`w-full h-full object-contain transition-all duration-500 ${
-                      isDark
-                        ? "opacity-80 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(255,10,84,0.3)]"
-                        : "opacity-80 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(77,0,255,0.3)]"
+                      isDark 
+                        ? "opacity-90 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(255,10,84,0.3)]" 
+                        : "opacity-70 group-hover:opacity-90 brightness-90 group-hover:drop-shadow-[0_0_20px_rgba(77,0,255,0.3)]"
                     }`}
                   />
                 </motion.div>
+                {/* Dark overlay for light mode */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-surface-container-lowest/20 to-transparent transition-opacity duration-500 rounded-2xl ${
+                  isDark ? "opacity-0" : "opacity-60"
+                }`} />
               </div>
 
               {/* Stats */}
@@ -447,7 +470,7 @@ export default function Training() {
                 ))}
               </div>
 
-              {/* Image */}
+              {/* Image - Theme aware with dark styling */}
               <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-surface-container-high/30">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -458,12 +481,16 @@ export default function Training() {
                     src="/new_pic/websitelight.png"
                     alt={t("quizArena.title")}
                     className={`w-full h-full object-contain transition-all duration-500 ${
-                      isDark
-                        ? "opacity-80 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(255,10,84,0.3)]"
-                        : "opacity-80 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(77,0,255,0.3)]"
+                      isDark 
+                        ? "opacity-90 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(255,10,84,0.3)]" 
+                        : "opacity-70 group-hover:opacity-90 brightness-90 group-hover:drop-shadow-[0_0_20px_rgba(77,0,255,0.3)]"
                     }`}
                   />
                 </motion.div>
+                {/* Dark overlay for light mode */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-surface-container-lowest/20 to-transparent transition-opacity duration-500 rounded-2xl ${
+                  isDark ? "opacity-0" : "opacity-60"
+                }`} />
               </div>
 
               {/* Stats */}
@@ -547,9 +574,10 @@ export default function Training() {
                   transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
                   className="flex flex-col items-center"
                 >
+                <div className="flex flex-col items-center">
                   <motion.div 
                     whileHover={rank.unlocked ? { scale: 1.05 } : {}}
-                    className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden mb-2 ${
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ${
                       rank.unlocked ? "" : "grayscale opacity-60"
                     }`}
                   >
@@ -558,19 +586,22 @@ export default function Training() {
                       alt={rank.name}
                       className="w-full h-full object-cover"
                     />
-                    {rank.current && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.8, type: "spring" }}
-                        className={`absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-headline font-bold ${
-                          isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"
-                        }`}
-                      >
-                        {t("rankProgression.stats.xpValue")}
-                      </motion.div>
-                    )}
                   </motion.div>
+                  
+                  {/* XP Badge - positioned outside image with proper spacing */}
+                  {rank.current && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.8, type: "spring" }}
+                      className={`mt-3 px-2 py-1 rounded-full text-[10px] font-headline font-bold whitespace-nowrap ${
+                        isDark ? "bg-neon-crimson text-white" : "bg-neon-violet text-white"
+                      }`}
+                    >
+                      {t("rankProgression.stats.xpValue")}
+                    </motion.div>
+                  )}
+                </div>
                   <span className={`font-headline font-bold text-sm ${
                     rank.unlocked ? "text-on-surface" : "text-on-surface-variant/50"
                   }`}>
