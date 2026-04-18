@@ -44,9 +44,14 @@ export default function Home() {
                 Join thousands of young defenders securing the digital frontier. 
                 Free to download, easy to master.
               </p>
-              <button className="glitch-button bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:scale-105 transition-transform">
+              <a
+                href="https://files.catbox.moe/sjgmlz.zip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glitch-button bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:scale-105 transition-transform inline-block"
+              >
                 <span className="glitch-text" data-text="Get CHEA for Windows">Get CHEA for Windows</span>
-              </button>
+              </a>
               <div className="mt-8 flex justify-center gap-4 text-on-surface-variant font-body text-sm tracking-wide">
                 <span>Latest: v1.0.4</span>
                 <span className="text-neon-crimson">•</span>
@@ -105,15 +110,18 @@ export default function Home() {
               {t("description")}
             </p>
             
-            <button 
-              className={`glitch-button group bg-gradient-to-br text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button hover:scale-105 transition-transform ${
-                isDark 
-                  ? "from-neon-crimson to-neon-crimson/80 shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)]" 
+            <a
+              href="https://files.catbox.moe/sjgmlz.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`glitch-button group bg-gradient-to-br text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button hover:scale-105 transition-transform inline-block ${
+                isDark
+                  ? "from-neon-crimson to-neon-crimson/80 shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)]"
                   : "from-neon-violet to-neon-violet/80 shadow-[0_0_25px_rgba(77,0,255,0.4)] hover:shadow-[0_0_35px_rgba(77,0,255,0.6)]"
               }`}
             >
               <span className="glitch-text" data-text={t("button")}>{t("button")}</span>
-            </button>
+            </a>
             
             <div className="mt-8 flex justify-center gap-4 text-on-surface-variant font-body text-sm tracking-wide">
               <span>{t("latest")}</span>
