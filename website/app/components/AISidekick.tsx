@@ -323,12 +323,12 @@ export default function AISidekick() {
     }
   };
 
-  // Features list for intro view
+  // Features list for intro view - using translations
   const features = [
-    { icon: "chat", text: "Instant Answers" },
-    { icon: "link", text: "Link Analysis" },
-    { icon: "school", text: "Security Tips" },
-    { icon: "support_agent", text: "24/7 Support" },
+    { icon: "chat", text: t("features.0.text") },
+    { icon: "link", text: t("features.1.text") },
+    { icon: "school", text: t("features.2.text") },
+    { icon: "support_agent", text: t("features.3.text") },
   ];
 
   // Static version for SSR
@@ -386,7 +386,7 @@ export default function AISidekick() {
                   </p>
                 </div>
 
-                {/* Features List */}
+                {/* Features List - SSR fallback (English) */}
                 <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-3 sm:gap-4">
                   {[
                     { icon: "chat", text: "Instant Answers" },
