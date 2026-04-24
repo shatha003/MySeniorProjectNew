@@ -1,0 +1,18 @@
+{
+  "title": "Nova's Analysis",
+  "subtitle": "Nova's security analysis",
+  "analyzing": "Analyzing scan results...",
+  "thinking": "AI is thinking...",
+  "error": "Something went wrong",
+  "tryAgain": "Try again",
+  "summary": "Quick Summary",
+  "detailed": "What This Means",
+  "recommendation": "What You Should Do",
+  "riskLevel": "Risk Level",
+  "whatToDo": "Next Steps",
+  "noThreats": "No significant threats detected",
+  "threatsFound": "Potential threats found",
+  "safeToProceed": "Safe to proceed with caution",
+  "dontClick": "Do not click this link",
+  "verdict": "AI Verdict"
+}
