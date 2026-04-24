@@ -21,6 +21,7 @@ import { useTrackActivity } from '../hooks/useTrackActivity';
 import { invoke } from '@tauri-apps/api/core';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
+import ScanAIAnalysis from '@/components/ai/ScanAIAnalysis';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -463,59 +464,70 @@ export default function LinkScanner() {
                                 </motion.div>
                             </div>
 
-                            {/* Detailed Findings Table */}
-                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
-                                <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
-                                    <div className="flex items-center gap-3">
-                                        <Activity className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('linkScanner:detailedInvestigation')}</h2>
-                                    </div>
-                                    <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
-                                        {t('linkScanner:securityChecks', { count: totalEngines })}
-                                    </span>
-                                </div>
+                             {/* Detailed Findings Table */}
+                             <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
+                                     <div className="flex items-center gap-3">
+                                         <Activity className="text-primary" />
+                                         <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('linkScanner:detailedInvestigation')}</h2>
+                                     </div>
+                                     <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
+                                         {t('linkScanner:securityChecks', { count: totalEngines })}
+                                     </span>
+                                 </div>
 
-                                <div className="overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead>
-                                            <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:securityExpert')}</th>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('linkScanner:reason')}</th>
-                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:status')}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y-2 divide-current/5">
-                                            {scanResult.detections.map((det, i) => {
-                                                const isDanger = det.category.toLowerCase() === 'malicious' || det.category.toLowerCase() === 'suspicious';
-                                                return (
-                                                    <tr key={i} className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50/50'} transition-colors`}>
-                                                        <td className="px-8 py-5">
-                                                            <div className="flex items-center gap-4">
-                                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
-                                                                    {isDanger ? <AlertTriangle size={18} /> : <ShieldCheck size={18} />}
-                                                                </div>
-                                                                <span className={`font-black ${headingColor}`}>{det.engine}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-8 py-5 hidden sm:table-cell">
-                                                            <span className={`text-sm font-medium ${mutedText}`}>{det.result || t('linkScanner:noThreatsFound')}</span>
-                                                        </td>
-                                                        <td className="px-8 py-5 text-right">
-                                                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
-                                                                isDanger 
-                                                                    ? 'bg-red-500/10 text-red-500' 
-                                                                    : 'bg-emerald-500/10 text-emerald-500'
-                                                            }`}>
-                                                                {det.category}
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                 <div className="overflow-x-auto">
+                                     <table className="w-full">
+                                         <thead>
+                                             <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+                                                 <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:securityExpert')}</th>
+                                                 <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('linkScanner:reason')}</th>
+                                                 <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('linkScanner:status')}</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody className="divide-y-2 divide-current/5">
+                                             {scanResult.detections.map((det, i) => {
+                                                 const isDanger = det.category.toLowerCase() === 'malicious' || det.category.toLowerCase() === 'suspicious';
+                                                 return (
+                                                     <tr key={i} className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50/50'} transition-colors`}>
+                                                         <td className="px-8 py-5">
+                                                             <div className="flex items-center gap-4">
+                                                                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                                                     {isDanger ? <AlertTriangle size={18} /> : <ShieldCheck size={18} />}
+                                                                 </div>
+                                                                 <span className={`font-black ${headingColor}`}>{det.engine}</span>
+                                                             </div>
+                                                         </td>
+                                                         <td className="px-8 py-5 hidden sm:table-cell">
+                                                             <span className={`text-sm font-medium ${mutedText}`}>{det.result || t('linkScanner:noThreatsFound')}</span>
+                                                         </td>
+                                                         <td className="px-8 py-5 text-right">
+                                                             <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
+                                                                 isDanger 
+                                                                     ? 'bg-red-500/10 text-red-500' 
+                                                                     : 'bg-emerald-500/10 text-emerald-500'
+                                                             }`}>
+                                                                 {det.category}
+                                                             </span>
+                                                         </td>
+                                                     </tr>
+                                                 );
+                                             })}
+                                         </tbody>
+                                     </table>
+                                 </div>
+                             </div>
+
+                             {/* AI Security Analysis */}
+                             <ScanAIAnalysis
+                                 scanData={{
+                                     target: scanResult.target,
+                                     status: scanResult.status,
+                                     stats: scanResult.stats,
+                                     detections: scanResult.detections,
+                                     type: 'link',
+                                 }}
+                             />
                         </motion.div>
                     )}
 

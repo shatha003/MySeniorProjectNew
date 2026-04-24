@@ -24,6 +24,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
+import ScanAIAnalysis from '@/components/ai/ScanAIAnalysis';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -521,71 +522,82 @@ export default function FileScanner() {
                                 </motion.div>
                             )}
 
-                            {/* Detailed Engines Table */}
-                            <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
-                                <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
-                                    <div className="flex items-center gap-3">
-                                        <Activity className="text-primary" />
-                                        <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('fileScanner:expertAnalysis')}</h2>
-                                    </div>
-                                    <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
-                                        {t('fileScanner:securityChecks', { count: totalEngines })}
-                                    </span>
-                                </div>
+                             {/* Detailed Engines Table */}
+                             <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} overflow-hidden shadow-lg`}>
+                                 <div className={`p-8 border-b-2 ${isDark ? 'border-white/5' : 'border-gray-100'} flex items-center justify-between bg-primary/5`}>
+                                     <div className="flex items-center gap-3">
+                                         <Activity className="text-primary" />
+                                         <h2 className={`font-display text-2xl font-black ${headingColor}`}>{t('fileScanner:expertAnalysis')}</h2>
+                                     </div>
+                                     <span className={`px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest`}>
+                                         {t('fileScanner:securityChecks', { count: totalEngines })}
+                                     </span>
+                                 </div>
 
-                                <div className="overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead>
-                                            <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:securityExpert')}</th>
-                                                <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('fileScanner:finding')}</th>
-                                                <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:verdict')}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y-2 divide-current/5">
-                                            {scanResult.detections && scanResult.detections.length > 0 ? (
-                                                scanResult.detections.map((det, i) => {
-                                                    const isDanger = det.category?.toLowerCase() === 'malicious' || det.category?.toLowerCase() === 'suspicious';
-                                                    return (
-                                                        <tr key={i} className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50/50'} transition-colors`}>
-                                                            <td className="px-8 py-5">
-                                                                <div className="flex items-center gap-4">
-                                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
-                                                                        {isDanger ? <AlertTriangle size={18} /> : <ShieldCheck size={18} />}
-                                                                    </div>
-                                                                    <span className={`font-black ${headingColor}`}>{det.engine}</span>
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-8 py-5 hidden sm:table-cell">
-                                                                <span className={`text-sm font-medium ${mutedText} truncate max-w-[300px] block`}>{det.result || t('fileScanner:noThreatsDetected')}</span>
-                                                            </td>
-                                                            <td className="px-8 py-5 text-right">
-                                                                <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
-                                                                    isDanger 
-                                                                        ? 'bg-red-500/10 text-red-500' 
-                                                                        : 'bg-emerald-500/10 text-emerald-500'
-                                                                }`}>
-                                                                    {det.category}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })
-                                            ) : (
-                                                <tr>
-                                                    <td colSpan={3} className="px-8 py-20 text-center">
-                                                        <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                            <CheckCircle className="text-emerald-500" size={40} />
-                                                        </div>
-                                                        <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:cleanWhistle')}</h3>
-                                                        <p className={`text-lg ${mutedText} mt-2`}>{t('fileScanner:cleanWhistleDesc')}</p>
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                 <div className="overflow-x-auto">
+                                     <table className="w-full">
+                                         <thead>
+                                             <tr className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+                                                 <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:securityExpert')}</th>
+                                                 <th className={`text-left px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText} hidden sm:table-cell`}>{t('fileScanner:finding')}</th>
+                                                 <th className={`text-right px-8 py-5 text-sm font-black uppercase tracking-wider ${mutedText}`}>{t('fileScanner:verdict')}</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody className="divide-y-2 divide-current/5">
+                                             {scanResult.detections && scanResult.detections.length > 0 ? (
+                                                 scanResult.detections.map((det, i) => {
+                                                     const isDanger = det.category?.toLowerCase() === 'malicious' || det.category?.toLowerCase() === 'suspicious';
+                                                     return (
+                                                         <tr key={i} className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50/50'} transition-colors`}>
+                                                             <td className="px-8 py-5">
+                                                                 <div className="flex items-center gap-4">
+                                                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                                                         {isDanger ? <AlertTriangle size={18} /> : <ShieldCheck size={18} />}
+                                                                     </div>
+                                                                     <span className={`font-black ${headingColor}`}>{det.engine}</span>
+                                                                 </div>
+                                                             </td>
+                                                             <td className="px-8 py-5 hidden sm:table-cell">
+                                                                 <span className={`text-sm font-medium ${mutedText} truncate max-w-[300px] block`}>{det.result || t('fileScanner:noThreatsDetected')}</span>
+                                                             </td>
+                                                             <td className="px-8 py-5 text-right">
+                                                                 <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
+                                                                     isDanger 
+                                                                         ? 'bg-red-500/10 text-red-500' 
+                                                                         : 'bg-emerald-500/10 text-emerald-500'
+                                                                 }`}>
+                                                                     {det.category}
+                                                                 </span>
+                                                             </td>
+                                                         </tr>
+                                                     );
+                                                 })
+                                             ) : (
+                                                 <tr>
+                                                     <td colSpan={3} className="px-8 py-20 text-center">
+                                                         <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                             <CheckCircle className="text-emerald-500" size={40} />
+                                                         </div>
+                                                         <h3 className={`text-xl font-black ${headingColor}`}>{t('fileScanner:cleanWhistle')}</h3>
+                                                         <p className={`text-lg ${mutedText} mt-2`}>{t('fileScanner:cleanWhistleDesc')}</p>
+                                                     </td>
+                                                 </tr>
+                                             )}
+                                         </tbody>
+                                     </table>
+                                 </div>
+                             </div>
+
+                             {/* AI Security Analysis */}
+                             <ScanAIAnalysis
+                                 scanData={{
+                                     target: scanResult.target,
+                                     status: scanResult.status,
+                                     stats: scanResult.stats,
+                                     detections: scanResult.detections || [],
+                                     type: 'file',
+                                 }}
+                             />
                         </motion.div>
                     )}
                 </AnimatePresence>

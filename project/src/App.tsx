@@ -25,6 +25,8 @@ import AIAgent from './pages/AIAgent';
 import Calculator from './pages/Calculator';
 import QuizArena from './pages/QuizArena';
 import PhishingDojo from './pages/PhishingDojo';
+import ScenarioSimulator from './pages/ScenarioSimulator';
+import SecurityPosture from './pages/SecurityPosture';
 
 import TitleBar from './components/ui/TitleBar';
 
@@ -98,6 +100,8 @@ function App() {
             <Route path="calculator" element={<Calculator />} />
             <Route path="quiz-arena" element={<QuizArena />} />
             <Route path="phishing-dojo" element={<PhishingDojo />} />
+            <Route path="scenario-simulator" element={<ScenarioSimulator />} />
+            <Route path="security-posture" element={<SecurityPosture />} />
             <Route path="settings" element={<Settings />} />
             <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
           </Route>

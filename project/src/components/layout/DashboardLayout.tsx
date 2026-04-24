@@ -29,6 +29,8 @@ import {
     KeyRound,
     Lock,
     Gamepad2,
+    Swords,
+    ShieldCheck,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -200,6 +202,14 @@ export default function DashboardLayout() {
             items: [
                 { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: t('nav:quizArena') },
                 { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: t('nav:phishingDojo') },
+                { to: "/dashboard/scenario-simulator", icon: <Swords size={18} />, label: 'Scenario Sim' },
+            ]
+        },
+        {
+            label: 'Security Assessment',
+            icon: <ShieldCheck size={14} />,
+            items: [
+                { to: "/dashboard/security-posture", icon: <ShieldCheck size={18} />, label: 'Security Posture' },
             ]
         },
     ];

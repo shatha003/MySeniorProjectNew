@@ -25,6 +25,7 @@ import {
 import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
+import AttackNarrative from '@/components/ai/AttackNarrative';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -452,23 +453,37 @@ export default function PasswordChecker() {
                                 </motion.div>
                             )}
 
-                            {/* Vulnerability Warning */}
-                            {score <= 4 && (
-                                <motion.div 
-                                    variants={itemVariants}
-                                    className={`rounded-3xl border-2 ${isDark ? 'border-red-500/20' : 'border-red-200'} ${isDark ? 'bg-red-500/5' : 'bg-red-50'} p-8 flex items-center gap-6`}
-                                >
-                                    <div className="w-16 h-16 rounded-2xl bg-red-500 flex items-center justify-center text-white shadow-lg">
-                                        <ShieldAlert size={32} />
-                                    </div>
-                                    <div>
-                                        <h3 className={`text-2xl font-black ${headingColor}`}>{t('passwordChecker:vulnerabilityWarning')}</h3>
-                                        <p className={`text-sm font-medium ${mutedText} mt-1`}>
-                                            {t('passwordChecker:vulnerabilityDescription')}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            )}
+                             {/* Vulnerability Warning */}
+                             {score <= 4 && (
+                                 <motion.div 
+                                     variants={itemVariants}
+                                     className={`rounded-3xl border-2 ${isDark ? 'border-red-500/20' : 'border-red-200'} ${isDark ? 'bg-red-500/5' : 'bg-red-50'} p-8 flex items-center gap-6`}
+                                 >
+                                     <div className="w-16 h-16 rounded-2xl bg-red-500 flex items-center justify-center text-white shadow-lg">
+                                         <ShieldAlert size={32} />
+                                     </div>
+                                     <div>
+                                         <h3 className={`text-2xl font-black ${headingColor}`}>{t('passwordChecker:vulnerabilityWarning')}</h3>
+                                         <p className={`text-sm font-medium ${mutedText} mt-1`}>
+                                             {t('passwordChecker:vulnerabilityDescription')}
+                                         </p>
+                                     </div>
+                                 </motion.div>
+                             )}
+
+                             {/* AI Attack Simulation */}
+                             <AttackNarrative
+                                 passwordTraits={{
+                                     length: password.length,
+                                     hasUppercase: checks.uppercase,
+                                     hasLowercase: checks.lowercase,
+                                     hasNumbers: checks.number,
+                                     hasSpecial: checks.special,
+                                     entropy,
+                                     score,
+                                     crackTime: timeToCrack.value,
+                                 }}
+                             />
                         </motion.div>
                     )}
 

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     Shield, ShieldAlert, Link as LinkIcon, FileSearch, KeyRound,
     Lock, Eye, Flame, Trophy, CheckCircle2, ChevronRight,
-    Activity, Star, MessageSquare, Brain, Mail
+    Activity, Star, MessageSquare, Brain, Mail, Swords, ShieldCheck
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
@@ -15,6 +15,7 @@ import { getUserCredentials } from '../services/credentialService';
 import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
 import { MusicPlayer } from '@/components/ui/MusicPlayer';
+import SecurityBuddy from '@/components/ai/SecurityBuddy';
 import { useWidgetPosition } from '@/hooks/useWidgetPosition';
 import { useTranslation } from 'react-i18next';
 
@@ -206,6 +207,24 @@ const Dashboard = () => {
             color: "from-red-500 to-orange-600",
             glow: "shadow-red-500/30"
         },
+        {
+            name: 'Scenario Sim',
+            description: 'AI-powered security decision simulator',
+            icon: <Swords size={24} />,
+            to: "/dashboard/scenario-simulator",
+            xp: 15,
+            color: "from-purple-500 to-indigo-600",
+            glow: "shadow-purple-500/30"
+        },
+        {
+            name: 'Security Posture',
+            description: 'Get your personalized security report card',
+            icon: <Shield size={24} />,
+            to: "/dashboard/security-posture",
+            xp: 25,
+            color: "from-emerald-500 to-teal-500",
+            glow: "shadow-teal-500/30"
+        },
     ];
 
     const getActivityIcon = (type: ActivityType) => {
@@ -220,8 +239,11 @@ const Dashboard = () => {
             chat_ai: <MessageSquare size={14} />,
             quiz_round: <Brain size={14} />,
             phishing_round: <Mail size={14} />,
+            ai_phishing_round: <Brain size={14} />,
             quiz_streak: <Flame size={14} />,
             phishing_streak: <Flame size={14} />,
+            scenario_simulator: <Swords size={14} />,
+            security_posture: <ShieldCheck size={14} />,
         };
         return icons[type] || <Star size={14} />;
     };
@@ -419,6 +441,11 @@ const Dashboard = () => {
                                     </span>
                                 </div>
                             </div>
+                        </motion.div>
+
+                        {/* AI Security Buddy */}
+                        <motion.div variants={itemVariants}>
+                            <SecurityBuddy />
                         </motion.div>
 
                         {/* Daily Quests */}

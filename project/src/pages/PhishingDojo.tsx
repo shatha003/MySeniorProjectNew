@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Trophy, Flame, ChevronRight, RotateCcw, Home,
     CheckCircle2, XCircle, Eye, Mail,
-    Flag, ShieldCheck, ShieldAlert
+    Flag, ShieldCheck, ShieldAlert, Brain, Loader2
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUserProgressStore } from '@/store/useUserProgressStore';
@@ -16,6 +16,7 @@ import {
     getTierForLevel,
     calculatePhishingXp,
 } from '@/services/phishingService';
+import { generatePhishingEmail } from '@/services/aiPhishingGenerator';
 import { logActivity } from '@/services/activityService';
 import { incrementTaskProgress } from '@/services/dailyTasksService';
 
@@ -62,6 +63,7 @@ export default function PhishingDojo() {
     const { progress, earnXp, fetchProgress } = useUserProgressStore();
 
     const [gameState, setGameState] = useState<'welcome' | 'playing' | 'results'>('welcome');
+    const [gameMode, setGameMode] = useState<'classic' | 'ai'>('classic');
     const [emails, setEmails] = useState<PhishingEmail[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [userDecision, setUserDecision] = useState<'phishing' | 'safe' | null>(null);
@@ -70,6 +72,7 @@ export default function PhishingDojo() {
     const [maxStreak, setMaxStreak] = useState(0);
     const [slideDirection, setSlideDirection] = useState(1);
     const [totalXpEarned, setTotalXpEarned] = useState(0);
+    const [isGeneratingEmail, setIsGeneratingEmail] = useState(false);
 
     const headingColor = isDark ? 'text-[#F4F6FF]' : 'text-gray-900';
     const mutedText = isDark ? 'text-[#8AB4F8]/60' : 'text-gray-500';
@@ -89,9 +92,21 @@ export default function PhishingDojo() {
         }
     }, [user?.uid, fetchProgress]);
 
-    const startGame = useCallback(() => {
-        const es = getEmailsForTier(tier, 5);
-        setEmails(es);
+    const startGame = useCallback(async () => {
+        if (gameMode === 'ai') {
+            setIsGeneratingEmail(true);
+            try {
+                const aiEmail = await generatePhishingEmail(tier);
+                setEmails([aiEmail]);
+            } catch {
+                const es = getEmailsForTier(tier, 1);
+                setEmails(es);
+            }
+            setIsGeneratingEmail(false);
+        } else {
+            const es = getEmailsForTier(tier, 5);
+            setEmails(es);
+        }
         setCurrentIndex(0);
         setUserDecision(null);
         setCorrectCount(0);
@@ -99,7 +114,7 @@ export default function PhishingDojo() {
         setMaxStreak(0);
         setTotalXpEarned(0);
         setGameState('playing');
-    }, [tier]);
+    }, [tier, gameMode]);
 
     const handleDecision = useCallback((decision: 'phishing' | 'safe') => {
         if (userDecision !== null) return;
@@ -119,21 +134,35 @@ export default function PhishingDojo() {
     }, [userDecision, emails, currentIndex, streak]);
 
     const nextEmail = useCallback(async () => {
-        if (currentIndex < emails.length - 1) {
+        if (gameMode === 'ai' && currentIndex < 4) {
+            setIsGeneratingEmail(true);
+            setSlideDirection(1);
+            try {
+                const usedTopics = emails.map(e => e.subject);
+                const aiEmail = await generatePhishingEmail(tier, usedTopics);
+                setEmails(prev => [...prev, aiEmail]);
+            } catch {
+                // fallback
+            }
+            setIsGeneratingEmail(false);
+            setCurrentIndex((prev) => prev + 1);
+            setUserDecision(null);
+        } else if (gameMode === 'classic' && currentIndex < emails.length - 1) {
             setSlideDirection(1);
             setCurrentIndex((prev) => prev + 1);
             setUserDecision(null);
         } else {
             if (!user?.uid) return;
 
-            const xpResult = calculatePhishingXp(correctCount, maxStreak, emails.length);
+            const xpResult = calculatePhishingXp(correctCount, maxStreak, Math.max(emails.length, currentIndex + 1));
             setTotalXpEarned(xpResult.totalXp);
 
             await earnXp(user.uid, xpResult.totalXp);
-            await logActivity(user.uid, 'phishing_round', {
+            await logActivity(user.uid, gameMode === 'ai' ? 'ai_phishing_round' : 'phishing_round', {
                 correct: String(correctCount),
-                total: String(emails.length),
+                total: String(Math.max(emails.length, currentIndex + 1)),
                 tier,
+                mode: gameMode,
             });
 
             if (maxStreak >= 3) {
@@ -145,7 +174,7 @@ export default function PhishingDojo() {
 
             setGameState('results');
         }
-    }, [currentIndex, emails, correctCount, maxStreak, user, earnXp, tier]);
+    }, [gameMode, currentIndex, emails, correctCount, maxStreak, user, earnXp, tier]);
 
     const handleGoHome = () => navigate('/dashboard');
 
@@ -194,29 +223,72 @@ export default function PhishingDojo() {
                             </span>
                         </div>
 
-                        <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
-                            <div className="flex items-center gap-2">
-                                <Mail size={16} className="text-blue-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:emailsToInspect')}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Flag size={16} className="text-red-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:spotRedFlags')}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <ShieldCheck size={16} className="text-emerald-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:learnFromReveal')}</span>
-                            </div>
-                        </div>
+                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
+                             <div className="flex items-center gap-2">
+                                 <Mail size={16} className="text-blue-500" />
+                                 <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:emailsToInspect')}</span>
+                             </div>
+                             <div className="flex items-center gap-2">
+                                 <Flag size={16} className="text-red-500" />
+                                 <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:spotRedFlags')}</span>
+                             </div>
+                             <div className="flex items-center gap-2">
+                                 <ShieldCheck size={16} className="text-emerald-500" />
+                                 <span className={`text-sm font-bold ${headingColor}`}>{t('phishing:learnFromReveal')}</span>
+                             </div>
+                         </div>
 
-                        <motion.button
-                            onClick={startGame}
-                            className="w-full py-4 rounded-2xl bg-gradient-to-r from-neon-crimson to-neon-violet text-white font-black text-lg shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center gap-2"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            {t('phishing:enterDojo')} <ChevronRight size={20} />
-                        </motion.button>
+                         {/* Game Mode Toggle */}
+                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6`}>
+                             <div className="flex items-center gap-2 mb-3">
+                                 <Brain size={16} className="text-purple-500" />
+                                 <span className={`text-sm font-black ${headingColor}`}>Game Mode</span>
+                             </div>
+                             <div className="grid grid-cols-2 gap-3">
+                                 <button
+                                     onClick={() => setGameMode('classic')}
+                                     className={`p-3 rounded-xl border-2 transition-all text-left ${
+                                         gameMode === 'classic'
+                                             ? 'border-neon-crimson bg-neon-crimson/10'
+                                             : isDark ? 'border-white/10 hover:border-white/20' : 'border-gray-200 hover:border-gray-300'
+                                     }`}
+                                 >
+                                     <span className={`text-sm font-black block ${gameMode === 'classic' ? 'text-neon-crimson' : headingColor}`}>Classic</span>
+                                     <span className={`text-[10px] ${mutedText}`}>5 preset emails</span>
+                                 </button>
+                                 <button
+                                     onClick={() => setGameMode('ai')}
+                                     className={`p-3 rounded-xl border-2 transition-all text-left ${
+                                         gameMode === 'ai'
+                                             ? 'border-purple-500 bg-purple-500/10'
+                                             : isDark ? 'border-white/10 hover:border-white/20' : 'border-gray-200 hover:border-gray-300'
+                                     }`}
+                                 >
+                                     <span className={`text-sm font-black flex items-center gap-1 ${gameMode === 'ai' ? 'text-purple-500' : headingColor}`}>
+                                         <Brain size={14} /> AI Challenge
+                                     </span>
+                                     <span className={`text-[10px] ${mutedText}`}>AI-generated emails</span>
+                                 </button>
+                             </div>
+                         </div>
+
+                         <motion.button
+                             onClick={startGame}
+                             disabled={isGeneratingEmail}
+                             className="w-full py-4 rounded-2xl bg-gradient-to-r from-neon-crimson to-neon-violet text-white font-black text-lg shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center gap-2 disabled:opacity-50"
+                             whileHover={{ scale: isGeneratingEmail ? 1 : 1.02 }}
+                             whileTap={{ scale: isGeneratingEmail ? 1 : 0.98 }}
+                         >
+                             {isGeneratingEmail ? (
+                                 <>
+                                     <Loader2 size={20} className="animate-spin" /> Generating AI Emails...
+                                 </>
+                             ) : (
+                                 <>
+                                     {t('phishing:enterDojo')} <ChevronRight size={20} />
+                                 </>
+                             )}
+                         </motion.button>
 
                         <motion.button
                             onClick={handleGoHome}
@@ -268,11 +340,11 @@ export default function PhishingDojo() {
                                     <span className="text-xs font-black text-orange-500">{streak}</span>
                                 </motion.div>
                             )}
-                            <div className={`px-3 py-1.5 rounded-full ${isDark ? 'bg-cyber-dark/50' : 'bg-gray-100'}`}>
-                                <span className={`text-xs font-bold ${mutedText}`}>
-                                    {currentIndex + 1}/{emails.length}
-                                </span>
-                            </div>
+                             <div className={`px-3 py-1.5 rounded-full ${isDark ? 'bg-cyber-dark/50' : 'bg-gray-100'}`}>
+                                 <span className={`text-xs font-bold ${mutedText}`}>
+                                     {currentIndex + 1}/{gameMode === 'ai' ? '5' : emails.length}
+                                 </span>
+                             </div>
                         </div>
                     </motion.div>
 
@@ -281,7 +353,7 @@ export default function PhishingDojo() {
                         <motion.div
                             className="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full"
                             initial={{ width: 0 }}
-                            animate={{ width: `${((currentIndex + 1) / emails.length) * 100}%` }}
+                             animate={{ width: `${((currentIndex + 1) / (gameMode === 'ai' ? 5 : emails.length)) * 100}%` }}
                             transition={{ duration: 0.5 }}
                         />
                     </motion.div>
@@ -444,15 +516,18 @@ export default function PhishingDojo() {
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 onClick={nextEmail}
-                                                className="w-full py-3 rounded-2xl bg-gradient-to-r from-neon-crimson to-neon-violet text-white font-black flex items-center justify-center gap-2"
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                            >
-                                                {currentIndex < emails.length - 1 ? (
-                                                    <>{t('phishing:nextEmail')} <ChevronRight size={18} /></>
-                                                ) : (
-                                                    <>{t('phishing:seeResults')} <Trophy size={18} /></>
-                                                )}
+                                                 className="w-full py-3 rounded-2xl bg-gradient-to-r from-neon-crimson to-neon-violet text-white font-black flex items-center justify-center gap-2 disabled:opacity-50"
+                                                 whileHover={{ scale: 1.02 }}
+                                                 whileTap={{ scale: 0.98 }}
+                                                 disabled={isGeneratingEmail}
+                                             >
+                                                 {isGeneratingEmail ? (
+                                                     <><Loader2 size={18} className="animate-spin" /> Generating...</>
+                                                 ) : currentIndex < (gameMode === 'ai' ? 4 : emails.length - 1) ? (
+                                                     <>{t('phishing:nextEmail')} <ChevronRight size={18} /></>
+                                                 ) : (
+                                                     <>{t('phishing:seeResults')} <Trophy size={18} /></>
+                                                 )}
                                             </motion.button>
                                         </motion.div>
                                     )}
@@ -504,8 +579,11 @@ export default function PhishingDojo() {
                             {grade.label}
                         </h1>
                         <p className={`text-sm ${mutedText} mb-6`}>
-                            {t('phishing:modeComplete', { emoji: tierLabels[tier].emoji, mode: tierLabels[tier].label })}
-                        </p>
+                             {gameMode === 'ai'
+                                 ? `AI Challenge Complete!`
+                                 : t('phishing:modeComplete', { emoji: tierLabels[tier].emoji, mode: tierLabels[tier].label })
+                             }
+                         </p>
 
                         <div className="grid grid-cols-3 gap-4 mb-6">
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
