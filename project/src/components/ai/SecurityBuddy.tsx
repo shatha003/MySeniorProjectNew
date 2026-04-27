@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Loader2, CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { callNova } from '../../services/aiService';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUserProgressStore } from '../../store/useUserProgressStore';
@@ -18,6 +19,7 @@ interface Challenge {
 export default function SecurityBuddy() {
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation('securityBuddy');
     const user = useAuthStore((s) => s.user);
     const { progress } = useUserProgressStore();
 
@@ -96,13 +98,13 @@ export default function SecurityBuddy() {
                         <Brain size={20} />
                     </div>
                     <div>
-                        <h3 className={`font-black ${headingColor}`}>Security Buddy</h3>
-                        <p className={`text-[10px] font-bold ${mutedText}`}>AI-powered daily challenges</p>
+                        <h3 className={`font-black ${headingColor}`}>{t('title')}</h3>
+                        <p className={`text-[10px] font-bold ${mutedText}`}>{t('subtitle')}</p>
                     </div>
                 </div>
                 {!isLoading && (
                     <div className={`text-xs font-black px-3 py-1.5 rounded-full ${completedCount === 3 ? 'bg-emerald-500/10 text-emerald-500' : isDark ? 'bg-purple-500/10 text-purple-500' : 'bg-purple-100 text-purple-600'}`}>
-                        {completedCount}/3 done
+                        {t('done', { count: completedCount })}
                     </div>
                 )}
             </div>
@@ -111,7 +113,7 @@ export default function SecurityBuddy() {
                 {isLoading ? (
                     <div className="flex items-center gap-3 py-4 justify-center">
                         <Loader2 size={20} className="animate-spin text-purple-500" />
-                        <span className={`text-sm font-bold ${mutedText}`}>Generating your challenges...</span>
+                        <span className={`text-sm font-bold ${mutedText}`}>{t('generating')}</span>
                     </div>
                 ) : (
                     challenges.map((challenge, i) => (
@@ -136,7 +138,7 @@ export default function SecurityBuddy() {
                                     <p className={`text-xs ${mutedText} mt-0.5`}>{challenge.description}</p>
                                     {challenge.tool && !challenge.completed && (
                                         <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-black text-purple-500">
-                                            <Sparkles size={10} /> Open {challenge.tool.replace('-', ' ')}
+                                            <Sparkles size={10} /> {t('open', { tool: challenge.tool.replace('-', ' ') })}
                                         </span>
                                     )}
                                 </div>

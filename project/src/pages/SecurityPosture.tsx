@@ -1,4 +1,4 @@
-import { securityQuestions } from '@/data/securityQuestions';
+import { useSecurityQuestions, type SecurityQuestion } from '@/hooks/useSecurityQuestions';
 import { callNova } from '@/services/aiService';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUserProgressStore } from '@/store/useUserProgressStore';
@@ -7,6 +7,7 @@ import { useTheme } from '@/components/theme-provider';
 import { motion } from 'framer-motion';
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     ShieldCheck, ChevronRight, Home, Brain,
     Award, AlertTriangle, CheckCircle2, XCircle, BarChart3,
@@ -36,6 +37,7 @@ export default function SecurityPosture() {
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation('securityPosture');
     const user = useAuthStore((s) => s.user);
     const { earnXp } = useUserProgressStore();
 
@@ -49,7 +51,7 @@ export default function SecurityPosture() {
     const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
-    const questions = securityQuestions;
+    const questions: SecurityQuestion[] = useSecurityQuestions();
     const totalQuestions = questions.length;
 
     const handleAnswer = useCallback((questionIndex: number, answerIndex: number) => {
@@ -62,16 +64,16 @@ export default function SecurityPosture() {
     const analyzePosture = useCallback(async () => {
         setPhase('analyzing');
 
-        const qaList = questions.map((q, i) => {
+        const qaList = questions.map((q: SecurityQuestion, i: number) => {
             const ansIdx = answers[i] ?? 0;
             return `Q: ${q.question}\nA: ${q.options[ansIdx]}`;
         }).join('\n\n');
 
-        const rawScore = questions.reduce((sum, q, i) => {
+        const rawScore = questions.reduce((sum: number, q: SecurityQuestion, i: number) => {
             const ansIdx = answers[i] ?? 0;
             return sum + (q.scores[ansIdx] || 0);
         }, 0);
-        const maxScore = questions.reduce((sum, q) => sum + Math.max(...q.scores), 0);
+        const maxScore = questions.reduce((sum: number, q: SecurityQuestion) => sum + Math.max(...q.scores), 0);
         const percentage = Math.round((rawScore / maxScore) * 100);
 
         try {
@@ -138,29 +140,29 @@ export default function SecurityPosture() {
                         <motion.div className="text-6xl mb-6" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
                             <ShieldCheck size={64} className="mx-auto text-emerald-500" />
                         </motion.div>
-                        <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>Security Posture</h1>
-                        <p className={`text-lg font-medium ${mutedText} mb-6`}>Answer 15 questions and get your personalized security report card</p>
+                        <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>{t('title')}</h1>
+                        <p className={`text-lg font-medium ${mutedText} mb-6`}>{t('subtitle')}</p>
 
                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
                             <div className="flex items-center gap-2">
                                 <BarChart3 size={16} className="text-emerald-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>4 security categories analyzed</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('categoriesAnalyzed')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Brain size={16} className="text-purple-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>AI-powered personalized report</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('aiReport')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Award size={16} className="text-amber-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>+25 XP reward, prioritized action plan</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('xpReward')}</span>
                             </div>
                         </div>
 
                         <motion.button onClick={() => setPhase('questions')} className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black text-lg flex items-center justify-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            Start Assessment <ChevronRight size={20} />
+                            {t('startAssessment')} <ChevronRight size={20} />
                         </motion.button>
                         <motion.button onClick={() => navigate('/dashboard')} className={`w-full mt-3 py-3 rounded-2xl ${isDark ? 'bg-cyber-surface text-[#8AB4F8]/60' : 'bg-gray-100 text-gray-500'} font-bold text-sm flex items-center justify-center gap-2`} whileHover={{ scale: 1.02 }}>
-                            <Home size={16} /> Back to Dashboard
+                            <Home size={16} /> {t('backToDashboard')}
                         </motion.button>
                     </motion.div>
                 </div>
@@ -232,7 +234,7 @@ export default function SecurityPosture() {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <Brain size={20} /> Analyze My Security Posture
+                                    <Brain size={20} /> {t('analyzePosture')}
                                 </motion.button>
                             )}
                         </div>
@@ -250,8 +252,8 @@ export default function SecurityPosture() {
                         <Brain size={64} className="text-purple-500 mx-auto" />
                     </motion.div>
                     <div>
-                        <h2 className={`text-2xl font-black ${headingColor}`}>Analyzing Your Security...</h2>
-                        <p className={`text-sm ${mutedText} mt-2`}>AI is generating your personalized report</p>
+                        <h2 className={`text-2xl font-black ${headingColor}`}>{t('analyzing')}</h2>
+                        <p className={`text-sm ${mutedText} mt-2`}>{t('aiThinking')}</p>
                     </div>
                 </div>
             </motion.div>
@@ -268,20 +270,18 @@ export default function SecurityPosture() {
                         <button onClick={() => navigate('/dashboard')} className={`p-2 rounded-xl ${isDark ? 'bg-cyber-dark/50' : 'bg-gray-100'} hover:scale-105 transition-transform`}>
                             <Home size={18} className={mutedText} />
                         </button>
-                        <h1 className={`font-display text-2xl font-black ${headingColor}`}>Security Report Card</h1>
+                        <h1 className={`font-display text-2xl font-black ${headingColor}`}>{t('reportCard')}</h1>
                         <div />
                     </motion.div>
 
-                    {/* Grade Card */}
                     <motion.div variants={itemVariants} className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-8 shadow-2xl text-center`}>
                         <motion.div className={`text-8xl font-black font-display ${gradeColor}`} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}>
                             {report.overallGrade}
                         </motion.div>
-                        <p className={`text-lg font-bold mt-2 ${headingColor}`}>Overall Security Score: {report.overallScore}/100</p>
+                        <p className={`text-lg font-bold mt-2 ${headingColor}`}>{t('overallScore')}: {report.overallScore}{t('of100')}</p>
                         <p className={`text-sm ${mutedText} mt-2 max-w-lg mx-auto`}>{report.summary}</p>
                     </motion.div>
 
-                    {/* Category Scores */}
                     <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {report.categories.map((cat, i) => (
                             <motion.div
@@ -313,12 +313,11 @@ export default function SecurityPosture() {
                         ))}
                     </motion.div>
 
-                    {/* Vulnerabilities & Recommendations */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <motion.div variants={itemVariants} className={`rounded-3xl border-2 ${isDark ? 'border-red-500/20' : 'border-red-200'} ${cardBg} p-6 shadow-lg`}>
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 rounded-xl bg-red-500/10 text-red-500"><AlertTriangle size={20} /></div>
-                                <h3 className={`text-lg font-black ${headingColor}`}>Top Vulnerabilities</h3>
+                                <h3 className={`text-lg font-black ${headingColor}`}>{t('topVulnerabilities')}</h3>
                             </div>
                             <div className="space-y-3">
                                 {report.vulnerabilities.map((v, i) => (
@@ -333,7 +332,7 @@ export default function SecurityPosture() {
                         <motion.div variants={itemVariants} className={`rounded-3xl border-2 ${isDark ? 'border-emerald-500/20' : 'border-emerald-200'} ${cardBg} p-6 shadow-lg`}>
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500"><CheckCircle2 size={20} /></div>
-                                <h3 className={`text-lg font-black ${headingColor}`}>Priority Actions</h3>
+                                <h3 className={`text-lg font-black ${headingColor}`}>{t('priorityActions')}</h3>
                             </div>
                             <div className="space-y-3">
                                 {report.recommendations.map((r, i) => (
@@ -348,7 +347,7 @@ export default function SecurityPosture() {
 
                     <motion.div variants={itemVariants} className="text-center">
                         <motion.button onClick={() => { setPhase('welcome'); setCurrentQuestion(0); setAnswers({}); setReport(null); }} className="px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black flex items-center justify-center gap-2 mx-auto" whileHover={{ scale: 1.02 }}>
-                            Retake Assessment
+                            {t('retakeAssessment')}
                         </motion.button>
                     </motion.div>
                 </div>

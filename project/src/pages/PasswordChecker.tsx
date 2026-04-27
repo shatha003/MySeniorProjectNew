@@ -471,19 +471,21 @@ export default function PasswordChecker() {
                                  </motion.div>
                              )}
 
-                             {/* AI Attack Simulation */}
-                             <AttackNarrative
-                                 passwordTraits={{
-                                     length: password.length,
-                                     hasUppercase: checks.uppercase,
-                                     hasLowercase: checks.lowercase,
-                                     hasNumbers: checks.number,
-                                     hasSpecial: checks.special,
-                                     entropy,
-                                     score,
-                                     crackTime: timeToCrack.value,
-                                 }}
-                             />
+{/* AI Attack Simulation */}
+                              {password.length >= 4 && (
+                              <AttackNarrative
+                                  passwordTraits={{
+                                      length: password.length,
+                                      hasUppercase: checks.uppercase,
+                                      hasLowercase: checks.lowercase,
+                                      hasNumbers: checks.number,
+                                      hasSpecial: checks.special,
+                                      entropy,
+                                      score,
+                                      crackTime: timeToCrack.value,
+                                  }}
+                              />
+                              )}
                         </motion.div>
                     )}
 

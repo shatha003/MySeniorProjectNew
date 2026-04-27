@@ -5,6 +5,8 @@ import {
     ShieldCheck, ShieldAlert, AlertTriangle, Brain, Trophy, Flame
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUserProgressStore } from '@/store/useUserProgressStore';
 import { useTheme } from '@/components/theme-provider';
@@ -32,6 +34,7 @@ export default function ScenarioSimulator() {
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
+    const { t } = useTranslation('scenarioSimulator');
     const user = useAuthStore((s) => s.user);
     const { earnXp } = useUserProgressStore();
 
@@ -39,6 +42,7 @@ export default function ScenarioSimulator() {
     const [tier, setTier] = useState<DifficultyTier>('cadet');
     const [round, setRound] = useState(0);
     const [totalRounds] = useState(5);
+    const roundRef = useRef(0);
     const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
     const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
     const [consequence, setConsequence] = useState('');
@@ -55,13 +59,15 @@ export default function ScenarioSimulator() {
     const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
     const tierConfig = {
-        cadet: { label: 'Cadet', color: 'text-amber-500', bg: 'bg-amber-500/10', emoji: '🔍' },
-        analyst: { label: 'Analyst', color: 'text-blue-500', bg: 'bg-blue-500/10', emoji: '🕵️' },
-        operator: { label: 'Operator', color: 'text-purple-500', bg: 'bg-purple-500/10', emoji: '🎯' },
+        cadet: { label: t('cadet'), color: 'text-amber-500', bg: 'bg-amber-500/10', emoji: '🔍' },
+        analyst: { label: t('analyst'), color: 'text-blue-500', bg: 'bg-blue-500/10', emoji: '🕵️' },
+        operator: { label: t('operator'), color: 'text-purple-500', bg: 'bg-purple-500/10', emoji: '🎯' },
     };
 
     const generateScenario = useCallback(async (tierOverride?: DifficultyTier) => {
         setIsLoading(true);
+        const lang = i18n.language === 'ar' ? 'Arabic' : 'English';
+        const currentRound = roundRef.current;
         try {
             const activeTier = tierOverride || tier;
             const tierDescriptions = {
@@ -73,20 +79,23 @@ export default function ScenarioSimulator() {
             const prompt = `Generate a cybersecurity scenario for an interactive training exercise.
 
 Difficulty: ${activeTier} - ${tierDescriptions[activeTier]}
-Round: ${round + 1} of ${totalRounds}
+Round: ${currentRound + 1} of ${totalRounds}
+
+IMPORTANT: Generate ALL content in ${lang}.
 
 Create a realistic scenario where the user must make a security decision. Return ONLY valid JSON:
 {
-  "scenario": "A detailed description of the situation (2-3 sentences)",
-  "choices": ["Option A", "Option B", "Option C"],
-  "topic": "The security topic being tested (e.g., 'Phishing', 'Password Security', 'Social Engineering')"
+  "scenario": "A detailed description of the situation in ${lang} (2-3 sentences)",
+  "choices": ["Option A in ${lang}", "Option B in ${lang}", "Option C in ${lang}"],
+  "topic": "The security topic being tested in ${lang} (e.g., 'Phishing', 'Password Security', 'Social Engineering')"
 }
 
 Requirements:
 - The scenario should be realistic and educational
 - Include exactly 3 choices where only ONE is the safest/correct option
 - Make the wrong choices tempting but clearly risky to an educated user
-- Vary topics across: phishing, passwords, social engineering, WiFi security, data privacy, malware, physical security`;
+- Vary topics across: phishing, passwords, social engineering, WiFi security, data privacy, malware, physical security
+- ALL text must be in ${lang}`;
 
             const response = await callNova(
                 [{ role: 'user', content: prompt }],
@@ -118,7 +127,7 @@ Requirements:
         } finally {
             setIsLoading(false);
         }
-    }, [tier, round, totalRounds]);
+    }, [tier, totalRounds]);
 
     const evaluateChoice = useCallback(async (choiceIndex: number) => {
         if (!scenarioData || selectedChoice !== null) return;
@@ -126,16 +135,19 @@ Requirements:
         setIsLoading(true);
 
         try {
+            const lang = i18n.language === 'ar' ? 'Arabic' : 'English';
             const prompt = `Evaluate this cybersecurity training choice.
 
 Scenario: ${scenarioData.scenario}
 Available choices: ${scenarioData.choices.map((c, i) => `${i + 1}. ${c}`).join('\n')}
 User selected: Choice ${choiceIndex + 1} - "${scenarioData.choices[choiceIndex]}"
 
+IMPORTANT: Generate ALL narrative text in ${lang}.
+
 Determine if this was the SAFEST choice. Return ONLY valid JSON:
 {
   "wasSafe": true/false,
-  "consequence": "A brief, dramatic narrative (2-3 sentences) describing what happens as a result of this choice. Be engaging like a story."
+  "consequence": "A brief, dramatic narrative in ${lang} (2-3 sentences) describing what happens as a result of this choice. Be engaging like a story."
 }`;
 
             const response = await callNova(
@@ -185,7 +197,9 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
             }
             setPhase('results');
         } else {
-            setRound(prev => prev + 1);
+            const nextRoundNum = round + 1;
+            roundRef.current = nextRoundNum;
+            setRound(nextRoundNum);
             setSelectedChoice(null);
             setConsequence('');
             setPhase('playing');
@@ -195,6 +209,7 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
 
     const startGame = async (selectedTier: DifficultyTier) => {
         setTier(selectedTier);
+        roundRef.current = 0;
         setRound(0);
         setSafeChoices(0);
         setStreak(0);
@@ -223,39 +238,39 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                             <Swords size={64} className="mx-auto text-purple-500" />
                         </motion.div>
 
-                        <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>Scenario Simulator</h1>
-                        <p className={`text-lg font-medium ${mutedText} mb-6`}>Face realistic cybersecurity situations and make the right call</p>
+                        <h1 className={`font-display text-4xl font-black mb-3 ${headingColor}`}>{t('title')}</h1>
+                        <p className={`text-lg font-medium ${mutedText} mb-6`}>{t('subtitle')}</p>
 
                         <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6 text-left space-y-2`}>
                             <div className="flex items-center gap-2">
                                 <Brain size={16} className="text-purple-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>AI-generated scenarios</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('aiScenarios')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Swords size={16} className="text-red-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>Choose your response wisely</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('chooseWisely')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <ShieldCheck size={16} className="text-emerald-500" />
-                                <span className={`text-sm font-bold ${headingColor}`}>5 rounds, +15 XP per safe choice</span>
+                                <span className={`text-sm font-bold ${headingColor}`}>{t('roundsInfo')}</span>
                             </div>
                         </div>
 
-                        <p className={`text-sm font-bold ${mutedText} mb-4`}>Select difficulty:</p>
+                        <p className={`text-sm font-bold ${mutedText} mb-4`}>{t('selectDifficulty')}</p>
                         <div className="space-y-3">
-                            {(['cadet', 'analyst', 'operator'] as DifficultyTier[]).map((t) => (
+                            {(['cadet', 'analyst', 'operator'] as DifficultyTier[]).map((tierKey) => (
                                 <motion.button
-                                    key={t}
-                                    onClick={() => startGame(t)}
+                                    key={tierKey}
+                                    onClick={() => startGame(tierKey)}
                                     className={`w-full p-4 rounded-2xl border-2 ${isDark ? 'border-white/10 hover:border-purple-500/50 bg-cyber-surface' : 'border-gray-200 hover:border-purple-300 bg-gray-50'} transition-all text-left flex items-center gap-4`}
                                     whileHover={{ scale: 1.02, x: 5 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <span className="text-2xl">{tierConfig[t].emoji}</span>
+                                    <span className="text-2xl">{tierConfig[tierKey].emoji}</span>
                                     <div>
-                                        <span className={`font-black ${tierConfig[t].color}`}>{tierConfig[t].label}</span>
+                                        <span className={`font-black ${tierConfig[tierKey].color}`}>{tierConfig[tierKey].label}</span>
                                         <p className={`text-xs ${mutedText}`}>
-                                            {t === 'cadet' ? 'Everyday security situations' : t === 'analyst' ? 'Workplace security scenarios' : 'Advanced security incidents'}
+                                            {tierKey === 'cadet' ? t('cadetDesc') : tierKey === 'analyst' ? t('analystDesc') : t('operatorDesc')}
                                         </p>
                                     </div>
                                 </motion.button>
@@ -263,7 +278,7 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                         </div>
 
                         <motion.button onClick={() => navigate('/dashboard')} className={`w-full mt-4 py-3 rounded-2xl ${isDark ? 'bg-cyber-surface text-[#8AB4F8]/60' : 'bg-gray-100 text-gray-500'} font-bold text-sm flex items-center justify-center gap-2`} whileHover={{ scale: 1.02 }}>
-                            <Home size={16} /> Back to Dashboard
+                            <Home size={16} /> {t('backToDashboard')}
                         </motion.button>
                     </motion.div>
                 </div>
@@ -304,8 +319,8 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                     {isLoading && !scenarioData ? (
                         <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-12 shadow-xl text-center`}>
                             <Loader2 size={40} className="animate-spin text-purple-500 mx-auto mb-4" />
-                            <p className={`font-black ${headingColor}`}>Generating scenario...</p>
-                            <p className={`text-sm ${mutedText} mt-2`}>AI is crafting your challenge</p>
+                            <p className={`font-black ${headingColor}`}>{t('generating')}</p>
+                            <p className={`text-sm ${mutedText} mt-2`}>{t('aiCrafting')}</p>
                         </div>
                     ) : scenarioData && (
                         <motion.div variants={itemVariants} className={`rounded-3xl border-2 ${borderColor} ${cardBg} shadow-xl overflow-hidden`}>
@@ -350,7 +365,7 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                                     {isLoading && selectedChoice !== null && (
                                         <motion.div className="text-center py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                             <Loader2 size={32} className="animate-spin text-purple-500 mx-auto mb-3" />
-                                            <p className={`font-bold ${mutedText}`}>Evaluating your choice...</p>
+                                            <p className={`font-bold ${mutedText}`}>{t('evaluating')}</p>
                                         </motion.div>
                                     )}
 
@@ -364,9 +379,9 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                                                     </div>
                                                     <div>
                                                         <p className={`text-sm font-black ${wasSafe ? 'text-emerald-500' : 'text-red-500'}`}>
-                                                            {wasSafe ? 'Safe Choice!' : 'Risky Move!'}
+                                                            {wasSafe ? t('safeChoice') : t('riskyMove')}
                                                         </p>
-                                                        <p className={`text-xs ${mutedText}`}>You chose: {scenarioData.choices[selectedChoice!]}</p>
+                                                        <p className={`text-xs ${mutedText}`}>{t('youChose')} {scenarioData.choices[selectedChoice!]}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -375,7 +390,7 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                                             <div className={`rounded-2xl ${isDark ? 'bg-blue-500/5 border border-blue-500/10' : 'bg-blue-50 border border-blue-100'} p-4`}>
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <AlertTriangle size={14} className="text-blue-500" />
-                                                    <span className={`text-xs font-black ${headingColor}`}>What happened:</span>
+                                                    <span className={`text-xs font-black ${headingColor}`}>{t('whatHappened')}</span>
                                                 </div>
                                                 <p className={`text-sm ${mutedText} leading-relaxed`}>{consequence}</p>
                                             </div>
@@ -386,7 +401,7 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                             >
-                                                {round + 1 < totalRounds ? <>Next Scenario <ChevronRight size={18} /></> : <>See Results <Trophy size={18} /></>}
+                                                {round + 1 < totalRounds ? <>{t('nextScenario')} <ChevronRight size={18} /></> : <>{t('seeResults')} <Trophy size={18} /></>}
                                             </motion.button>
                                         </motion.div>
                                     )}
@@ -402,10 +417,10 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
     if (phase === 'results') {
         const percentage = Math.round((safeChoices / totalRounds) * 100);
         const getGrade = () => {
-            if (percentage === 100) return { emoji: '🏆', label: 'Security Expert', color: 'text-amber-500' };
-            if (percentage >= 80) return { emoji: '🌟', label: 'Sharp Analyst', color: 'text-emerald-500' };
-            if (percentage >= 60) return { emoji: '👍', label: 'Good Instincts', color: 'text-blue-500' };
-            return { emoji: '📚', label: 'Keep Training', color: 'text-orange-500' };
+            if (percentage === 100) return { emoji: '🏆', label: t('securityExpert'), color: 'text-amber-500' };
+            if (percentage >= 80) return { emoji: '🌟', label: t('sharpAnalyst'), color: 'text-emerald-500' };
+            if (percentage >= 60) return { emoji: '👍', label: t('goodInstincts'), color: 'text-blue-500' };
+            return { emoji: '📚', label: t('keepTraining'), color: 'text-orange-500' };
         };
         const grade = getGrade();
 
@@ -420,20 +435,20 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
                         </motion.div>
 
                         <h1 className={`font-display text-3xl font-black mb-2 ${headingColor}`}>{grade.label}</h1>
-                        <p className={`text-sm ${mutedText} mb-6`}>{tierConfig[tier].emoji} {tierConfig[tier].label} Scenario Complete</p>
+                        <p className={`text-sm ${mutedText} mb-6`}>{tierConfig[tier].emoji} {tierConfig[tier].label} {t('scenarioComplete')}</p>
 
                         <div className="grid grid-cols-3 gap-4 mb-6">
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className={`text-2xl font-black ${grade.color}`}>{safeChoices}/{totalRounds}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Safe</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('safe')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-orange-500">{maxStreak}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Best Streak</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('bestStreak')}</div>
                             </div>
                             <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4`}>
                                 <div className="text-2xl font-black text-emerald-500">+{totalXpEarned.current}</div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>XP</div>
+                                <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>{t('xp')}</div>
                             </div>
                         </div>
 
@@ -443,10 +458,10 @@ Determine if this was the SAFEST choice. Return ONLY valid JSON:
 
                         <div className="space-y-3">
                             <motion.button onClick={async () => { setPhase('welcome'); }} className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-black text-lg flex items-center justify-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                                <RotateCcw size={18} /> Play Again
+                                <RotateCcw size={18} /> {t('playAgain')}
                             </motion.button>
                             <motion.button onClick={() => navigate('/dashboard')} className={`w-full py-3 rounded-2xl ${isDark ? 'bg-cyber-surface text-[#8AB4F8]/60' : 'bg-gray-100 text-gray-500'} font-bold flex items-center justify-center gap-2`} whileHover={{ scale: 1.02 }}>
-                                <Home size={16} /> Back to Dashboard
+                                <Home size={16} /> {t('backToDashboard')}
                             </motion.button>
                         </div>
                     </motion.div>

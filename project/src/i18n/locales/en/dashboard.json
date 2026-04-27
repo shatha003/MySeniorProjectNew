@@ -22,6 +22,8 @@
   "treasureBoxDesc": "Keep all your secret keys in one safe place.",
   "quizArenaDesc": "Test your cyber smarts with trivia!",
   "phishingDojoDesc": "Spot the fake emails like a pro!",
+  "scenarioSimDesc": "AI-powered security decision simulator",
+  "securityPostureDesc": "Get your personalized security report card",
   "timeJustNow": "Just now",
   "timeMinutesAgo": "{{count}}m ago",
   "timeHoursAgo": "{{count}}h ago",

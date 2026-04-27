@@ -22,6 +22,12 @@ import enLanding from './locales/en/landing.json';
 import enTerms from './locales/en/terms.json';
 import enPrivacy from './locales/en/privacy.json';
 import enComponents from './locales/en/components.json';
+import enScenarioSimulator from './locales/en/scenarioSimulator.json';
+import enSecurityBuddy from './locales/en/securityBuddy.json';
+import enPhishingAI from './locales/en/phishingAI.json';
+import enScanAIAnalysis from './locales/en/scanAIAnalysis.json';
+import enAttackNarrative from './locales/en/attackNarrative.json';
+import enSecurityPosture from './locales/en/securityPosture.json';
 
 import arCommon from './locales/ar/common.json';
 import arAuth from './locales/ar/auth.json';
@@ -43,6 +49,12 @@ import arLanding from './locales/ar/landing.json';
 import arTerms from './locales/ar/terms.json';
 import arPrivacy from './locales/ar/privacy.json';
 import arComponents from './locales/ar/components.json';
+import arScenarioSimulator from './locales/ar/scenarioSimulator.json';
+import arSecurityBuddy from './locales/ar/securityBuddy.json';
+import arPhishingAI from './locales/ar/phishingAI.json';
+import arScanAIAnalysis from './locales/ar/scanAIAnalysis.json';
+import arAttackNarrative from './locales/ar/attackNarrative.json';
+import arSecurityPosture from './locales/ar/securityPosture.json';
 
 const resources = {
   en: {
@@ -66,6 +78,12 @@ const resources = {
     terms: enTerms,
     privacy: enPrivacy,
     components: enComponents,
+    scenarioSimulator: enScenarioSimulator,
+    securityBuddy: enSecurityBuddy,
+    phishingAI: enPhishingAI,
+    scanAIAnalysis: enScanAIAnalysis,
+    attackNarrative: enAttackNarrative,
+    securityPosture: enSecurityPosture,
   },
   ar: {
     common: arCommon,
@@ -88,6 +106,12 @@ const resources = {
     terms: arTerms,
     privacy: arPrivacy,
     components: arComponents,
+    scenarioSimulator: arScenarioSimulator,
+    securityBuddy: arSecurityBuddy,
+    phishingAI: arPhishingAI,
+    scanAIAnalysis: arScanAIAnalysis,
+    attackNarrative: arAttackNarrative,
+    securityPosture: arSecurityPosture,
   },
 };
 
@@ -103,6 +127,8 @@ i18n
       'passwordGenerator', 'passwordChecker', 'encryption', 'vault',
       'settings', 'aiAgent', 'quiz', 'phishing', 'imagePrivacy',
       'calculator', 'landing', 'terms', 'privacy', 'components',
+      'scenarioSimulator', 'securityBuddy', 'phishingAI',
+      'scanAIAnalysis', 'attackNarrative', 'securityPosture',
     ],
     interpolation: {
       escapeValue: false,

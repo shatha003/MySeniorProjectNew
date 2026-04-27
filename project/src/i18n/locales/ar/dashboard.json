@@ -22,6 +22,8 @@
   "treasureBoxDesc": "احفظ كل مفاتيحك السرية في مكان آمن.",
   "quizArenaDesc": "اختبر معرفتك السيبرانية بالأسئلة!",
   "phishingDojoDesc": "اكتشف الرسائل المزيفة كالمحترفين!",
+  "scenarioSimDesc": "محاكي قرارات أمنية بالذكاء الاصطناعي",
+  "securityPostureDesc": "احصل على بطاقة تقريرك الأمني الشخصية",
   "timeJustNow": "الآن",
   "timeMinutesAgo": "منذ {{count}} د",
   "timeHoursAgo": "منذ {{count}} س",

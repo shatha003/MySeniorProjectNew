@@ -208,8 +208,8 @@ const Dashboard = () => {
             glow: "shadow-red-500/30"
         },
         {
-            name: 'Scenario Sim',
-            description: 'AI-powered security decision simulator',
+            name: t('nav:scenarioSim'),
+            description: t('dashboard:scenarioSimDesc'),
             icon: <Swords size={24} />,
             to: "/dashboard/scenario-simulator",
             xp: 15,
@@ -217,8 +217,8 @@ const Dashboard = () => {
             glow: "shadow-purple-500/30"
         },
         {
-            name: 'Security Posture',
-            description: 'Get your personalized security report card',
+            name: t('nav:securityPosture'),
+            description: t('dashboard:securityPostureDesc'),
             icon: <Shield size={24} />,
             to: "/dashboard/security-posture",
             xp: 25,
@@ -575,7 +575,7 @@ const Dashboard = () => {
                             <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
                                 <Star size={12} /> {t('dashboard:gameZone')}
                             </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <motion.div
                                     variants={itemVariants}
                                     whileHover={{ y: -4, scale: 1.02 }}
@@ -606,6 +606,48 @@ const Dashboard = () => {
                                     <p className={`text-xs ${mutedText} line-clamp-1`}>{t('dashboard:phishingDojoDesc')}</p>
                                     <div className="mt-3 flex items-center justify-between">
                                         <span className="text-[10px] font-black text-emerald-500">+15 {t('common:xp')}</span>
+                                        <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    variants={itemVariants}
+                                    whileHover={{ y: -4, scale: 1.02 }}
+                                    className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                    onClick={() => navigate('/dashboard/scenario-simulator')}
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white mb-3 shadow-md shadow-purple-500/30">
+                                        <Swords size={24} />
+                                    </div>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>{t('nav:scenarioSim')}</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>{t('dashboard:scenarioSimDesc')}</p>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-emerald-500">+15 {t('common:xp')}</span>
+                                        <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
+                                    </div>
+                                </motion.div>
+                            </div>
+                        </div>
+
+                        {/* Security Assessment */}
+                        <div className="mb-4">
+                            <h3 className={`text-xs font-bold uppercase tracking-widest ${mutedText} mb-3 flex items-center gap-2`}>
+                                <ShieldCheck size={12} /> {t('nav:securityAssessment')}
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <motion.div
+                                    variants={itemVariants}
+                                    whileHover={{ y: -4, scale: 1.02 }}
+                                    className={`group relative p-4 rounded-2xl border-2 ${borderColor} ${cardBg} cursor-pointer shadow-md overflow-hidden`}
+                                    onClick={() => navigate('/dashboard/security-posture')}
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white mb-3 shadow-md shadow-emerald-500/30">
+                                        <ShieldCheck size={24} />
+                                    </div>
+                                    <h3 className={`text-base font-bold ${headingColor}`}>{t('nav:securityPosture')}</h3>
+                                    <p className={`text-xs ${mutedText} line-clamp-1`}>{t('dashboard:securityPostureDesc')}</p>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-emerald-500">+25 {t('common:xp')}</span>
                                         <ChevronRight size={14} className={`${isDark ? 'text-white/40' : 'text-gray-400'}`} />
                                     </div>
                                 </motion.div>

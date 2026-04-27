@@ -202,14 +202,14 @@ export default function DashboardLayout() {
             items: [
                 { to: "/dashboard/quiz-arena", icon: <Brain size={18} />, label: t('nav:quizArena') },
                 { to: "/dashboard/phishing-dojo", icon: <Mail size={18} />, label: t('nav:phishingDojo') },
-                { to: "/dashboard/scenario-simulator", icon: <Swords size={18} />, label: 'Scenario Sim' },
+                { to: "/dashboard/scenario-simulator", icon: <Swords size={18} />, label: t('nav:scenarioSim') },
             ]
         },
         {
-            label: 'Security Assessment',
+            label: t('nav:securityAssessment'),
             icon: <ShieldCheck size={14} />,
             items: [
-                { to: "/dashboard/security-posture", icon: <ShieldCheck size={18} />, label: 'Security Posture' },
+                { to: "/dashboard/security-posture", icon: <ShieldCheck size={18} />, label: t('nav:securityPosture') },
             ]
         },
     ];

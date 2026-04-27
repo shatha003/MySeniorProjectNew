@@ -19,5 +19,8 @@
   "aes256Encrypted": "مشفّر بـ AES-256",
   "greeting": "مرحباً، {{name}}!",
   "readyMission": "مستعد لمهمة اليوم؟ 🚀",
-  "dayStreak": "أيام متتالية"
+  "dayStreak": "أيام متتالية",
+  "scenarioSim": "محاكي السيناريوهات",
+  "securityPosture": "الوضع الأمني",
+  "securityAssessment": "التقييم الأمني"
 }

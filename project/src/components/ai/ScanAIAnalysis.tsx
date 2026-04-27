@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Brain, Loader2, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslation } from 'react-i18next';
 import { callNovaStreaming } from '../../services/aiService';
 import { useTheme } from '@/components/theme-provider';
 
@@ -19,6 +20,7 @@ interface ScanAnalysisProps {
 export default function ScanAIAnalysis({ scanData }: ScanAnalysisProps) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const { t, i18n } = useTranslation('scanAIAnalysis');
   const [analysis, setAnalysis] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,18 @@ export default function ScanAIAnalysis({ scanData }: ScanAnalysisProps) {
   const cardBg = isDark ? 'bg-cyber-dark' : 'bg-card';
   const borderColor = isDark ? 'border-neon-crimson/20' : 'border-neon-violet/20';
 
+  const langRef = useRef(i18n.language);
+  const prevScanData = useRef('');
+
   useEffect(() => {
+    const scanKey = `${scanData.target}-${scanData.status}-${scanData.type}`;
+    
+    if (langRef.current !== i18n.language || prevScanData.current !== scanKey) {
+      langRef.current = i18n.language;
+      prevScanData.current = scanKey;
+      hasFetched.current = false;
+    }
+
     if (hasFetched.current) return;
     hasFetched.current = true;
 
@@ -39,8 +52,12 @@ export default function ScanAIAnalysis({ scanData }: ScanAnalysisProps) {
       .map(d => `${d.engine}: ${d.result}`)
       .join('\n');
 
+    const currentLang = i18n.language === 'ar' ? 'Arabic' : 'English';
+
     const prompt = scanData.type === 'link'
       ? `Analyze this URL scan result and explain it in simple terms for a non-expert user.
+
+IMPORTANT: Write your entire response in ${currentLang}.
 
 URL: ${scanData.target}
 Status: ${scanData.status}
@@ -48,14 +65,16 @@ Detection Stats: ${scanData.stats.malicious} malicious, ${scanData.stats.suspici
 Key Detections:
 ${threatDetections || 'No threats detected'}
 
-Provide a brief, friendly analysis in 3-4 short paragraphs:
+Provide a brief, friendly analysis in ${currentLang} in 3-4 short paragraphs:
 1. What does this scan result mean in plain language?
 2. What is the risk level and should the user be worried?
 3. What specific actions should the user take?
 4. Any tips to stay safe?
 
-Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis.`
+Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis. Write in ${currentLang}.`
       : `Analyze this file scan result and explain it in simple terms for a non-expert user.
+
+IMPORTANT: Write your entire response in ${currentLang}.
 
 File: ${scanData.target}
 Status: ${scanData.status}
@@ -63,13 +82,13 @@ Detection Stats: ${scanData.stats.malicious} malicious, ${scanData.stats.suspici
 Key Detections:
 ${threatDetections || 'No threats detected'}
 
-Provide a brief, friendly analysis in 3-4 short paragraphs:
+Provide a brief, friendly analysis in ${currentLang} in 3-4 short paragraphs:
 1. What does this scan result mean in plain language?
 2. What is the risk level and should the user be worried?
 3. What specific actions should the user take?
 4. Any tips to stay safe?
 
-Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis.`;
+Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis. Write in ${lang}.`;
 
     const analyze = async () => {
       try {
@@ -87,14 +106,14 @@ Keep it concise, use bullet points where helpful, and avoid technical jargon. Us
         }
       } catch (err) {
         console.error('AI analysis failed:', err);
-        setError('AI analysis unavailable. Please try again later.');
+        setError(t('error'));
       } finally {
         setIsAnalyzing(false);
       }
     };
 
     analyze();
-  }, [scanData]);
+  }, [scanData, t]);
 
   return (
     <motion.div
@@ -109,22 +128,22 @@ Keep it concise, use bullet points where helpful, and avoid technical jargon. Us
             <Brain size={24} />
           </div>
           <div>
-            <h3 className={`text-xl font-black ${headingColor}`}>AI Security Analysis</h3>
+            <h3 className={`text-xl font-black ${headingColor}`}>{t('title')}</h3>
             <p className={`text-xs font-bold ${mutedText}`}>
-              {isAnalyzing ? 'Analyzing scan results...' : 'Powered by Nova AI'}
+              {isAnalyzing ? t('analyzing') : t('subtitle')}
             </p>
           </div>
         </div>
         {isAnalyzing && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/10 text-purple-500">
             <Loader2 size={16} className="animate-spin" />
-            <span className="text-xs font-black uppercase tracking-widest">Thinking</span>
+            <span className="text-xs font-black uppercase tracking-widest">{t('thinking')}</span>
           </div>
         )}
         {!isAnalyzing && !error && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500">
             <Sparkles size={16} />
-            <span className="text-xs font-black uppercase tracking-widest">Complete</span>
+            <span className="text-xs font-black uppercase tracking-widest">{t('complete')}</span>
           </div>
         )}
       </div>
@@ -150,7 +169,7 @@ Keep it concise, use bullet points where helpful, and avoid technical jargon. Us
         {isAnalyzing && analysis && (
           <div className="flex items-center gap-2 mt-4">
             <Loader2 size={14} className="animate-spin text-purple-500" />
-            <span className={`text-xs ${mutedText}`}>Still analyzing...</span>
+            <span className={`text-xs ${mutedText}`}>{t('stillAnalyzing')}</span>
           </div>
         )}
       </div>

@@ -58,7 +58,7 @@ export default function PhishingDojo() {
     const navigate = useNavigate();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
-    const { t } = useTranslation(['phishing', 'common']);
+    const { t } = useTranslation(['phishing', 'phishingAI', 'common']);
     const user = useAuthStore((s) => s.user);
     const { progress, earnXp, fetchProgress } = useUserProgressStore();
 
@@ -242,7 +242,7 @@ export default function PhishingDojo() {
                          <div className={`rounded-2xl ${isDark ? 'bg-cyber-surface' : 'bg-gray-50'} p-4 mb-6`}>
                              <div className="flex items-center gap-2 mb-3">
                                  <Brain size={16} className="text-purple-500" />
-                                 <span className={`text-sm font-black ${headingColor}`}>Game Mode</span>
+                                 <span className={`text-sm font-black ${headingColor}`}>{t('phishingAI:gameMode')}</span>
                              </div>
                              <div className="grid grid-cols-2 gap-3">
                                  <button
@@ -253,8 +253,8 @@ export default function PhishingDojo() {
                                              : isDark ? 'border-white/10 hover:border-white/20' : 'border-gray-200 hover:border-gray-300'
                                      }`}
                                  >
-                                     <span className={`text-sm font-black block ${gameMode === 'classic' ? 'text-neon-crimson' : headingColor}`}>Classic</span>
-                                     <span className={`text-[10px] ${mutedText}`}>5 preset emails</span>
+                                      <span className={`text-sm font-black block ${gameMode === 'classic' ? 'text-neon-crimson' : headingColor}`}>{t('phishingAI:classic')}</span>
+                                      <span className={`text-[10px] ${mutedText}`}>{t('phishingAI:classicDesc')}</span>
                                  </button>
                                  <button
                                      onClick={() => setGameMode('ai')}
@@ -264,10 +264,10 @@ export default function PhishingDojo() {
                                              : isDark ? 'border-white/10 hover:border-white/20' : 'border-gray-200 hover:border-gray-300'
                                      }`}
                                  >
-                                     <span className={`text-sm font-black flex items-center gap-1 ${gameMode === 'ai' ? 'text-purple-500' : headingColor}`}>
-                                         <Brain size={14} /> AI Challenge
-                                     </span>
-                                     <span className={`text-[10px] ${mutedText}`}>AI-generated emails</span>
+                                      <span className={`text-sm font-black flex items-center gap-1 ${gameMode === 'ai' ? 'text-purple-500' : headingColor}`}>
+                                          <Brain size={14} /> {t('phishingAI:aiChallenge')}
+                                      </span>
+                                      <span className={`text-[10px] ${mutedText}`}>{t('phishingAI:aiDesc')}</span>
                                  </button>
                              </div>
                          </div>
@@ -280,9 +280,9 @@ export default function PhishingDojo() {
                              whileTap={{ scale: isGeneratingEmail ? 1 : 0.98 }}
                          >
                              {isGeneratingEmail ? (
-                                 <>
-                                     <Loader2 size={20} className="animate-spin" /> Generating AI Emails...
-                                 </>
+                                  <>
+                                      <Loader2 size={20} className="animate-spin" /> {t('phishingAI:generating')}
+                                  </>
                              ) : (
                                  <>
                                      {t('phishing:enterDojo')} <ChevronRight size={20} />
@@ -522,7 +522,7 @@ export default function PhishingDojo() {
                                                  disabled={isGeneratingEmail}
                                              >
                                                  {isGeneratingEmail ? (
-                                                     <><Loader2 size={18} className="animate-spin" /> Generating...</>
+                                                      <><Loader2 size={18} className="animate-spin" /> {t('phishingAI:generatingShort')}</>
                                                  ) : currentIndex < (gameMode === 'ai' ? 4 : emails.length - 1) ? (
                                                      <>{t('phishing:nextEmail')} <ChevronRight size={18} /></>
                                                  ) : (
@@ -580,7 +580,7 @@ export default function PhishingDojo() {
                         </h1>
                         <p className={`text-sm ${mutedText} mb-6`}>
                              {gameMode === 'ai'
-                                 ? `AI Challenge Complete!`
+                                 ? t('phishingAI:aiChallengeComplete')
                                  : t('phishing:modeComplete', { emoji: tierLabels[tier].emoji, mode: tierLabels[tier].label })
                              }
                          </p>
