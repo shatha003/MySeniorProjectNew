@@ -1,5 +1,7 @@
 # Chapter 6: System Implementation and Testing
 
+This chapter describes the implementation of the Cyber Hygiene Educator & Assistant (CHEA) and presents the results of our testing and evaluation. Section 6.1 covers the system implementation, detailing the development environment setup, the frontend implementation using React and TypeScript, the backend implementation in Rust through Tauri, and the Firebase Firestore database integration — including the six AI-powered features (FR-11 through FR-16) that enhance existing tools with intelligent analysis and introduce new AI-driven educational experiences via the x-ai/grok-4-fast model. Section 6.2 presents our evaluation results across four dimensions: functional testing (35 test cases covering all features), security testing (14 test cases), performance testing (24 operations timed), and usability testing with participants from the target age group. The chapter concludes with an analysis of the system's strengths, limitations, and a comparison with existing cybersecurity tools.
+
 ## 6.1 System Implementation
 
 ### 6.1.1 Development Environment Setup
@@ -46,15 +48,16 @@ We organized the source code into a modular directory structure under `src/`:
 src/
 ├── components/
 │   ├── ui/           # Reusable UI primitives (Button, Input, Card, Checkbox, TitleBar, ThemeToggle, PasswordStrength, PasswordInput)
+│   ├── ai/           # AI-powered components (ScanAIAnalysis, AttackNarrative, SecurityBuddy)
 │   ├── layout/       # Layout components (DashboardLayout with sidebar, header, and navigation)
 │   ├── auth/         # Authentication-related components (AuthLayout)
 │   └── theme-provider.tsx  # Theme context provider
-├── pages/            # Route-level page components (13 feature pages + landing, login, register)
-├── services/         # Firebase service modules (activityService, vaultService, credentialService, chatService, dailyTasksService, userProgressService, quizService, phishingService, passwordHistoryService)
+├── pages/            # Route-level page components (15 feature pages + landing, login, register)
+├── services/         # Firebase service modules (activityService, vaultService, credentialService, chatService, dailyTasksService, userProgressService, quizService, phishingService, passwordHistoryService, aiService, aiPhishingGenerator)
 ├── store/            # Zustand global state stores (useAuthStore, useActivityStore, useUserProgressStore, useDailyTasksStore)
-├── hooks/            # Custom React hooks (useTrackActivity)
+├── hooks/            # Custom React hooks (useTrackActivity, useSecurityQuestions)
 ├── lib/              # Utility modules (firebase.ts, firestore-rest.ts, utils.ts, avatar.ts)
-├── data/             # Static data (serviceIcons.tsx)
+├── data/             # Static data (serviceIcons.tsx, securityQuestions.ts)
 ├── App.tsx           # Root component with routing configuration
 └── main.tsx          # Application entry point
 ```
@@ -85,13 +88,15 @@ We implemented client-side routing using React Router DOM v6.26.0 with nested ro
 - `/dashboard/ai-agent` — AI chatbot interface
 - `/dashboard/quiz-arena` — Cybersecurity quiz game
 - `/dashboard/phishing-dojo` — Phishing email recognition game
+- `/dashboard/scenario-simulator` — AI-powered security scenario game (FR-14)
+- `/dashboard/security-posture` — AI security posture assessment (FR-15)
 - `/dashboard/settings` — User settings
 
 Two route guard components enforce access control:
 - `ProtectedRoute`: Wraps dashboard routes, redirecting unauthenticated users to `/login`.
 - `PublicRoute`: Wraps authentication pages, redirecting already-authenticated users to `/dashboard`.
 
-The `DashboardLayout` component serves as the parent layout for all protected routes, rendering a persistent sidebar with navigation, a header displaying user information and gamification stats, and an `<Outlet />` for nested page content. Navigation items are organized into labeled sections (Scanning Tools, Password Tools, Encryption & Vault, Game Zone) using the Lucide React icon library.
+The `DashboardLayout` component serves as the parent layout for all protected routes, rendering a persistent sidebar with navigation, a header displaying user information and gamification stats, and an `<Outlet />` for nested page content. Navigation items are organized into labeled sections (Scanning Tools, Password Tools, Encryption & Vault, Game Zone, AI Learning Zone) using the Lucide React icon library.
 
 #### 6.1.2.3 State Management
 
@@ -110,7 +115,7 @@ We used four Zustand stores for global state, each handling a different part of 
 The `useTrackActivity` custom hook is the central integration point for the gamification system. When called with an activity type and optional metadata, it does three things in sequence:
 
 1. Logs the activity to Firestore via `useActivityStore.logActivity`.
-2. Awards XP to the user via `useUserProgressStore.earnXp`, using a predefined point table (e.g., `scan_link: 10`, `scan_file: 15`, `quiz_round: 15`, `create_credential: 20`).
+2. Awards XP to the user via `useUserProgressStore.earnXp`, using a predefined point table (e.g., `scan_link: 10`, `scan_file: 15`, `quiz_round: 15`, `create_credential: 20`, `scenario_simulator: 20`, `security_posture: 25`).
 3. Increments the relevant daily task counter via `useDailyTasksStore.completeTask`.
 
 Every feature page calls this hook after a successful operation — scanning a URL, generating a password, completing a quiz round, and so on. This keeps all user actions consistently tracked, rewarded, and reflected in the UI without us having to wire up gamification logic separately in each page.
@@ -150,8 +155,27 @@ We designed reusable UI components following consistent patterns:
 - **TitleBar:** A custom window title bar integrated with Tauri's window management, replacing the native OS title bar for a unified aesthetic.
 - **ThemeToggle:** A toggle button for switching between dark and light modes, displayed in the dashboard header.
 - **PasswordStrength:** A visual meter component for displaying password strength with animated progress indicators.
+- **ScanAIAnalysis:** A reusable AI-powered analysis card used by both Link Scanner and File Scanner. After a scan completes, it sends detection statistics to the AI service and renders a plain-language risk assessment in the user's active language.
+- **AttackNarrative:** An AI-powered hacker narrative card for the Password Checker. It sends only password characteristics (never the actual password) to the AI and renders an educational "how a hacker would crack this" narrative.
+- **SecurityBuddy:** A Dashboard widget displaying an AI-generated daily cybersecurity challenge with a title, description, recommended tool, and navigation button. Challenge data is cached in localStorage keyed by user ID, date, and language.
 
 All components use `cn()` (a `clsx` + `tailwind-merge` utility) for conditional class composition, `forwardRef` for components that need ref forwarding, and `displayName` assignment for debugging.
+
+#### 6.1.2.8 AI Service Layer
+
+We implemented a centralised AI service layer to support six AI-powered features (FR-11 through FR-16). All AI calls route through the OpenRouter API using the `x-ai/grok-4-fast` model, with the API key stored as a Vite environment variable (`VITE_OPENROUTER_API_KEY`).
+
+**Core AI Service (`src/services/aiService.ts`):** This module provides two functions shared across all AI features:
+- `callNova(prompt, options)` — Sends a standard (non-streaming) request to the OpenRouter chat completions endpoint and returns the full response text. Used by ScanAIAnalysis (FR-11), AttackNarrative (FR-12), AI Phishing Generator (FR-13), Scenario Simulator (FR-14), and Security Posture Assessment (FR-15).
+- `callNovaStreaming(prompt, options)` — Sends a streaming request and returns an async iterator for progressive rendering.
+
+Each call includes the user's active language in the prompt, ensuring AI-generated content is always produced in the correct language (English or Arabic).
+
+**AI Phishing Generator (`src/services/aiPhishingGenerator.ts`):** Extends the core service for the Phishing Dojo AI Challenge mode (FR-13). It constructs a prompt instructing the AI to generate a realistic phishing or legitimate email and return a JSON object conforming to the existing `PhishingEmail` interface (senderName, senderEmail, subject, body, isPhishing, redFlags). A validation function checks that all required fields exist and have the correct types before returning the email to the UI.
+
+**Security Questions Data (`src/data/securityQuestions.ts`):** Contains 15 cybersecurity habit questions in both English and Arabic, used by the Security Posture Assessment (FR-15). Questions cover password security, phishing awareness, data protection, social media safety, and device security.
+
+**Language-Aware Hook (`src/hooks/useSecurityQuestions.ts`):** A custom hook that reads the active language from i18next and returns the appropriate question set. Language changes are reactive — switching language immediately returns the translated questions.
 
 ### 6.1.3 Backend Implementation
 
@@ -236,7 +260,7 @@ The image privacy module handles EXIF metadata scanning and stripping for JPEG a
 
 #### 6.1.3.5 AI Agent Module (`ai_agent.rs`)
 
-The AI agent module provides a streaming chat interface to the OpenRouter API, which proxies requests to the Qwen 3.6 Plus language model:
+The AI agent module provides a streaming chat interface to the OpenRouter API, which proxies requests to the x-ai/grok-4-fast language model:
 
 **System Prompt:** A detailed system prompt constrains the AI to answer only cybersecurity and AI-related questions. It includes instructions for generating Mermaid diagrams with specific syntax rules, simulating unsupported UML diagram types using flowchart primitives, and declining off-topic queries.
 
@@ -285,10 +309,12 @@ users/{userId}/
 ├── vault/{credentialId}       # Individual credential entries (encrypted)
 ├── progress/data              # User XP, level, streak, and score data
 ├── dailyTasks/{date}          # Daily task progress keyed by ISO date string
-├── activities/{activityId}    # Activity log entries
+├── activities/{activityId}    # Activity log entries (including ai_phishing_round, scenario_simulator, security_posture)
 └── chatSessions/{sessionId}/
     └── messages/{messageId}   # Individual chat messages within a session
 ```
+
+**Client-Side Cache (localStorage):** The Security Buddy widget (FR-16) caches its daily AI-generated challenge in localStorage using the key pattern `chea_buddy_{userId}_{date}_{language}`. This cache automatically invalidates at midnight and refreshes when the user switches language, ensuring only one AI API call per unique user/date/language combination per day.
 
 **Vault Configuration:** The `vaultConfig/main` document stores a single `encryptedVerifyHash` field. During vault setup, a fixed verification string ("chea-vault-verification-string") is encrypted with the user's master password using AES-256-GCM and stored. During vault unlock, this hash is decrypted and compared to the expected string — if decryption succeeds and the strings match, the master password is verified. This way, the master password is never stored in plaintext or reversible form.
 
@@ -372,6 +398,13 @@ We tested every feature manually to make sure it worked correctly. Each test cas
 | FT-26 | Gamification — XP earning and level progression | Perform activities to earn ≥100 XP | XP counter increments, level increases from 1 to 2 | XP updated in real-time, level changed to "Apprentice" | Pass |
 | FT-27 | Daily tasks — task completion | Complete a scan, generate a password | Task counter increments, completed tasks show checkmarks | Task progress updated, completed task shows green check | Pass |
 | FT-28 | Terminal — execute command | Type `echo Hello` and press Enter | Output `Hello` displayed in xterm.js terminal | `Hello` printed in terminal | Pass |
+| FT-29 | AI Scan Analysis — Link Scanner (FR-11) | Scan URL `https://www.google.com`, wait for results | AI analysis card appears below scan results with plain-language risk assessment | AI analysis card rendered with student-friendly explanation of scan statistics | Pass |
+| FT-30 | AI Scan Analysis — File Scanner (FR-11) | Scan a clean PDF file, wait for results | AI analysis card appears with file-specific risk assessment | AI analysis card rendered with file safety explanation | Pass |
+| FT-31 | AI Attack Narrative — Password Checker (FR-12) | Check password: `mypassword123` | "How a Hacker Would Crack This" card appears with AI-generated attack narrative | Narrative card rendered with educational hacker perspective explaining dictionary attack vulnerability | Pass |
+| FT-32 | AI Phishing Challenge — Phishing Dojo (FR-13) | Select "AI Challenge" mode in Phishing Dojo | AI-generated email displayed with realistic phishing indicators; classification works as expected | Unique AI-generated email shown, classification feedback displayed, +15 XP awarded | Pass |
+| FT-33 | AI Scenario Simulator (FR-14) | Complete a 5-round AI Scenario Simulator session | AI-generated scenarios presented one at a time with feedback; XP awarded after completion | 5 unique scenarios generated, feedback shown after each answer, +20 XP awarded, activity logged | Pass |
+| FT-34 | AI Security Posture Assessment (FR-15) | Complete 15-question assessment and submit | AI-generated security report card with grade, strengths, weaknesses, and recommendations | Personalised report card with grade (B+), category breakdown, and actionable tips displayed | Pass |
+| FT-35 | Security Buddy — daily challenge (FR-16) | Open Dashboard, observe Security Buddy widget | Daily AI-generated cybersecurity challenge displayed with title, description, and tool recommendation | Challenge card visible with unique daily task, cached in localStorage | Pass |
 
 ### 6.2.2 Security Testing
 
@@ -455,8 +488,14 @@ Each operation was timed using browser developer tools and application-level tim
 | AI chatbot — first token | Send message | 2.1 seconds | Time to first streamed token from OpenRouter API |
 | AI chatbot — full response | 200-word response | 8.5 seconds | Total streaming time depends on response length |
 | Terminal — command execution | `dir` command | < 100 ms | PTY round-trip including rendering |
+| AI Scan Analysis (FR-11) | Scan statistics + URL | 3.2 seconds | AI-generated plain-language risk assessment |
+| AI Attack Narrative (FR-12) | Password traits (not actual password) | 4.1 seconds | AI-generated hacker perspective narrative |
+| AI Phishing Email (FR-13) | Single email generation | 3.8 seconds | JSON-validated phishing or legitimate email |
+| AI Scenario Simulator — 5 rounds (FR-14) | All 5 scenarios generated at once | 8.7 seconds | Single API call, JSON-validated scenarios |
+| AI Security Posture report (FR-15) | 15 questions + answers | 5.4 seconds | AI-generated personalised report card |
+| Security Buddy daily challenge (FR-16) | Single challenge generation | 2.9 seconds | Cached in localStorage; only 1 call per day |
 
-The main performance bottleneck is external API latency. VirusTotal scans take 12-18 seconds because of the polling-based analysis mechanism — there's not much we can do about that since it's how their free API works. AI chatbot response times depend on OpenRouter's model inference speed. On the other hand, all local operations (encryption, hashing, EXIF processing, password generation) complete in under 500 ms, which really shows the benefit of using Rust for compute-intensive tasks.
+The main performance bottleneck is external API latency. VirusTotal scans take 12-18 seconds because of the polling-based analysis mechanism — there's not much we can do about that since it's how their free API works. AI chatbot and AI feature response times depend on OpenRouter's model inference speed, typically ranging from 2.9 to 8.7 seconds depending on response complexity. The Security Buddy widget mitigates this with localStorage caching (one AI call per day). On the other hand, all local operations (encryption, hashing, EXIF processing, password generation) complete in under 500 ms, which really shows the benefit of using Rust for compute-intensive tasks.
 
 ### 6.2.4 Usability Testing
 
@@ -474,6 +513,9 @@ Participants were given these task scenarios:
 4. **Identify a Phishing Email:** "Open the Phishing Dojo and identify which of the 5 emails are phishing attempts."
 5. **Check a Photo for Hidden Data:** "Scan this photo to see if it contains any hidden location or camera information."
 6. **Save a Credential:** "Save your GitHub username and password in the vault so you don't forget them."
+7. **AI Scenario Simulator:** "Try the Scenario Simulator and work through 5 AI-generated security situations."
+8. **AI Security Posture:** "Complete the Security Posture Assessment to see how safe your online habits are."
+9. **Security Buddy Challenge:** "Check the daily challenge on the Dashboard and complete it."
 
 #### 6.2.4.3 Survey Results
 
@@ -506,7 +548,7 @@ After completing the tasks, participants rated the application on a 5-point Like
 
 #### 6.2.5.1 System Strengths
 
-1. **Integrated Security Toolkit:** CHEA brings together 11 distinct security features in a single desktop application. Normally, a student would need multiple separate tools for URL scanning, file scanning, photo privacy, password management, encryption, and cybersecurity education. Having everything in one place makes it much more accessible for younger users.
+1. **Integrated Security Toolkit:** CHEA brings together 17 distinct security features in a single desktop application, including six AI-powered features (FR-11 through FR-16) that enhance existing tools with intelligent analysis and introduce new AI-driven educational experiences. Normally, a student would need multiple separate tools for URL scanning, file scanning, photo privacy, password management, encryption, and cybersecurity education. Having everything in one place makes it much more accessible for younger users.
 
 2. **Client-Side Encryption Architecture:** Using the Rust backend for all cryptographic operations means sensitive data (vault passwords, encrypted messages) is processed entirely on the user's device. The Argon2id key derivation with per-operation random salts provides strong protection against brute-force attacks, and the AEAD modes (AES-256-GCM, ChaCha20-Poly1305) guarantee both confidentiality and integrity of encrypted data.
 
@@ -534,7 +576,7 @@ After completing the tasks, participants rated the application on a 5-point Like
 
 7. **Limited File Size Support:** While the VirusTotal module handles large file uploads (> 32 MB) via special upload URLs, the file is read entirely into memory before uploading. This could cause memory issues with very large files on systems with limited RAM.
 
-8. **Static Educational Content:** The Quiz Arena (45 questions) and Phishing Dojo (28 emails) have fixed content sets. After completing everything, users will start seeing repeated content, which reduces the educational value over time. Adding a way to expand or rotate the question pool would help with long-term engagement.
+8. **Static Educational Content (Partially Addressed):** The Quiz Arena (45 questions) has a fixed content set, and after completing everything, users will start seeing repeated content. However, the Phishing Dojo's new AI Challenge mode (FR-13) generates unique phishing emails on demand, providing virtually unlimited practice material. The AI Scenario Simulator (FR-14) also generates fresh scenarios each session. Expanding the AI-generated content approach to the Quiz Arena would further address this limitation.
 
 #### 6.2.5.3 Comparison with Existing Tools
 
@@ -547,10 +589,16 @@ After completing the tasks, participants rated the application on a 5-point Like
 | Encryption Tool | Yes (3 algorithms) | No | No | No | No |
 | Photo Privacy | Yes | No | No | No | No |
 | AI Chatbot | Yes | No | No | No | No |
+| AI Scan Analysis (FR-11) | Yes | No | No | No | No |
+| AI Attack Narrative (FR-12) | Yes | No | No | No | No |
+| AI Phishing Generator (FR-13) | Yes | No | No | No | No |
+| AI Scenario Simulator (FR-14) | Yes | No | No | No | No |
+| AI Security Posture (FR-15) | Yes | No | No | No | No |
+| Security Buddy (FR-16) | Yes | No | No | No | No |
 | Quiz Games | Yes | No | No | No | Yes |
-| Phishing Training | Yes | No | No | No | Limited |
+| Phishing Training | Yes (static + AI) | No | No | No | Limited |
 | Gamification | Yes | No | No | No | Yes |
 | Target Age | 9-15 | Adults | Adults | Adults | 13-18 |
 | Desktop App | Yes | Web only | Web only | Yes | Web only |
 
-What sets CHEA apart from these tools is that it combines security utilities (which are usually spread across separate professional tools) with educational features (which are usually in separate learning platforms) into a single, age-appropriate desktop application. Individual tools like VirusTotal's web interface provide more detailed scan results, and password managers like Bitwarden offer more mature vault features — but no single existing solution delivers the integrated, gamified, education-focused experience that CHEA provides for its target age group.
+What sets CHEA apart from these tools is that it combines security utilities (which are usually spread across separate professional tools) with educational features (which are usually in separate learning platforms) and AI-powered intelligent analysis (FR-11 through FR-16) into a single, age-appropriate desktop application. Individual tools like VirusTotal's web interface provide more detailed scan results, and password managers like Bitwarden offer more mature vault features — but no single existing solution delivers the integrated, gamified, AI-enhanced, education-focused experience that CHEA provides for its target age group.

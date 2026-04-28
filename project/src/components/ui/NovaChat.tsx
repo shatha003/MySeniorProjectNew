@@ -78,7 +78,14 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    useEffect(() => { scrollToBottom(); }, [messages, isLoading]);
+    const isInitialMount = useRef(true);
+    useEffect(() => { 
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+        scrollToBottom(); 
+    }, [messages, isLoading]);
 
     const onDragStart = (e: React.PointerEvent) => {
         e.preventDefault();

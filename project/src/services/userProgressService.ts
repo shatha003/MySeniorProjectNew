@@ -11,16 +11,16 @@ export interface UserProgress {
 }
 
 export const LEVEL_THRESHOLDS = [
-    { level: 1, xp: 0, title: 'Novice' },
-    { level: 2, xp: 100, title: 'Apprentice' },
-    { level: 3, xp: 300, title: 'Guardian' },
-    { level: 4, xp: 600, title: 'Defender' },
-    { level: 5, xp: 1000, title: 'Sentinel' },
-    { level: 6, xp: 1500, title: 'Champion' },
-    { level: 7, xp: 2200, title: 'Hero' },
-    { level: 8, xp: 3000, title: 'Legend' },
-    { level: 9, xp: 4000, title: 'Mythic' },
-    { level: 10, xp: 5500, title: 'Omniscient' },
+    { level: 1, xp: 0, title: 'Rookie' },
+    { level: 2, xp: 100, title: 'Scout' },
+    { level: 3, xp: 300, title: 'Shield' },
+    { level: 4, xp: 600, title: 'Guardian' },
+    { level: 5, xp: 1000, title: 'Cyber Ninja' },
+    { level: 6, xp: 1500, title: 'Security Ranger' },
+    { level: 7, xp: 2200, title: 'Knight' },
+    { level: 8, xp: 3000, title: 'Cyber Legend' },
+    { level: 9, xp: 4000, title: 'Cyber Master' },
+    { level: 10, xp: 5500, title: 'Cyber Supreme' },
 ];
 
 export function getLevelInfo(xp: number): { level: number; title: string; xpForNext: number; xpInLevel: number; progress: number } {

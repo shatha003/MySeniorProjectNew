@@ -12,6 +12,7 @@ import { useDailyTasksStore } from '../store/useDailyTasksStore';
 import { useActivityStore } from '../store/useActivityStore';
 import { ActivityType } from '../services/activityService';
 import { getUserCredentials } from '../services/credentialService';
+import { LEVEL_THRESHOLDS } from '../services/userProgressService';
 import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
 import { MusicPlayer } from '@/components/ui/MusicPlayer';
@@ -290,6 +291,28 @@ const Dashboard = () => {
             </div>
 
             <div className="relative z-10 space-y-5">
+                {/* Cyber Hygiene Educator Banner */}
+                <motion.div 
+                    variants={itemVariants}
+                    className={`relative overflow-hidden rounded-xl px-4 py-3 ${
+                        isDark 
+                            ? 'bg-[#0d1a2d] border border-cyan-500/20' 
+                            : 'bg-cyan-50 border border-cyan-200'
+                    }`}
+                >
+                    <div className="relative flex items-center gap-3">
+                        <ShieldCheck size={20} className="text-cyan-400" />
+                        <div className="flex-1">
+                            <p className={`font-display text-sm font-bold ${
+                                isDark ? 'text-cyan-100' : 'text-gray-800'
+                            }`}>
+                                {t('dashboard:cyberHygieneBanner')}
+                            </p>
+                            <div className="h-0.5 mt-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500" />
+                        </div>
+                    </div>
+                </motion.div>
+
                 {/* Friendly Hero Section */}
                 <motion.div variants={itemVariants} className="relative">
                     <div className={`rounded-3xl border-2 ${borderColor} ${cardBg} p-4 md:p-6 shadow-xl overflow-hidden relative`}>
@@ -332,7 +355,7 @@ const Dashboard = () => {
 
                                 <div className="space-y-2">
                                     <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
-                                        {t('dashboard:welcomeBack', { name: displayName })} 👋
+                                        {t('dashboard:welcomeBack', { name: displayName })}
                                     </h1>
                                     <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
                                         {t('dashboard:readySafe')}
@@ -394,7 +417,7 @@ const Dashboard = () => {
                                     <div className="absolute inset-0 bg-white/20 animate-shimmer bg-[length:200%_100%]" />
                                 </motion.div>
                             </div>
-                        </div>
+</div>
                     </div>
                 </motion.div>
 

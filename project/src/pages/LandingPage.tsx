@@ -38,12 +38,18 @@ const LandingPage: React.FC = () => {
           />
         </div>
         <div className="max-w-7xl mx-auto px-8 flex flex-col items-center text-center">
-          <span className="label-md uppercase tracking-[0.2em] text-primary mb-6 headline font-bold">{t('landing:systemOnline')}</span>
+          <span className="label-md uppercase tracking-[0.2em] text-primary mb-3 headline font-bold">{t('landing:systemOnline')}</span>
+          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 border border-secondary/30 text-secondary text-sm font-bold mb-6">
+            {t('landing:cyberHygieneBadge')}
+          </span>
           <h1 className="text-6xl md:text-8xl headline font-extrabold mb-6 leading-tight max-w-4xl">
             {t('landing:heroTitleBefore')}<span className="glitch-accent">{t('landing:heroTitleAccent')}</span>{t('landing:heroTitleAfter')}
           </h1>
-          <p className="text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-10 font-body">
+          <p className="text-xl md:text-2xl text-on-surface-variant max-w-2xl mb-4 font-body">
             {t('landing:heroDesc')}
+          </p>
+          <p className="text-lg text-secondary/80 mb-10 font-body">
+            {t('landing:cyberHygieneDesc')}
           </p>
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <button
@@ -75,6 +81,9 @@ const LandingPage: React.FC = () => {
             <p className="text-lg text-on-surface-variant leading-relaxed mb-6">
               {t('landing:missionDesc')}
             </p>
+            <p className="text-secondary font-medium mb-6">
+              {t('landing:cyberHygieneTools')}
+            </p>
             <div className="grid grid-cols-2 gap-6">
               <div className="p-4 rounded-xl bg-surface-container-high border border-outline-variant/10">
                 <span className="material-symbols-outlined text-primary mb-2">verified_user</span>
@@ -95,6 +104,7 @@ const LandingPage: React.FC = () => {
           <div>
             <h2 className="text-5xl headline font-bold mb-4">{t('landing:theGadgets')}</h2>
             <p className="text-on-surface-variant max-w-md">{t('landing:gadgetsSubtitle')}</p>
+            <p className="text-secondary text-sm mt-2 font-medium">{t('landing:cyberHygieneTools')}</p>
           </div>
           <div className="hidden md:block h-px flex-1 mx-12 bg-outline-variant/20"></div>
           <span className="text-tertiary headline font-bold tracking-widest">KIT_V.1.0.4</span>

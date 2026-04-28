@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './lib/firebase'
 import { useAuthStore } from './store/useAuthStore'
+import ScrollToTop from './components/ScrollToTop'
 import Login from './pages/Login'
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -80,6 +81,7 @@ function App() {
     <div className="app-shell">
       <TitleBar />
       <div className="app-content">
+        <ScrollToTop />
         <Routes>
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

@@ -70,3 +70,9 @@ project/src-tauri/gen/
 # Optional stylelint cache
 .stylelintcache
 docs/screenshots/pic8.png
+
+#Rust & Cargo targets 
+cargo-target/
+target/
+**/target/
+**/cargo-target/

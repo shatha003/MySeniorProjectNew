@@ -153,6 +153,28 @@ export default function Register() {
         animate="visible"
         className="space-y-6"
       >
+        {/* Cyber Hygiene Educator Banner */}
+        <motion.div 
+          variants={itemVariants}
+          className={`relative overflow-hidden rounded-xl px-4 py-3 ${
+            isDark 
+              ? 'bg-[#0d1a2d] border border-cyan-500/20' 
+              : 'bg-cyan-50 border border-cyan-200'
+          }`}
+        >
+          <div className="relative flex items-center gap-3">
+            <ShieldCheck size={20} className="text-cyan-400" />
+            <div className="flex-1">
+              <p className={`font-display text-sm font-bold ${
+                isDark ? 'text-cyan-100' : 'text-gray-800'
+              }`}>
+                {t('cyberHygieneBanner')}
+              </p>
+              <div className="h-0.5 mt-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500" />
+            </div>
+          </div>
+        </motion.div>
+
         {/* Header */}
         <motion.div variants={itemVariants} className="space-y-3">
           <div className="flex items-center gap-3">
