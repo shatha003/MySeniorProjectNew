@@ -187,17 +187,17 @@ export default function Training() {
               {/* Rank Grid */}
               <div className="grid grid-cols-4 gap-4 mb-8">
                 {[
-                  { name: "Rookie", unlocked: true },
-                  { name: "Guardian", unlocked: true, current: true },
-                  { name: "Elite", unlocked: false },
-                  { name: "Legend", unlocked: false },
+                  { name: "Guardian", image: "Guardian", unlocked: true },
+                  { name: "Cyber Ninja", image: "Elite", unlocked: true, current: true },
+                  { name: "Knight", image: "Rookie", unlocked: false },
+                  { name: "Cyber Legend", image: "Legend", unlocked: false },
                 ].map((rank) => (
                   <div key={rank.name} className="flex flex-col items-center">
                     <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden ${
                       rank.unlocked ? "" : "grayscale opacity-60"
                     }`}>
                       <img 
-                        src={`/ranks/${rank.name}.png`}
+                        src={`/ranks/${rank.image}.png`}
                         alt={rank.name}
                         className="w-full h-full object-cover"
                       />
@@ -561,10 +561,10 @@ export default function Training() {
             {/* Rank Grid */}
             <div className="grid grid-cols-4 gap-4 mb-8">
               {[
-                { key: "rookie", name: t("rankProgression.ranks.rookie"), unlocked: true },
-                { key: "guardian", name: t("rankProgression.ranks.guardian"), unlocked: true, current: true },
-                { key: "elite", name: t("rankProgression.ranks.elite"), unlocked: false },
-                { key: "legend", name: t("rankProgression.ranks.legend"), unlocked: false },
+                { key: "guardian", name: t("rankProgression.ranks.rookie"), unlocked: true, image: "Guardian" },
+                { key: "ninja", name: t("rankProgression.ranks.guardian"), unlocked: true, current: true, image: "Elite" },
+                { key: "knight", name: t("rankProgression.ranks.elite"), unlocked: false, image: "Rookie" },
+                { key: "legend", name: t("rankProgression.ranks.legend"), unlocked: false, image: "Legend" },
               ].map((rank, index) => (
                 <motion.div 
                   key={rank.key}
@@ -582,7 +582,7 @@ export default function Training() {
                     }`}
                   >
                     <img 
-                      src={`/ranks/${rank.key.charAt(0).toUpperCase() + rank.key.slice(1)}.png`}
+                      src={`/ranks/${rank.image}.png`}
                       alt={rank.name}
                       className="w-full h-full object-cover"
                     />
