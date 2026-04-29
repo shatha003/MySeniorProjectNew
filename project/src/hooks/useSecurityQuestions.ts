@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { securityQuestionsEN, securityQuestionsAR, type SecurityQuestion } from '@/data/securityQuestions';
 
+export type { SecurityQuestion };
 export function useSecurityQuestions(): SecurityQuestion[] {
     const { i18n: i18nInstance } = useTranslation();
     return useMemo(() => {

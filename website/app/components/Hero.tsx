@@ -39,7 +39,7 @@ export default function Hero() {
           
           <div className="flex flex-col sm:flex-row gap-4 items-center">
             <a 
-              href="https://files.catbox.moe/sjgmlz.zip"
+              href="https://files.catbox.moe/ehld2e.zip"
               target="_blank"
               rel="noopener noreferrer"
               className="glitch-button-light flex items-center gap-3 bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-8 py-4 rounded-xl font-headline font-bold text-lg shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:shadow-[0_0_35px_rgba(255,10,84,0.6)] transition-shadow"
@@ -118,8 +118,6 @@ export default function Hero() {
           <span className={`glitch-accent drop-shadow-[0_0_15px_rgba(255,10,84,0.5)] ${isDark ? "text-neon-crimson" : "text-neon-violet"}`}>
             {t("titleAccent")}
           </span>
-          <br />
-          {t("titleSuffix")}
         </motion.h1>
 
         {/* Subtitle */}
@@ -140,7 +138,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-4 items-center"
         >
           <a
-            href="https://files.catbox.moe/sjgmlz.zip"
+            href="https://files.catbox.moe/ehld2e.zip"
             target="_blank"
             rel="noopener noreferrer"
             className={`glitch-button-light flex items-center gap-3 px-8 py-4 rounded-xl font-headline font-bold text-lg text-white transition-shadow ${

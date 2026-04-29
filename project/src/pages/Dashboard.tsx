@@ -12,7 +12,6 @@ import { useDailyTasksStore } from '../store/useDailyTasksStore';
 import { useActivityStore } from '../store/useActivityStore';
 import { ActivityType } from '../services/activityService';
 import { getUserCredentials } from '../services/credentialService';
-import { LEVEL_THRESHOLDS } from '../services/userProgressService';
 import { useTheme } from '@/components/theme-provider';
 import { loadAvatar } from '../lib/avatar';
 import { MusicPlayer } from '@/components/ui/MusicPlayer';

@@ -198,7 +198,7 @@ export default function SecurityPosture() {
                         <div className="p-6 md:p-8">
                             <h3 className={`text-xl font-black mb-6 ${headingColor}`}>{q.question}</h3>
                             <div className="space-y-3">
-                                {q.options.map((option, i) => (
+                                {q.options.map((option: string, i: number) => (
                                     <motion.button
                                         key={i}
                                         onClick={() => handleAnswer(currentQuestion, i)}
