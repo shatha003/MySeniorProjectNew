@@ -1,7 +1,7 @@
 {
-  "sectionTitle": "The Gadgets",
-  "sectionSubtitle": "Equip your digital arsenal with tools built for elite performance.",
-  "kitVersion": "KIT_V.1.0.4",
+  "sectionTitle": "Cyber Hygiene Tools",
+  "sectionSubtitle": "Build essential cyber hygiene habits with tools designed for everyday protection.",
+  "kitVersion": "KIT_V.2.0.0",
   "gadgets": [
     {
       "icon": "policy",

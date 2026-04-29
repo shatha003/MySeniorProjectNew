@@ -33,5 +33,10 @@
   "recentInvestigations": "Recent Investigations",
   "logsSaved": "{{count}} Logs Saved",
   "noLogsYet": "No logs yet!",
-  "startFirst": "Start your first investigation above."
+  "startFirst": "Start your first investigation above.",
+  "guideCta": "Not sure what to do?",
+  "guideStep1": "Copy a link you want to check (from a message, email, or website)",
+  "guideStep2": "Paste it in the search box above",
+  "guideStep3": "Click \"Scan Now!\" to check it with 70+ security engines",
+  "guideStep4": "Read the result — green means safe, red means danger!"
 }

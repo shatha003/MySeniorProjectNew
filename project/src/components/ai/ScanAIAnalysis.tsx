@@ -88,7 +88,7 @@ Provide a brief, friendly analysis in ${currentLang} in 3-4 short paragraphs:
 3. What specific actions should the user take?
 4. Any tips to stay safe?
 
-Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis. Write in ${lang}.`;
+Keep it concise, use bullet points where helpful, and avoid technical jargon. Use emojis sparingly for emphasis. Write in ${currentLang}.`;
 
     const analyze = async () => {
       try {

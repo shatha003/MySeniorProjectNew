@@ -1,0 +1,43 @@
+{
+  "badgeText": "AI Powered",
+  "sectionTitle": "AI Superpowers",
+  "sectionSubtitle": "Meet Nova — your AI cybersecurity sidekick that thinks, analyzes, and trains with you.",
+  "features": [
+    {
+      "icon": "smart_toy",
+      "title": "Nova AI Chatbot",
+      "description": "Your personal cybersecurity expert. Ask anything about threats, passwords, or online safety — Nova streams real-time answers with code examples and diagrams.",
+      "tag": "AI"
+    },
+    {
+      "icon": "alternate_email",
+      "title": "AI Phishing Generator",
+      "description": "AI crafts unique, never-seen-before phishing emails in real-time. Train against an infinite library of AI-generated scams across 3 difficulty tiers.",
+      "tag": "AI"
+    },
+    {
+      "icon": "analytics",
+      "title": "AI Scan Analysis",
+      "description": "After every link or file scan, Nova breaks down the results in plain language — what was detected, how risky it is, and what you should do next.",
+      "tag": "AI"
+    },
+    {
+      "icon": "psychology",
+      "title": "AI Attack Narrative",
+      "description": "Check a password and watch Nova stage a dramatic hacker attack simulation — will your password survive? Learn through thrilling storytelling.",
+      "tag": "AI"
+    },
+    {
+      "icon": "rocket_launch",
+      "title": "AI Scenario Simulator",
+      "description": "Face 5 rounds of AI-generated security dilemmas. Make choices, face consequences, and learn from realistic cybersecurity scenarios in real-time.",
+      "tag": "AI"
+    },
+    {
+      "icon": "shield_person",
+      "title": "AI Security Posture",
+      "description": "Answer a security questionnaire and get a comprehensive AI-powered report card — your grade, vulnerabilities, and a personalized action plan.",
+      "tag": "AI"
+    }
+  ]
+}

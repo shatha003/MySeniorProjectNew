@@ -301,9 +301,9 @@ const Dashboard = () => {
                     }`}
                 >
                     <div className="relative flex items-center gap-3">
-                        <ShieldCheck size={20} className="text-cyan-400" />
-                        <div className="flex-1">
-                            <p className={`font-display text-sm font-bold ${
+                        <ShieldCheck size={20} className="text-cyan-400 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                            <p className={`font-display text-sm font-bold truncate ${
                                 isDark ? 'text-cyan-100' : 'text-gray-800'
                             }`}>
                                 {t('dashboard:cyberHygieneBanner')}
@@ -344,17 +344,17 @@ const Dashboard = () => {
                                         <img
                                             src={customAvatar}
                                             alt={displayName}
-                                            className="relative w-32 h-32 rounded-full object-cover border-2 border-transparent shadow-lg"
+                                            className="relative w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-transparent shadow-lg"
                                         />
                                     ) : (
-                                        <div className={`relative w-32 h-32 rounded-full flex items-center justify-center font-black text-4xl shadow-lg bg-gradient-to-br ${tierStyle?.gradient || 'from-amber-500 to-orange-500'} text-white`}>
+                                        <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center font-black text-3xl md:text-4xl shadow-lg bg-gradient-to-br ${tierStyle?.gradient || 'from-amber-500 to-orange-500'} text-white`}>
                                             {displayName.charAt(0).toUpperCase()}
                                         </div>
                                     )}
                                 </motion.div>
 
-                                <div className="space-y-2">
-                                    <h1 className={`font-display text-3xl md:text-5xl font-black tracking-tight ${headingColor}`}>
+                                <div className="space-y-1">
+                                    <h1 className={`font-display text-2xl md:text-4xl font-black tracking-tight ${headingColor}`}>
                                         {t('dashboard:welcomeBack', { name: displayName })}
                                     </h1>
                                     <p className={`text-lg md:text-xl font-medium ${mutedText}`}>
@@ -506,7 +506,7 @@ const Dashboard = () => {
                     <div className="lg:col-span-3 space-y-5">
                         <div className="flex items-center justify-between mb-3">
                             <h2 className={`font-display text-xl font-black ${headingColor}`}>{t('dashboard:mySecurityTools')}</h2>
-                            <span className={`text-xs font-bold ${mutedText}`}>{t('dashboard:awesomeTools', { count: tools.length })}</span>
+                            <span className={`text-xs font-bold ${mutedText}`}>{t('dashboard:awesomeTools')}</span>
                         </div>
 
                         {/* Scanning Tools */}

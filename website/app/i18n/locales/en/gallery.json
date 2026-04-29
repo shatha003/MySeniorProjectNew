@@ -5,7 +5,7 @@
   "screenshots": [
     {
       "title": "Welcome to CHEA",
-      "description": "Secure login to begin your cybersecurity journey"
+      "description": "Secure login to begin your cyber hygiene journey"
     },
     {
       "title": "Command Center",
@@ -16,8 +16,12 @@
       "description": "Verify links before you click to stay safe"
     },
     {
+      "title": "File Scanner",
+      "description": "Deep scan files for malware and threats"
+    },
+    {
       "title": "Photo Vault",
-      "description": "Secure storage for your private photos"
+      "description": "Secure encrypted storage for your private photos"
     },
     {
       "title": "Password Vault",
@@ -26,6 +30,10 @@
     {
       "title": "Password Generator",
       "description": "Create strong, unhackable passwords"
+    },
+    {
+      "title": "Password Tester",
+      "description": "Check how strong your passwords are"
     },
     {
       "title": "Secret Messages",
@@ -40,12 +48,20 @@
       "description": "Test your skills and compete with friends"
     },
     {
-      "title": "Password Tester",
-      "description": "Check how strong your passwords are"
+      "title": "Scenario Simulator",
+      "description": "Interactive security decision-making with real consequences"
     },
     {
-      "title": "Choose Your Avatar",
+      "title": "Security Posture",
+      "description": "AI-powered security report and action plan"
+    },
+    {
+      "title": "Avatar Selection",
       "description": "Customize your digital identity"
+    },
+    {
+      "title": "Ask Nova",
+      "description": "Your AI cybersecurity assistant"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "sectionTitle": "Training Grounds",
-  "sectionSubtitle": "Don't just use tools. Master the skills.",
+  "sectionSubtitle": "Master cyber hygiene skills through hands-on practice.",
   "phishingDojo": {
     "title": "Phishing Dojo",
     "subtitle": "Spot the traps, dodge the bait.",
@@ -14,7 +14,7 @@
   },
   "quizArena": {
     "title": "Quiz Arena",
-    "subtitle": "Duel with friends, climb the ladder.",
+    "subtitle": "Test your cyber hygiene knowledge.",
     "rank": "RANK: GUARDIAN",
     "stats": {
       "players": "500+ Players",
@@ -23,7 +23,7 @@
   },
   "rankProgression": {
     "title": "Rank Progression",
-    "subtitle": "Climb the ranks and become a Cyber Legend!",
+    "subtitle": "Climb the ranks and become a Cyber Hygiene Legend!",
     "ranks": {
       "rookie": "Rookie",
       "guardian": "Guardian",

@@ -44,7 +44,7 @@ export default function Features() {
           {/* Section Header - Minimal */}
           <div className="text-center mb-20">
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-headline font-semibold tracking-wider uppercase mb-6 bg-neon-crimson/10 text-neon-crimson border border-neon-crimson/20">
-              KIT_V.1.0.4
+              KIT_V.2.0.0
             </span>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-headline font-bold text-on-surface mb-4">
               The Gadgets

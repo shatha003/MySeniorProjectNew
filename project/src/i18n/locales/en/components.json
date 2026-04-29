@@ -26,5 +26,8 @@
   "languageSwitcher": {
     "en": "EN",
     "ar": "AR"
+  },
+  "quickGuide": {
+    "title": "Not sure what to do?"
   }
 }

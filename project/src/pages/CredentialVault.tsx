@@ -27,6 +27,7 @@ import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import QuickGuide from '../components/ui/QuickGuide';
 import PasswordInput from '../components/ui/PasswordInput';
 
 const containerVariants = {
@@ -469,6 +470,23 @@ export default function CredentialVault() {
                                         <p className={`text-sm font-medium ${mutedText}`}>
                                             <span className="text-lg">💡</span> <strong className={headingColor}>{t('vault:masterTip')}</strong>
                                         </p>
+                                        <button
+                                            onClick={() => navigate('/dashboard/settings')}
+                                            className={`mt-3 flex items-center gap-2 text-xs font-bold text-primary hover:underline`}
+                                        >
+                                            <span>⚙️</span> {t('vault:changeMasterLink')}
+                                        </button>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <QuickGuide
+                                            steps={[
+                                                { icon: <span>⚙️</span>, text: t('vault:guideStep1') },
+                                                { icon: <span>🔓</span>, text: t('vault:guideStep2') },
+                                                { icon: <span>➕</span>, text: t('vault:guideStep3') },
+                                                { icon: <span>🔐</span>, text: t('vault:guideStep4') },
+                                            ]}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -527,6 +545,17 @@ export default function CredentialVault() {
                             </div>
                         </div>
                     </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <QuickGuide
+                        steps={[
+                            { icon: <span>⚙️</span>, text: t('vault:guideStep1') },
+                            { icon: <span>🔓</span>, text: t('vault:guideStep2') },
+                            { icon: <span>➕</span>, text: t('vault:guideStep3') },
+                            { icon: <span>🔐</span>, text: t('vault:guideStep4') },
+                        ]}
+                    />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>

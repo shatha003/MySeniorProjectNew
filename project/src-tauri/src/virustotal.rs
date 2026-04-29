@@ -8,6 +8,7 @@ use std::io::{Read, BufReader};
 
 const API_KEY: &str = "f0c0be10cd79cdbda397cc236c5bf064cf542558587cd653a9c75768f783478f";
 const BASE_URL: &str = "https://www.virustotal.com/api/v3";
+const MAX_FILE_SIZE: u64 = 200 * 1024 * 1024;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ScanResult {
@@ -184,6 +185,13 @@ pub async fn scan_file(file_path: String) -> Result<ScanResult, String> {
         .await
         .map_err(|e| format!("Task join error: {}", e))?
         .map_err(|e| format!("Failed to read file: {}", e))?;
+
+    if size > MAX_FILE_SIZE {
+        return Err(format!(
+            "File is too large ({:.1} MB). Maximum allowed size is 200 MB.",
+            size as f64 / (1024.0 * 1024.0)
+        ));
+    }
 
     let client = create_client()?;
 

@@ -26,6 +26,7 @@ import { useTrackActivity } from '../hooks/useTrackActivity';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
 import AttackNarrative from '@/components/ai/AttackNarrative';
+import QuickGuide from '@/components/ui/QuickGuide';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -247,6 +248,17 @@ export default function PasswordChecker() {
                             </div>
                         </div>
                     </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <QuickGuide
+                        steps={[
+                            { icon: <span>⌨️</span>, text: t('passwordChecker:guideStep1') },
+                            { icon: <span>📊</span>, text: t('passwordChecker:guideStep2') },
+                            { icon: <span>✅</span>, text: t('passwordChecker:guideStep3') },
+                            { icon: <span>🧑‍💻</span>, text: t('passwordChecker:guideStep4') },
+                        ]}
+                    />
                 </motion.div>
 
                 {/* Password Input Card */}

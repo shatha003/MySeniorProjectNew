@@ -252,6 +252,7 @@ export default function DashboardLayout() {
                         src="/icon.png"
                         alt="CHEA"
                         className="w-40 h-40 object-contain relative z-10"
+                        title="CHEA = Cyber Hygiene Educator & Assistant"
                     />
                 </motion.div>
                 <span className="font-cyber text-sm font-bold tracking-[0.25em] uppercase" style={{ color: isDark ? '#F4F6FF' : '#121A33' }}>
@@ -392,7 +393,8 @@ export default function DashboardLayout() {
                                 <h2 className={`text-lg font-black ${isDark ? 'text-[#F4F6FF]' : 'text-gray-900'}`}>
                                     {t('nav:greeting', { name: displayName })}
                                 </h2>
-                                <p className={`text-xs font-bold ${isDark ? 'text-[#8AB4F8]/50' : 'text-gray-400'}`}>
+                                <p className={`text-xs font-bold flex items-center gap-1 ${isDark ? 'text-[#8AB4F8]/50' : 'text-gray-400'}`}>
+                                    <ShieldCheck size={12} className="text-primary" />
                                     {t('nav:readyMission')}
                                 </p>
                             </div>
@@ -464,14 +466,28 @@ export default function DashboardLayout() {
                                 </div>
                             )}
 
-                            {/* Level Badge */}
+{/* Level Badge */}
                             <motion.div
                                 className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-black text-white shadow-md border-2 ${isDark ? 'border-[#0A1128]' : 'border-white'} ${tierStyle.bg}`}
                                 animate={isHighTier ? { scale: [1, 1.15, 1] } : {}}
                                 transition={{ duration: 2, repeat: Infinity }}
-                            >
+                                title={`Level ${level} - ${tierStyle.text}`}
+>
                                 {level}
                             </motion.div>
+                        </motion.div>
+
+                        {/* Cyber Hygiene Badge */}
+                        <motion.div
+                            className={`hidden md:flex items-center gap-1 px-2 py-0.5 rounded-full ${isDark ? 'bg-primary/10 border border-primary/20' : 'bg-violet-50 border border-violet-200'}`}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            <ShieldCheck size={10} className={isDark ? 'text-primary' : 'text-violet-600'} />
+                            <span className={`text-[8px] font-black uppercase tracking-wider ${isDark ? 'text-primary' : 'text-violet-600'}`}>
+                                {level >= 7 ? 'Gold' : level >= 4 ? 'Silver' : 'Bronze'} Hygiene
+                            </span>
                         </motion.div>
                     </div>
                 </header>

@@ -6,6 +6,7 @@ import CyberEffects from "./components/CyberEffects";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
+import AIFeatures from "./components/AIFeatures";
 import ScreenshotGallery from "./components/ScreenshotGallery";
 import Training from "./components/Training";
 import AISidekick from "./components/AISidekick";
@@ -27,6 +28,7 @@ export default function Home() {
         <main>
           <Hero />
           <Features />
+          <AIFeatures />
           <ScreenshotGallery />
           <Training />
           <AISidekick />
@@ -53,7 +55,7 @@ export default function Home() {
                 <span className="glitch-text" data-text="Get CHEA for Windows">Get CHEA for Windows</span>
               </a>
               <div className="mt-8 flex justify-center gap-4 text-on-surface-variant font-body text-sm tracking-wide">
-                <span>Latest: v1.0.4</span>
+                <span>Latest: v2.0.0</span>
                 <span className="text-neon-crimson">•</span>
                 <span>Verified Secure</span>
               </div>
@@ -80,6 +82,9 @@ export default function Home() {
 
         {/* Features / Gadgets */}
         <Features />
+
+        {/* AI Superpowers */}
+        <AIFeatures />
 
         {/* App Gallery */}
         <ScreenshotGallery />

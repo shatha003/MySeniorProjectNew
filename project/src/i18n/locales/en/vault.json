@@ -16,6 +16,7 @@
   "unlocking": "UNLOCK! 🔓",
   "checking": "Checking...",
   "masterTip": "Tip: Your Master Password is the key to all your secrets. Keep it safe!",
+  "changeMasterLink": "Set up or change your master password in Settings",
   "loadingVault": "Loading your vault...",
   "noMatches": "No matches found!",
   "emptyVault": "Your vault is empty!",
@@ -75,5 +76,10 @@
   "expiresLabel": "Expires",
   "secretCode": "Secret Code",
   "saveCard": "Save Card! 💳",
-  "cardSafe": "🔐 Your card info is encrypted and super safe!"
+  "cardSafe": "🔐 Your card info is encrypted and super safe!",
+  "guideCta": "Not sure what to do?",
+  "guideStep1": "First, set up a master password in Settings if you haven't yet",
+  "guideStep2": "Unlock your vault by typing your master password",
+  "guideStep3": "Click \"Add New!\" to save a login or card safely",
+  "guideStep4": "Everything is encrypted — only your master password can unlock it!"
 }

@@ -35,5 +35,10 @@
   "recentScans": "Recent Scans",
   "filesTracked": "{{count}} Files Tracked",
   "noHistoryYet": "No history yet!",
-  "scannedFilesAppear": "Your scanned files will appear here."
+  "scannedFilesAppear": "Your scanned files will appear here.",
+  "guideCta": "Not sure what to do?",
+  "guideStep1": "Click \"Pick a File!\" to choose a file from your computer",
+  "guideStep2": "Wait a moment while 70+ security engines scan it",
+  "guideStep3": "Check the result — green means safe, red has dangers",
+  "guideStep4": "If it's dangerous, you can quarantine or delete it"
 }

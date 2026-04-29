@@ -22,6 +22,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
 import ScanAIAnalysis from '@/components/ai/ScanAIAnalysis';
+import QuickGuide from '@/components/ui/QuickGuide';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -242,6 +243,17 @@ export default function LinkScanner() {
                             </div>
                         </div>
                     </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <QuickGuide
+                        steps={[
+                            { icon: <span>📋</span>, text: t('linkScanner:guideStep1') },
+                            { icon: <span>📥</span>, text: t('linkScanner:guideStep2') },
+                            { icon: <span>🔍</span>, text: t('linkScanner:guideStep3') },
+                            { icon: <span>✅</span>, text: t('linkScanner:guideStep4') },
+                        ]}
+                    />
                 </motion.div>
 
                 {/* Scan Input Card */}

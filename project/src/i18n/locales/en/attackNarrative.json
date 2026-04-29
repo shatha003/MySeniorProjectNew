@@ -5,5 +5,7 @@
   "thinking": "Attacking",
   "complete": "Complete",
   "error": "Attack simulation unavailable.",
-  "simulating": "Simulating..."
+  "simulating": "Simulating...",
+  "showMore": "Show more",
+  "showLess": "Show less"
 }

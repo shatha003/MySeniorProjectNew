@@ -7,6 +7,7 @@ import enCommon from './locales/en/common.json';
 import enNav from './locales/en/nav.json';
 import enHero from './locales/en/hero.json';
 import enFeatures from './locales/en/features.json';
+import enAIFeatures from './locales/en/ai-features.json';
 import enGallery from './locales/en/gallery.json';
 import enTraining from './locales/en/training.json';
 import enAI from './locales/en/ai.json';
@@ -21,6 +22,7 @@ import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
 import arHero from './locales/ar/hero.json';
 import arFeatures from './locales/ar/features.json';
+import arAIFeatures from './locales/ar/ai-features.json';
 import arGallery from './locales/ar/gallery.json';
 import arTraining from './locales/ar/training.json';
 import arAI from './locales/ar/ai.json';
@@ -36,6 +38,7 @@ const resources = {
     nav: enNav,
     hero: enHero,
     features: enFeatures,
+    'ai-features': enAIFeatures,
     gallery: enGallery,
     training: enTraining,
     ai: enAI,
@@ -50,6 +53,7 @@ const resources = {
     nav: arNav,
     hero: arHero,
     features: arFeatures,
+    'ai-features': arAIFeatures,
     gallery: arGallery,
     training: arTraining,
     ai: arAI,
@@ -82,7 +86,7 @@ i18n
     lng: getInitialLanguage(), // Set initial language synchronously
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'nav', 'hero', 'features', 'gallery', 'training', 'ai', 'avatars', 'footer', 'cta', 'privacy', 'terms'],
+    ns: ['common', 'nav', 'hero', 'features', 'ai-features', 'gallery', 'training', 'ai', 'avatars', 'footer', 'cta', 'privacy', 'terms'],
     interpolation: {
       escapeValue: false,
     },

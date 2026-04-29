@@ -25,6 +25,7 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useTheme } from '@/components/theme-provider';
 import { useTranslation } from 'react-i18next';
 import ScanAIAnalysis from '@/components/ai/ScanAIAnalysis';
+import QuickGuide from '@/components/ui/QuickGuide';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -260,6 +261,17 @@ export default function FileScanner() {
                     </div>
                 </motion.div>
 
+                <motion.div variants={itemVariants}>
+                    <QuickGuide
+                        steps={[
+                            { icon: <span>📂</span>, text: t('fileScanner:guideStep1') },
+                            { icon: <span>⏳</span>, text: t('fileScanner:guideStep2') },
+                            { icon: <span>🛡️</span>, text: t('fileScanner:guideStep3') },
+                            { icon: <span>🗑️</span>, text: t('fileScanner:guideStep4') },
+                        ]}
+                    />
+                </motion.div>
+
                 {/* Upload Card */}
                 {!hasScanned && (
                     <motion.div variants={itemVariants}>
@@ -328,22 +340,39 @@ export default function FileScanner() {
                                 </div>
                             )}
 
-                            {errorMsg && (
-                                <motion.div
-                                    className={`mt-10 p-5 rounded-2xl border-2 flex items-start gap-4 text-left max-w-lg mx-auto ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                >
-                                    <AlertCircle size={24} className="shrink-0" />
-                                    <div className="space-y-2">
-                                        <h4 className="font-black text-lg">{t('fileScanner:oopsWrong')}</h4>
-                                        <p className="font-medium text-sm">{errorMsg}</p>
-                                        <button onClick={() => setErrorMsg(null)} className="mt-2 text-xs font-black uppercase tracking-widest bg-current/10 px-4 py-2 rounded-xl">
-                                            {t('fileScanner:tryAgain')}
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
+                             {errorMsg && (
+                                 <motion.div
+                                     className={`mt-10 p-5 rounded-2xl border-2 flex items-start gap-4 text-left max-w-lg mx-auto ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`}
+                                     initial={{ opacity: 0, scale: 0.9 }}
+                                     animate={{ opacity: 1, scale: 1 }}
+                                 >
+                                     <AlertCircle size={24} className="shrink-0" />
+                                     <div className="space-y-2">
+                                         <h4 className="font-black text-lg">{t('fileScanner:oopsWrong')}</h4>
+                                         <p className="font-medium text-sm">{errorMsg}</p>
+                                         <button onClick={() => setErrorMsg(null)} className="mt-2 text-xs font-black uppercase tracking-widest bg-current/10 px-4 py-2 rounded-xl">
+                                             {t('fileScanner:tryAgain')}
+                                         </button>
+                                     </div>
+                                 </motion.div>
+                             )}
+                         </div>
+                     </motion.div>
+                 )}
+
+                {hasScanned && errorMsg && (
+                    <motion.div
+                        className={`p-5 rounded-2xl border-2 flex items-start gap-4 text-left ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <AlertCircle size={24} className="shrink-0" />
+                        <div className="space-y-2">
+                            <h4 className="font-black text-lg">{t('fileScanner:oopsWrong')}</h4>
+                            <p className="font-medium text-sm">{errorMsg}</p>
+                            <button onClick={resetScan} className="mt-2 text-xs font-black uppercase tracking-widest bg-current/10 px-4 py-2 rounded-xl">
+                                {t('fileScanner:tryAgain')}
+                            </button>
                         </div>
                     </motion.div>
                 )}

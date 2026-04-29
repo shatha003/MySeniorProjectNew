@@ -67,7 +67,7 @@ The main hub showing:
 - Security Score card (calculated from XP, streak, vault items, activity)
 - Stats Overview: XP, Level, Streak, Total Activities
 - Progress bar showing XP to next level
-- Tool grid with all 14 available tools
+- Tool grid with all 20 available tools
 - Recent Activity feed
 - Daily Quests (3 tasks that reset daily)
 
@@ -151,14 +151,56 @@ The main hub showing:
 - Shows detailed explanations for each red flag
 - XP Reward: 15 XP per completed round
 
-### 12. Calculator (/dashboard/calculator)
+### 12. AI Phishing Generator (Phishing Dojo - AI Mode)
+- AI generates unique, never-before-seen phishing or legitimate emails in real-time
+- 70% phishing, 30% legitimate emails for balanced training
+- Varies difficulty across 3 tiers (Cadet/Analyst/Operator)
+- Includes red flags with explanations and safety guidance
+- XP Reward: 15 XP per completed round
+
+### 13. AI Scan Analysis (Link & File Scanner)
+- After VirusTotal scans, AI generates plain-language explanations
+- Explains detection stats, risk level, and action recommendations
+- Streams response in real-time with Markdown formatting
+- Supports English and Arabic output
+- XP Reward: 10 XP (link) / 15 XP (file) per scan
+
+### 14. AI Attack Narrative (Password Checker)
+- Generates dramatic "hacker narrative" when checking passwords
+- 4 sections: ASSESSMENT, ATTACK, RESULT, TIP
+- Adapts to password entropy, character types, length, and crack time
+- Uses theatrical "dramatic hacker" persona for engagement
+- XP Reward: 3 XP per check
+
+### 15. AI Scenario Simulator (/dashboard/scenario-simulator)
+- AI-driven interactive cybersecurity training
+- 5 rounds of security decision-making scenarios with 3 choices each
+- AI evaluates choices and generates dramatic consequence narratives
+- Topics: phishing, passwords, social engineering, WiFi security, data privacy, malware
+- XP Reward: 15 XP per safe choice, 5 XP per risky choice
+
+### 16. AI Security Posture Analyzer (/dashboard/security-posture)
+- Users answer security questionnaire, AI analyzes responses
+- Produces comprehensive report: letter grade (A-F), numerical score (0-100)
+- Category scores: Password Hygiene, Network Safety, Data Privacy, Social Engineering
+- Top 3 vulnerabilities, 5 prioritized action items, encouraging summary
+- XP Reward: 25 XP per assessment
+
+### 17. AI Security Buddy (Dashboard Widget)
+- Generates 3 personalized daily cybersecurity challenges
+- Based on user's current level, XP, and streak
+- Each challenge has title, description, recommended tool, difficulty, and category
+- Challenges cached daily in localStorage
+- XP Reward: Varies per challenge
+
+### 18. Calculator (/dashboard/calculator)
 - Standard calculator for quick math
 
-### 13. Terminal (/dashboard/terminal)
+### 19. Terminal (/dashboard/terminal)
 - Embedded PowerShell terminal via PTY
 - Full command-line access within the app
 
-### 14. Settings (/dashboard/settings)
+### 20. Settings (/dashboard/settings)
 - Master password setup/management
 - Theme toggle (Light/Dark mode)
 - User preferences
@@ -179,6 +221,10 @@ Users earn XP for all activities:
 | Chat AI (per message) | 5 |
 | Complete Quiz | 15 |
 | Complete Phishing Round | 15 |
+| AI Phishing Round | 15 |
+| AI Scenario (safe choice) | 15 |
+| AI Scenario (risky choice) | 5 |
+| AI Security Posture | 25 |
 | Daily Streak Bonus | 10 |
 
 ### Level System
@@ -238,7 +284,7 @@ CHEA is a free Windows desktop application:
 - You cannot perform actions on behalf of users (no scanning, no password generation)
 - You don't have access to user's personal vault data, scan history, or credentials
 - You can see user's level/tier for personalized guidance but not specific data
-- **WEBSITE LIMITATION**: The website chat is limited to 10 free messages per user. When users reach this limit, encourage them to download the CHEA desktop app for more AI chats and access to all 14 cybersecurity tools.`;
+- **WEBSITE LIMITATION**: The website chat is limited to 10 free messages per user. When users reach this limit, encourage them to download the CHEA desktop app for more AI chats and access to all 20 cybersecurity tools including 6 AI-powered features.`;
 
 export async function POST(req: NextRequest) {
   try {
