@@ -356,8 +356,13 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("OpenRouter API error:", response.status, errorText);
+      let errorMessage = "Failed to get response from AI service";
+      try {
+        const errorJson = JSON.parse(errorText);
+        errorMessage = errorJson.error?.message || errorJson.error || errorMessage;
+      } catch {}
       return NextResponse.json(
-        { error: "AI service error", message: "Failed to get response from AI service" },
+        { error: "AI service error", message: errorMessage },
         { status: 502 }
       );
     }
@@ -417,10 +422,14 @@ export async function POST(req: NextRequest) {
         "X-RateLimit-Reset": String(Math.ceil(rateLimitResult.resetIn / 1000)),
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Chat API error:", error);
+    let errorMessage = "Something went wrong. Please try again later.";
+    if (error.message) {
+      errorMessage = error.message;
+    }
     return NextResponse.json(
-      { error: "Internal error", message: "Something went wrong. Please try again later." },
+      { error: "Internal error", message: errorMessage },
       { status: 500 }
     );
   }

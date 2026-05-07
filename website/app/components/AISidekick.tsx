@@ -301,12 +301,21 @@ export default function AISidekick() {
       }
     } catch (err: any) {
       console.error("Chat error:", err);
-      setError(err.message || t("genericError"));
+      // More robust error message extraction
+      let errorMessage = t("unknownError");
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else if (err && err.error && err.error.message) {
+        errorMessage = err.error.message;
+      }
+      setError(errorMessage);
       setMessages((prev) => [
         ...prev,
         { 
           role: "assistant", 
-          content: t("errorMessage", { error: err.message || t("unknownError") }),
+          content: t("errorMessage", { error: errorMessage }),
           timestamp: Date.now(),
         },
       ]);
