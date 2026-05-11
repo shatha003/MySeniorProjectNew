@@ -2117,6 +2117,22 @@ Willingness to use again	4.4 / 5	Strong interest in continued use
 4. Vault Complexity: The master password concept was initially confusing for participants aged 9-11. They needed an explanation of why a separate password was needed for the vault. Participants aged 13-15 understood the concept right away. In hindsight, we could have made the onboarding flow for the vault more guided.
 5. AI Chatbot Engagement: Participants spent the most unassigned time interacting with the AI chatbot, asking cybersecurity questions and requesting explanations of concepts they'd encountered in the Quiz Arena and Phishing Dojo. The chatbot ended up being more popular than we expected.
 6. Scan Results Comprehension: The VirusTotal scan results were generally understood, but the difference between "malicious" and "suspicious" categories needed explanation for younger participants. We could improve this by adding clearer visual indicators or tooltips.
+
+6.2.4.5 User Feedback Summary
+Feedback was collected from 5 children aged 10-15 years:
+- Participant 1: Boy, 13 years old
+- Participant 2: Boy, 10 years old
+- Participant 3: Girl, 13 years old
+- Participant 4: Girl, 15 years old
+- Participant 5: Girl, 15 years old
+
+Based on the feedback collected during usability testing, the following observations were recorded:
+1. Positive Reception: Users appreciated the gamified learning approach and found the interface engaging and easy to navigate.
+2. Security Awareness Improvement: After using the application, participants demonstrated increased awareness of cybersecurity best practices.
+3. AI Assistant Value: The AI chatbot was frequently cited as a valuable feature for learning and getting instant answers to security questions.
+4. Performance Satisfaction: Most users found the application responsive with minimal loading times during normal operation.
+5. Improvement Suggestions: Some users suggested adding more visual tutorials and expanding the quiz content library for variety.
+
 6.2.5 Strengths and Limitations
 6.2.5.1 System Strengths
 1. Integrated Security Toolkit: CHEA brings together 17 distinct security features in a single desktop application, including six AI-powered features (FR-11 through FR-16) that enhance existing tools with intelligent analysis and introduce new AI-driven educational experiences. Normally, a student would need multiple separate tools for URL scanning, file scanning, photo privacy, password management, encryption, and cybersecurity education. Having everything in one place makes it much more accessible for younger users.

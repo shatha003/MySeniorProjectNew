@@ -13,6 +13,7 @@ import AISidekick from "./components/AISidekick";
 import AvatarShowcase from "./components/AvatarShowcase";
 import FloatingAvatars from "./components/FloatingAvatars";
 import Footer from "./components/Footer";
+import Testimonials from "./components/Testimonials";
 
 export default function Home() {
   const { t } = useTranslation("cta");
@@ -91,6 +92,9 @@ href="https://files.catbox.moe/ehld2e.zip"
 
         {/* Training Grounds */}
         <Training />
+
+        {/* Testimonials */}
+        <Testimonials />
 
         {/* AI Sidekick */}
         <AISidekick />
