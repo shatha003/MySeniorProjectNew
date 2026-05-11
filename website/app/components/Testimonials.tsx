@@ -41,7 +41,7 @@ export default function Testimonials() {
       age: "14 years old",
     },
     {
-      quote: "I love scrolling through social media and following fashion accounts. My cousin showed me CHEA - she built it as his senior project! At first I thought it would be boring, but the Phishing Dojo actually taught me to spot fake accounts and scam DMs - super useful! My favorite feature is customizing my Agent, I made mine with pink and purple colors to match my style. The Treasure Box is amazing too, I have passwords for all my accounts stored securely. The whole app feels really modern and not like a university project at all - I'd definitely recommend it to my friends.",
+      quote: "I love scrolling through social media and following fashion accounts. My cousin showed me CHEA - she built it as her senior project! At first I thought it would be boring, but the Phishing Dojo actually taught me to spot fake accounts and scam DMs - super useful! My favorite feature is customizing my Agent, I made mine with pink and purple colors to match my style. The Treasure Box is amazing too, I have passwords for all my accounts stored securely. The whole app feels really modern and not like a university project at all - I'd definitely recommend it to my friends.",
       name: "Ayah",
       age: "14 years old",
     },
