@@ -806,7 +806,7 @@ export default function AISidekick() {
                       {t("limitReached.title", { count: MAX_FREE_MESSAGES })}
                     </p>
                     <a
-                      href="https://files.catbox.moe/ehld2e.zip"
+                      href="https://files.catbox.moe/cddlyb.zip"
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`glitch-button-light inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-headline font-bold text-sm sm:text-base shadow-lg ${

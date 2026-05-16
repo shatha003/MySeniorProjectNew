@@ -41,9 +41,9 @@ export default function Navbar() {
   });
 
   const navLinks = [
-    { name: t("features"), href: "#features" },
-    { name: t("training"), href: "#training" },
-    { name: t("avatars"), href: "#avatars" },
+    { name: t("features"), href: "/#features" },
+    { name: t("training"), href: "/#training" },
+    { name: t("avatars"), href: "/#avatars" },
   ];
 
   // Static version for SSR
@@ -51,7 +51,7 @@ export default function Navbar() {
     return (
       <nav className="fixed top-4 left-0 right-0 w-[90%] max-w-5xl mx-auto z-50 rounded-2xl border border-white/10 bg-surface/70 backdrop-blur-xl shadow-lg shadow-black/20 px-6 sm:px-8 py-4">
         <div className="flex justify-between items-center">
-          <a href="#" className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-3">
             <img src="/icon.png" alt="CHEA" className="w-12 h-12 object-contain" />
             <span className="text-2xl font-bold text-on-surface font-headline tracking-tight">
               CHEA
@@ -59,9 +59,9 @@ export default function Navbar() {
           </a>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-8">
-              <span className="text-sm font-headline font-semibold text-on-surface/80">Features</span>
-              <span className="text-sm font-headline font-semibold text-on-surface/80">Training</span>
-              <span className="text-sm font-headline font-semibold text-on-surface/80">Avatars</span>
+              <span className="text-base font-headline font-semibold text-on-surface/80">Features</span>
+              <span className="text-base font-headline font-semibold text-on-surface/80">Training</span>
+              <span className="text-base font-headline font-semibold text-on-surface/80">Avatars</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-10 h-10" />
@@ -94,7 +94,7 @@ export default function Navbar() {
       <div className="flex justify-between items-center px-6 sm:px-8">
         {/* Logo - Better spacing from edges */}
         <motion.a
-          href="#"
+          href="/"
           className="flex items-center gap-3 group"
           whileHover={{ scale: 1.02 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -123,7 +123,7 @@ export default function Navbar() {
             <motion.a
               key={link.name}
               href={link.href}
-              className={`relative font-headline font-semibold text-sm transition-all duration-300 py-2 text-on-surface/90 hover:text-on-surface`}
+              className={`relative font-headline font-semibold text-base transition-all duration-300 py-2 text-on-surface/90 hover:text-on-surface`}
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
