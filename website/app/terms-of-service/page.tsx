@@ -37,10 +37,10 @@ export default function TermsOfServicePage() {
   // Text color helpers
   const getHeadingColor = () => isDark ? "text-white" : "text-gray-900";
   const getBodyTextColor = () => isDark ? "text-gray-400" : "text-gray-600";
-  const getMutedTextColor = () => isDark ? "text-gray-500" : "text-gray-500";
+  const getMutedTextColor = () => isDark ? "text-gray-500" : "text-gray-400";
 
   return (
-    <div className="min-h-screen bg-[#0d0d15] text-[#f2effb] font-body relative overflow-x-hidden">
+    <div className={`min-h-screen font-body relative overflow-x-hidden ${isDark ? "bg-[#0d0d15] text-[#f2effb]" : "bg-gray-50 text-gray-900"}`}>
       <CyberEffects />
       <Navbar />
 
