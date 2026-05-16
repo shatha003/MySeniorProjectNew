@@ -3,7 +3,7 @@ import { useUserProgressStore } from '../store/useUserProgressStore';
 
 const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'x-ai/grok-4-fast';
+const MODEL = 'x-ai/grok-4.3';
 
 export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
@@ -32,7 +32,8 @@ export async function* callNovaStreaming(
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${API_KEY}`,
-      'HTTP-Referer': window.location.origin,
+      'HTTP-Referer': 'https://chea.app',
+      'X-Title': 'CHEA Cybersecurity App',
     },
     body: JSON.stringify({
       model,
