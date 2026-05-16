@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="5.0" version="21.0.0">
+  <diagram name="Feature Overview" id="feat-1">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="CHEA Feature Overview — 14+ Tools" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#8ff5ff;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="600" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- SECURE SCANNING (Left column) -->
+        <mxCell id="scan-header" value="&#128737; SECURE SCANNING" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF0A54;strokeColor=#FF0A54;strokeWidth=2;fontColor=#ffffff;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="scan1" value="&#128279; Link Scanner&#xa;URL threat scan via VirusTotal&#xa;70+ security engines&#xa;10 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FF0A54;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="125" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="scan2" value="&#128193; File Scanner&#xa;File malware scan (650MB)&#xa;SHA256 hash + reports&#xa;15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FF0A54;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="195" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="scan3" value="&#128247; Image Privacy&#xa;EXIF metadata extractor&#xa;&amp; stripper&#xa;10 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FF0A54;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="265" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- PASSWORD TOOLS (2nd column) -->
+        <mxCell id="pass-header" value="&#128273; PASSWORD TOOLS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00E5FF;strokeColor=#00E5FF;strokeWidth=2;fontColor=#000000;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pass1" value="&#128476; Password Generator&#xa;6–64 chars configurable&#xa;Entropy display&#xa;5 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00E5FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="125" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="pass2" value="&#128269; Password Checker&#xa;Real-time strength analysis&#xa;AI attack narrative&#xa;3 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00E5FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="195" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="pass3" value="&#128274; Credential Vault&#xa;Encrypted logins + cards&#xa;AES-256-GCM&#xa;20 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00E5FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="265" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ENCRYPTION (3rd column) -->
+        <mxCell id="enc-header" value="&#128271; ENCRYPTION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4D00FF;strokeColor=#4D00FF;strokeWidth=2;fontColor=#ffffff;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="enc1" value="&#128273; Text Encryption&#xa;AES-256-GCM&#xa;Shareable encrypted text&#xa;5 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#4D00FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="520" y="125" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- AI FEATURES (3rd column bottom) -->
+        <mxCell id="ai-header" value="&#129302; AI FEATURES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9D00FF;strokeColor=#9D00FF;strokeWidth=2;fontColor=#ffffff;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="520" y="200" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ai1" value="&#128100; Nova Chatbot&#xa;Cybersecurity AI&#xa;Grok-4 + Mermaid&#xa;5 XP/msg" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#9D00FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="520" y="245" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ai2" value="&#128200; Security Posture&#xa;AI security assessment&#xa;Letter grades + report&#xa;25 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#9D00FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="520" y="315" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- EDUCATIONAL GAMES (Right column) -->
+        <mxCell id="game-header" value="&#127918; GAMES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00FF8C;strokeColor=#00FF8C;strokeWidth=2;fontColor=#000000;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="80" width="300" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="game1" value="&#129518; Quiz Arena&#xa;5Q cybersecurity quiz&#xa;Bronze/Silver/Gold tiers&#xa;15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="125" width="145" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="game2" value="&#128293; Phishing Dojo&#xa;Phishing email detection&#xa;Classic + AI Mode&#xa;15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="915" y="125" width="145" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="game3" value="&#127765; Scenario&#xa;Simulator&#xa;AI dynamic decisions&#xa;5-round scenarios&#xa;15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="195" width="145" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="game4" value="&#128187; Terminal&#xa;PowerShell inside&#xa;desktop app&#xa;(No XP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="915" y="195" width="145" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Utilities under games -->
+        <mxCell id="util-header" value="&#9889; UTILITIES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#FFD700;strokeWidth=2;fontColor=#000000;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="270" width="300" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="util1" value="&#128192; Calculator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FFD700;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="315" width="95" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="util2" value="&#127925; Music Player" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FFD700;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="865" y="315" width="95" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="util3" value="&#127468;&#127463; i18n EN+AR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FFD700;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="970" y="315" width="90" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Slide label -->
+        <mxCell id="slide-lbl" value="SLIDE 8 — Feature Overview" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="780" y="565" width="280" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -132,7 +132,7 @@ The main hub showing:
 
 ### 9. AI Agent (/dashboard/ai-agent) - "You are here!"
 - Cybersecurity AI chatbot (that's me!)
-- Powered by OpenRouter API (x-ai/grok-4-fast)
+- Powered by OpenRouter API (x-ai/grok-4.3)
 - Persistent chat history in Firestore
 - Supports Markdown, code blocks, Mermaid diagrams
 - Arabic language support (RTL)
@@ -526,7 +526,7 @@ export default function AIAgent() {
                     "X-Title": "CHEA Cybersecurity App",
                 },
                 body: JSON.stringify({
-                    model: "x-ai/grok-4-fast",
+                    model: "x-ai/grok-4.3",
                     messages: apiMessages,
                     stream: true,
                 }),

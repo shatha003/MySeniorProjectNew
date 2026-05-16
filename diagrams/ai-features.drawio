@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net" agent="5.0" version="21.0.0">
+  <diagram name="AI Features" id="ai-1">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="AI-Powered Features" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#8ff5ff;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="15" width="400" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- NOVA (Top center) -->
+        <mxCell id="nova-box" value="&#129302; NOVA — AI Security Chatbot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#9D00FF;strokeWidth=3;fontColor=#ffffff;fontSize=16;fontStyle=1;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="280" y="70" width="540" height="160" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nova-col1" value="&#128187; App Knowledge&#xa;   Knows every CHEA feature&#xa;&#127760; Markdown Rendering&#xa;   Code blocks + syntax highlighting&#xa;&#129506; Mermaid Diagrams&#xa;   Visualize security concepts" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="90" width="180" height="130" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nova-col2" value="&#127468;&#127463; Arabic RTL Support&#xa;   Full bilingual interface&#xa;&#128100; Chat History (Firestore)&#xa;   Picks up where you left off&#xa;&#128272; Topic Bounded&#xa;   Strictly cybersecurity-focused" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="510" y="90" width="180" height="130" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nova-col3" value="&#128722; Powered by&#xa;   Grok-4 via&#xa;   OpenRouter API&#xa;&#128176; 5 XP per message" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#9D00FF;fontSize=11;fontStyle=1;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="90" width="80" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Divider arrow down -->
+        <mxCell id="divider" value="" style="endArrow=classic;html=1;strokeColor=#9D00FF;strokeWidth=2;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nova-box" target="ai-games-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- AI GAMES (Middle) -->
+        <mxCell id="ai-games-box" value="&#127918; AI-Powered Educational Games" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00FF8C;strokeWidth=2;fontColor=#00FF8C;fontSize=14;fontStyle=1;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="350" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ai-game1" value="&#128293; Phishing Dojo — AI Mode&#xa;AI generates unique phishing&#xa;emails each round. Users learn&#xa;patterns, not memorize templates.&#xa;15 XP per round" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="55" y="290" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ai-game2" value="&#127765; Scenario Simulator&#xa;AI generates unique 5-round&#xa;decision scenarios. Consequences&#xa;and feedback per round.&#xa;15 XP" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="55" y="365" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- SECURITY POSTURE (Right) -->
+        <mxCell id="posture-box" value="&#128200; Security Posture Assessment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#FFD700;strokeWidth=2;fontColor=#FFD700;fontSize=14;fontStyle=1;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="420" y="270" width="310" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="posture-flow" value="1. Complete questionnaire&#xa;2. AI analyzes responses&#xa;3. Generates personalized report&#xa;&#128227; Grade (A–F) per category&#xa;&#128227; Top 5 vulnerabilities&#xa;&#128227; Prioritized recommendations" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="435" y="295" width="280" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="posture-xp" value="25 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="640" y="400" width="60" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- WHY AI MATTERS (Bottom) -->
+        <mxCell id="why-box" value="Why AI?" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="270" width="300" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="why-items" value="&#128281; Unique content every time&#xa;   No repeated questions&#xa;&#127758; Personalized experiences&#xa;   Adapts to user responses&#xa;&#128200; Scalable education&#xa;   Infinite scenario generation&#xa;&#128273; Security focus&#xa;   Topic-bounded AI prevents&#xa;   off-topic misuse" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="775" y="295" width="270" height="145" as="geometry"/>
+        </mxCell>
+
+        <!-- Slide label -->
+        <mxCell id="slide-lbl" value="SLIDE 11 — AI-Powered Features" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="780" y="565" width="280" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

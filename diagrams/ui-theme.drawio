@@ -1,0 +1,138 @@
+<mxfile host="app.diagrams.net" agent="5.0" version="21.0.0">
+  <diagram name="UI Theme" id="ui-1">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Cyberpunk / Neon UI Theme" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#8ff5ff;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="15" width="460" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- DARK MODE -->
+        <mxCell id="dark-header" value="&#127769; Dark Mode (Default)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#05050A;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="480" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Dark color swatches -->
+        <mxCell id="d-bg" value="#05050A&#xa;Cyber Void" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#05050A;strokeColor=#ffffff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-surf" value="#0A1128&#xa;Surface" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#ffffff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="150" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-cyan" value="#8ff5ff&#xa;Primary" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#8ff5ff;strokeColor=#ffffff;fontColor=#000000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="245" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-crim" value="#FF0A54&#xa;Crimson" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF0A54;strokeColor=#ffffff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="340" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-violet" value="#4D00FF&#xa;Violet" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4D00FF;strokeColor=#ffffff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="435" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Dark animations -->
+        <mxCell id="d-anim" value="&#127919; Animations: fade-in, slide-up, shimmer, neon-pulse, cyber-scan, glow-rotate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#888;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="55" y="180" width="465" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- LIGHT MODE -->
+        <mxCell id="light-header" value="&#9728; Light Mode" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#005d63;strokeWidth=2;fontColor=#005d63;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="80" width="480" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Light color swatches -->
+        <mxCell id="l-bg" value="#ffffff&#xa;Background" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333;fontColor=#000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="565" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-surf" value="#f5f5f5&#xa;Surface" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333;fontColor=#000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="660" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-teal" value="#005d63&#xa;Teal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#005d63;strokeColor=#333;fontColor=#fff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="755" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-violet" value="#d674ff&#xa;Violet" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d674ff;strokeColor=#333;fontColor=#000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="850" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-cyan" value="#00E5FF&#xa;Cyan Accent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#00E5FF;strokeColor=#333;fontColor=#000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="945" y="125" width="85" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Typography -->
+        <mxCell id="typo-header" value="&#128221; Typography" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="230" width="990" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="t1" value="Outfit&#xa;Display / UI" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#8ff5ff;fontColor=#8ff5ff;fontSize=11;align=center;fontFamily=Outfit;" vertex="1" parent="1">
+          <mxGeometry x="55" y="275" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="t2" value="Orbitron&#xa;Headlines" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00E5FF;fontColor=#00E5FF;fontSize=11;align=center;fontFamily=Orbitron;" vertex="1" parent="1">
+          <mxGeometry x="220" y="275" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="t3" value="Plus Jakarta Sans&#xa;Body Text" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#FF0A54;fontColor=#FF0A54;fontSize=11;align=center;fontFamily='Plus Jakarta Sans';" vertex="1" parent="1">
+          <mxGeometry x="385" y="275" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="t4" value="Space Grotesk&#xa;Accent / Key" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#4D00FF;fontColor=#4D00FF;fontSize=11;align=center;fontFamily='Space Grotesk';" vertex="1" parent="1">
+          <mxGeometry x="550" y="275" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- UI Components -->
+        <mxCell id="comp-header" value="&#9881; UI Components" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="350" width="990" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="comp1" value="&#9632; Dashboard&#xa;Layout&#xa;(Sidebar +&#xa;Content)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#8ff5ff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp2" value="&#9632; Security&#xa;Buddy&#xa;(AI Widget)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#9D00FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="180" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp3" value="&#9632; Music&#xa;Player&#xa;(Draggable&#xa;Widget)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="305" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp4" value="&#9632; Custom&#xa;Title Bar&#xa;(Frameless&#xa;Window)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FF0A54;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="430" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp5" value="&#9632; Terminal&#xa;PTY&#xa;Embedded&#xa;Shell" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#00E5FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="555" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp6" value="&#9632; i18n&#xa;EN + AR&#xa;RTL&#xa;Support" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#FFD700;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="680" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp7" value="&#9632; Scan&#xa;Results&#xa;Cards&#xa;(Animated)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#4D00FF;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="805" y="395" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp8" value="&#9632; Security&#xa;Posture&#xa;Report&#xa;(Visual)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#121A33;strokeColor=#8ff5ff;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="930" y="395" width="100" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Key Visual Elements -->
+        <mxCell id="vis-header" value="&#127752; Key Visual Elements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="500" width="990" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="vis1" value="Neon glow borders&#xa;with pulse animations" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#8ff5ff;fontColor=#8ff5ff;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="545" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="vis2" value="Cyberpunk gradient&#xa;backgrounds" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00E5FF;fontColor=#00E5FF;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="545" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="vis3" value="Shimmer loading&#xa;progress bars" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#FF0A54;fontColor=#FF0A54;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="485" y="545" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="vis4" value="Cyber-scan line&#xa;effect on scans" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#4D00FF;fontColor=#4D00FF;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="700" y="545" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="vis5" value="Framer Motion&#xa;page transitions" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00FF8C;fontColor=#00FF8C;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="915" y="545" width="115" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Slide label -->
+        <mxCell id="slide-lbl" value="SLIDE 17 — User Interface Design" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="780" y="590" width="280" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

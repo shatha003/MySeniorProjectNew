@@ -1,0 +1,113 @@
+<mxfile host="app.diagrams.net" agent="5.0" version="21.0.0">
+  <diagram name="Gamification System" id="game-1">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Gamification System — XP &amp; Progression" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#8ff5ff;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="15" width="500" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- XP ACTIVITIES (Left) -->
+        <mxCell id="xp-header" value="&#128176; XP Activities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="240" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="xp-item1" value="&#128279; Scan Link         10 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item2" value="&#128193; Scan File         15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="148" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item3" value="&#128247; Scan Image        10 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="176" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item4" value="&#128476; Gen Password       5 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="204" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item5" value="&#128269; Check Password     3 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="232" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item6" value="&#128274; Vault Entry       20 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="260" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item7" value="&#128100; AI Chat (msg)     5 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="288" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item8" value="&#127918; Quiz/Game        15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="316" width="240" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="xp-item9" value="&#128200; Assessment      25 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#333;fontColor=#fff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="344" width="240" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- LEVEL SYSTEM (Middle) -->
+        <mxCell id="level-header" value="&#127941; Level System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#FFD700;strokeWidth=2;fontColor=#FFD700;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="80" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Bronze -->
+        <mxCell id="bronze" value="&#129704; Bronze  Lv 1–3&#xa;Basic quiz content&#xa;&#127991; Starter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CD7F32;strokeColor=#CD7F32;fontColor=#ffffff;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="125" width="220" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Silver -->
+        <mxCell id="silver" value="&#11088; Silver  Lv 4–6&#xa;Intermediate content&#xa;&#127992; Growing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0C0C0;strokeColor=#C0C0C0;fontColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="190" width="220" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Gold -->
+        <mxCell id="gold" value="&#127941; Gold  Lv 7+&#xa;Advanced content&#xa;&#128992; Expert" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#FFD700;fontColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="255" width="220" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Formula -->
+        <mxCell id="formula" value="Level = floor(XP / 100) + 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#FFD700;fontColor=#FFD700;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="310" y="320" width="220" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- STREAK (Middle bottom) -->
+        <mxCell id="streak-header" value="&#128293; Streak System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#FF0A54;strokeWidth=2;fontColor=#FF0A54;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="370" width="220" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="streak-items" value="Consecutive daily logins&#xa;Resets if a day is missed&#xa;+10 XP bonus for 3+ days&#xa;&#128293; Motivates daily return" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="410" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- DAILY QUESTS (Right) -->
+        <mxCell id="quest-header" value="&#128176; Daily Quests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#00FF8C;strokeWidth=2;fontColor=#00FF8C;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="80" width="260" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="quest1" value="&#10004; Scan something&#xa;(link/file/image) → 20 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="125" width="260" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="quest2" value="&#10004; Password tool&#xa;(generate/check) → 15 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="175" width="260" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="quest3" value="&#10004; Chat with AI&#xa;Nova → 10 XP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#00FF8C;fontColor=#ffffff;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="225" width="260" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="quest-note" value="3 tasks reset every 24 hours&#xa;Refresh = reason to return daily" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#888;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="550" y="275" width="260" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- SECURITY SCORE (Right bottom) -->
+        <mxCell id="score-header" value="&#128200; Security Score" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A1128;strokeColor=#8ff5ff;strokeWidth=2;fontColor=#8ff5ff;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="340" width="260" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="score-items" value="XP contribution    → 25 pts max&#xa;Streak days       → 20 pts max&#xa;Vault items       → 15 pts max&#xa;Activities        → 15 pts max&#xa;Base score        → 10 pts&#xa;─────────────────&#xa;MAX SCORE         = 100%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="550" y="380" width="260" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Slide label -->
+        <mxCell id="slide-lbl" value="SLIDE 16 — Gamification System" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="780" y="565" width="280" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
