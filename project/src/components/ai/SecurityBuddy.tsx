@@ -6,6 +6,8 @@ import { callNova } from '../../services/aiService';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUserProgressStore } from '../../store/useUserProgressStore';
 import { useTheme } from '@/components/theme-provider';
+import { onChallengeEvent } from '@/lib/challengeEvents';
+import { ActivityType } from '@/services/activityService';
 
 interface Challenge {
     title: string;
@@ -15,6 +17,18 @@ interface Challenge {
     category: string;
     completed: boolean;
 }
+
+const TOOL_TO_ACTIVITIES: Record<string, ActivityType[]> = {
+    'link-scanner': ['scan_link'],
+    'file-scanner': ['scan_file'],
+    'metadata': ['scan_image'],
+    'password-check': ['check_password'],
+    'phishing-dojo': ['phishing_round', 'ai_phishing_round'],
+    'quiz-arena': ['quiz_round'],
+    'vault': ['create_credential'],
+    'encryption': ['generate_encryption'],
+    'password-gen': ['generate_password'],
+};
 
 export default function SecurityBuddy() {
     const { resolvedTheme } = useTheme();
@@ -75,6 +89,27 @@ export default function SecurityBuddy() {
 
         generate();
     }, [user, progress]);
+
+    useEffect(() => {
+        const unsubscribe = onChallengeEvent(({ activityType }) => {
+            setChallenges(prev => {
+                const updated = prev.map(challenge => {
+                    if (challenge.completed || !challenge.tool) return challenge;
+                    const activities = TOOL_TO_ACTIVITIES[challenge.tool] || [];
+                    if (activities.includes(activityType as ActivityType)) {
+                        return { ...challenge, completed: true };
+                    }
+                    return challenge;
+                });
+                const changed = updated.some((c, i) => c.completed !== prev[i].completed);
+                if (changed && user) {
+                    localStorage.setItem(`chea_buddy_${user.uid}_${new Date().toDateString()}`, JSON.stringify(updated));
+                }
+                return updated;
+            });
+        });
+        return () => { unsubscribe(); };
+    }, [user]);
 
     const toggleComplete = (index: number) => {
         const updated = challenges.map((c, i) => i === index ? { ...c, completed: !c.completed } : c);

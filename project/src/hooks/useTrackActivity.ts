@@ -4,6 +4,20 @@ import { useActivityStore } from '../store/useActivityStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
 import { useDailyTasksStore } from '../store/useDailyTasksStore';
 import { ActivityType, ACTIVITY_POINTS } from '../services/activityService';
+import { emitChallengeEvent } from '../lib/challengeEvents';
+
+const ACTIVITY_TO_TOOL: Partial<Record<ActivityType, string>> = {
+    scan_link: 'link-scanner',
+    scan_file: 'file-scanner',
+    scan_image: 'metadata',
+    check_password: 'password-check',
+    phishing_round: 'phishing-dojo',
+    ai_phishing_round: 'phishing-dojo',
+    quiz_round: 'quiz-arena',
+    create_credential: 'vault',
+    generate_encryption: 'encryption',
+    generate_password: 'password-gen',
+};
 
 export function useTrackActivity() {
     const user = useAuthStore((state) => state.user);
@@ -30,6 +44,11 @@ export function useTrackActivity() {
         }
         
         await completeTask(userId, taskType);
+
+        const tool = ACTIVITY_TO_TOOL[type];
+        if (tool) {
+            emitChallengeEvent(tool, type);
+        }
     }, [user, logActivity, earnXp, completeTask]);
     
     return track;

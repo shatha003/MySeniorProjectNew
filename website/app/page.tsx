@@ -48,7 +48,7 @@ export default function Home() {
                 Free to download, easy to master.
               </p>
               <a
-href="https://files.catbox.moe/hpslfy.zip"
+href="https://files.catbox.moe/m6kdws.zip"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="glitch-button bg-gradient-to-br from-neon-crimson to-neon-crimson/80 text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button shadow-[0_0_25px_rgba(255,10,84,0.4)] hover:scale-105 transition-transform inline-block"
@@ -120,7 +120,7 @@ href="https://files.catbox.moe/hpslfy.zip"
             </p>
             
             <a
-href="https://files.catbox.moe/hpslfy.zip"
+href="https://files.catbox.moe/m6kdws.zip"
               target="_blank"
               rel="noopener noreferrer"
               className={`glitch-button group bg-gradient-to-br text-white px-10 sm:px-12 py-4 sm:py-5 rounded-full font-headline font-bold text-lg kinetic-button hover:scale-105 transition-transform inline-block ${

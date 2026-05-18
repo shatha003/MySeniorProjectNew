@@ -1,7 +1,6 @@
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserProgressStore } from '../store/useUserProgressStore';
 
-const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'x-ai/grok-4.3';
 
@@ -22,6 +21,8 @@ export async function* callNovaStreaming(
   options: AIStreamOptions = {}
 ): AsyncGenerator<string, void, unknown> {
   const { model = MODEL, temperature = 0.7, maxTokens = 2000, systemPrompt } = options;
+  const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
+  if (!API_KEY) throw new Error('OpenRouter API key not configured (VITE_OPENROUTER_API_KEY)');
 
   const finalMessages = systemPrompt
     ? [{ role: 'system' as const, content: systemPrompt }, ...messages]

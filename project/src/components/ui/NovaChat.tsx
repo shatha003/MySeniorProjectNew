@@ -136,17 +136,21 @@ export function NovaChat({ defaultPosition = { x: 24, y: 100 } }: NovaChatProps)
             const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
             if (!apiKey) throw new Error('API key missing');
 
+            const historyToSend = messages.map((m) => ({ role: m.role, content: m.content }));
+
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${apiKey}`,
                     'Content-Type': 'application/json',
+                    'HTTP-Referer': 'https://chea.app',
+                    'X-Title': 'CHEA Cybersecurity App',
                 },
                 body: JSON.stringify({
-                    model: 'x-ai/grok-4-fast',
+                    model: 'x-ai/grok-4.3',
                     messages: [
                         { role: 'system', content: t('aiAgent:novaSystemPrompt') },
-                        ...messages.map((m) => ({ role: m.role, content: m.content })),
+                        ...historyToSend,
                         { role: 'user', content: userMsg },
                     ],
                     stream: true,
