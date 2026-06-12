@@ -33,6 +33,7 @@ export default function Footer() {
 
           {/* Links - More spacing */}
           <div className="flex items-center gap-10 text-sm font-headline">
+            <a href="/about" className="text-on-surface-variant/80 hover:text-primary transition-colors">About</a>
             <a href="/privacy-policy" className="text-on-surface-variant/80 hover:text-primary transition-colors">Privacy Policy</a>
             <a href="/terms-of-service" className="text-on-surface-variant/80 hover:text-primary transition-colors">Terms of Service</a>
           </div>
@@ -102,6 +103,14 @@ export default function Footer() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex items-center gap-10 text-sm font-headline"
         >
+          <a
+            href="/about"
+            className={`text-on-surface-variant/80 transition-colors duration-300 hover:${
+              isDark ? "text-neon-crimson" : "text-neon-violet"
+            }`}
+          >
+            {t("about")}
+          </a>
           <a
             href="/privacy-policy"
             className={`text-on-surface-variant/80 transition-colors duration-300 hover:${

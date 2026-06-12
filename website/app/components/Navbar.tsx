@@ -44,6 +44,7 @@ export default function Navbar() {
     { name: t("features"), href: "/#features" },
     { name: t("training"), href: "/#training" },
     { name: t("avatars"), href: "/#avatars" },
+    { name: t("about"), href: "/about" },
   ];
 
   // Static version for SSR
@@ -62,6 +63,7 @@ export default function Navbar() {
               <span className="text-base font-headline font-semibold text-on-surface/80">Features</span>
               <span className="text-base font-headline font-semibold text-on-surface/80">Training</span>
               <span className="text-base font-headline font-semibold text-on-surface/80">Avatars</span>
+              <span className="text-base font-headline font-semibold text-on-surface/80">About</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-10 h-10" />

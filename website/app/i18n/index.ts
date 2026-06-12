@@ -16,6 +16,7 @@ import enFooter from './locales/en/footer.json';
 import enCTA from './locales/en/cta.json';
 import enPrivacy from './locales/en/privacy.json';
 import enTerms from './locales/en/terms.json';
+import enAbout from './locales/en/about.json';
 
 // Arabic translations
 import arCommon from './locales/ar/common.json';
@@ -31,6 +32,7 @@ import arFooter from './locales/ar/footer.json';
 import arCTA from './locales/ar/cta.json';
 import arPrivacy from './locales/ar/privacy.json';
 import arTerms from './locales/ar/terms.json';
+import arAbout from './locales/ar/about.json';
 
 const resources = {
   en: {
@@ -47,6 +49,7 @@ const resources = {
     cta: enCTA,
     privacy: enPrivacy,
     terms: enTerms,
+    about: enAbout,
   },
   ar: {
     common: arCommon,
@@ -62,6 +65,7 @@ const resources = {
     cta: arCTA,
     privacy: arPrivacy,
     terms: arTerms,
+    about: arAbout,
   },
 };
 
@@ -86,7 +90,7 @@ i18n
     lng: getInitialLanguage(), // Set initial language synchronously
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'nav', 'hero', 'features', 'ai-features', 'gallery', 'training', 'ai', 'avatars', 'footer', 'cta', 'privacy', 'terms'],
+    ns: ['common', 'nav', 'hero', 'features', 'ai-features', 'gallery', 'training', 'ai', 'avatars', 'footer', 'cta', 'privacy', 'terms', 'about'],
     interpolation: {
       escapeValue: false,
     },

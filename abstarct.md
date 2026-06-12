@@ -1,0 +1,4 @@
+Abstract
+This project addresses the critical vulnerability of students aged 9–15 amidst a reported 300% surge in cyberattacks targeting the education sector. Currently, students lack the routine "Cyber Hygiene" necessary to mitigate risks like weak passwords and phishing, often finding professional tools too complex to adopt. To solve this, the Cyber Hygiene Educator & Assistant was developed as a unified Windows application that combines active protection with gamified education. The system integrates five core modules: a secure Password Vault, a real-time Malware Scanner, Encryption tools, and an AI-driven learning assistant. Implementation results confirm that the application successfully simplifies enterprise-grade security concepts for novice users. By bridging the gap between theoretical awareness and practical utility, this solution empowers students to independently secure their digital identities and establish lifelong defensive habits.
+
+
