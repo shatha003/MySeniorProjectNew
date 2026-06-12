@@ -9,6 +9,15 @@
     "title": "Demo Video",
     "subtitle": "See CHEA in action — watch our full walkthrough"
   },
+  "gallery": {
+    "title": "See CHEA in Action",
+    "subtitle": "Explore the powerful features and sleek interface of your cyber-defender toolkit"
+  },
+  "report": {
+    "title": "Project Report",
+    "subtitle": "Read the full project report and technical documentation",
+    "download": "Download Report"
+  },
   "team": {
     "title": "Meet the Team",
     "supervisor": "Project Supervisor",

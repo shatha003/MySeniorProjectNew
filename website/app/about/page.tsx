@@ -6,6 +6,7 @@ import { useTheme } from "../components/theme-provider";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CyberEffects from "../components/CyberEffects";
+import ScreenshotGallery from "../components/ScreenshotGallery";
 
 interface TeamMember {
   name: string;
@@ -196,6 +197,79 @@ export default function AboutPage() {
                     className="absolute top-0 left-0 w-full h-full"
                   />
                 </div>
+              </div>
+            </motion.section>
+
+            {/* See CHEA in Action Section */}
+            <ScreenshotGallery />
+
+            {/* Project Report Section */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, duration: 0.5 }}
+              className={`group rounded-xl border backdrop-blur-md p-6 sm:p-8 transition-all duration-300 hover:scale-[1.01] ${
+                isDark
+                  ? "bg-[#191923]/60 border-white/5 hover:border-[#FF0A54]/20"
+                  : "bg-white/60 border-black/5 hover:border-[#4D00FF]/20"
+              } hover:shadow-[0_0_30px_rgba(0,0,0,0.1)]`}
+            >
+              <div className="text-center mb-6">
+                <h2
+                  className={`font-headline text-2xl font-bold mb-2 ${getHeadingColor()}`}
+                >
+                  {t("report.title")}
+                </h2>
+                <p className={`${getMutedTextColor()} font-body text-sm`}>
+                  {t("report.subtitle")}
+                </p>
+              </div>
+              <div
+                className={`relative rounded-xl overflow-hidden border ${getBorderLight()}`}
+                style={{ height: "800px" }}
+              >
+                <object
+                  data="/report/Report-CHEA.pdf"
+                  type="application/pdf"
+                  className="w-full h-full"
+                  title="CHEA Project Report"
+                >
+                  <div className="flex flex-col items-center justify-center h-full gap-4 text-on-surface-variant">
+                    <p className="font-body text-sm">PDF viewer is not supported in this browser.</p>
+                    <a
+                      href="/report/Report-CHEA.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-headline font-semibold border ${getBorderMedium()} ${getTextColor()} ${getBgLight()}`}
+                    >
+                      Open PDF in new tab
+                    </a>
+                  </div>
+                </object>
+              </div>
+              <div className="mt-4 text-center">
+                <a
+                  href="/report/Report-CHEA.pdf"
+                  download
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-headline font-semibold text-sm transition-all duration-300 border ${getBorderMedium()} ${getTextColor()} ${getBgLight()} hover:opacity-80`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  {t("report.download")}
+                </a>
               </div>
             </motion.section>
 
