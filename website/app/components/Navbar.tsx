@@ -13,6 +13,7 @@ export default function Navbar() {
   const isDark = theme === "dark";
   const [scrolled, setScrolled] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
 
   // Track scroll direction and visibility
@@ -66,6 +67,8 @@ export default function Navbar() {
               <span className="text-base font-headline font-semibold text-on-surface/80">About</span>
             </div>
             <div className="flex items-center gap-4">
+              {/* Mobile Menu Button placeholder for SSR */}
+              <div className="md:hidden w-10 h-10" />
               <div className="w-10 h-10" />
             </div>
           </div>
@@ -142,12 +145,58 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right Section - ThemeToggle and LanguageSwitcher only */}
+        {/* Right Section - Mobile Menu Button + ThemeToggle and LanguageSwitcher */}
         <div className="flex items-center gap-2 sm:gap-4">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-on-surface/80 hover:text-on-surface hover:bg-white/10"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            )}
+          </button>
           <ThemeToggle />
           <LanguageSwitcher />
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="md:hidden border-t border-white/10 mt-2 pt-4 pb-2"
+        >
+          <div className="flex flex-col gap-2">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-3 rounded-lg font-headline font-semibold text-sm transition-all duration-300 ${
+                  isDark
+                    ? "text-on-surface/80 hover:text-on-surface hover:bg-white/5"
+                    : "text-on-surface/80 hover:text-on-surface hover:bg-black/5"
+                }`}
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </motion.nav>
   );
 }
